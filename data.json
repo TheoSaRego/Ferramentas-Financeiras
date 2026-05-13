@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-13T17:14:04.683848+00:00",
+  "generatedAt": "2026-05-13T22:10:52.976474+00:00",
   "anchorDate": "2026-05-11",
   "ibov": {
     "cagr12": 33.07265378725563,
@@ -17,93 +17,93 @@
     "cagr60": 10.904212348817222
   },
   "ntnb": {
-    "ntnb_rate_long": 7.3023,
-    "ntnb_rate_mid": 7.7533,
-    "ntnb_fetched_at": "2026-05-13T17:12:29.754890+00:00",
+    "ntnb_rate_long": 7.3931,
+    "ntnb_rate_mid": 7.8965,
+    "ntnb_fetched_at": "2026-05-13T22:10:42.606090+00:00",
     "ntnb_titles": [
       {
         "nome": "NTN-B",
         "vencimento": "2026-08-15",
-        "taxa": 9.654
+        "taxa": 9.8459
       },
       {
         "nome": "NTN-B",
         "vencimento": "2027-05-15",
-        "taxa": 8.0873
+        "taxa": 8.1135
       },
       {
         "nome": "NTN-B",
         "vencimento": "2028-08-15",
-        "taxa": 7.94
+        "taxa": 8.0599
       },
       {
         "nome": "NTN-B",
         "vencimento": "2029-05-15",
-        "taxa": 7.83
+        "taxa": 7.9866
       },
       {
         "nome": "NTN-B",
         "vencimento": "2030-08-15",
-        "taxa": 7.84
+        "taxa": 7.991
       },
       {
         "nome": "NTN-B",
         "vencimento": "2031-05-15",
-        "taxa": 7.7533
+        "taxa": 7.8965
       },
       {
         "nome": "NTN-B",
         "vencimento": "2032-08-15",
-        "taxa": 7.7035
+        "taxa": 7.851
       },
       {
         "nome": "NTN-B",
         "vencimento": "2033-05-15",
-        "taxa": 7.68
+        "taxa": 7.825
       },
       {
         "nome": "NTN-B",
         "vencimento": "2035-05-15",
-        "taxa": 7.5468
+        "taxa": 7.6632
       },
       {
         "nome": "NTN-B",
         "vencimento": "2037-05-15",
-        "taxa": 7.4708
+        "taxa": 7.57
       },
       {
         "nome": "NTN-B",
         "vencimento": "2040-08-15",
-        "taxa": 7.3334
+        "taxa": 7.4275
       },
       {
         "nome": "NTN-B",
         "vencimento": "2045-05-15",
-        "taxa": 7.2548
+        "taxa": 7.3398
       },
       {
         "nome": "NTN-B",
         "vencimento": "2050-08-15",
-        "taxa": 7.1928
+        "taxa": 7.2693
       },
       {
         "nome": "NTN-B",
         "vencimento": "2055-05-15",
-        "taxa": 7.1623
+        "taxa": 7.2434
       },
       {
         "nome": "NTN-B",
         "vencimento": "2060-08-15",
-        "taxa": 7.1553
+        "taxa": 7.2382
       }
     ],
     "ntnb_source": "anbima"
   },
   "ipca_focus": {
-    "ipca_12m": 4.91,
-    "ipca_longo_prazo": 3.5,
-    "ipca_fetched_at": "2026-05-08",
-    "ipca_source": "focus"
+    "ipca_12m": 4.8,
+    "ipca_longo_prazo": 4.0,
+    "ipca_fetched_at": null,
+    "ipca_source": "fallback"
   },
   "fund_betas": {
     "22.232.927/0001-90": {
@@ -412,8 +412,8 @@
       "cagr60": 13.78570933106209,
       "cagrInception": 14.287876250671538,
       "ibovCagrInception": 6.967,
-      "cdiCagrInception": 9.8053,
-      "alphaVsCdi": 4.4825,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 7.3209,
       "error": false
     },
@@ -437,8 +437,8 @@
       "cagr60": 17.75003238331938,
       "cagrInception": 17.85047924567522,
       "ibovCagrInception": 8.8235,
-      "cdiCagrInception": 11.7878,
-      "alphaVsCdi": 6.0627,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 9.027,
       "error": false
     },
@@ -462,8 +462,8 @@
       "cagr60": null,
       "cagrInception": 20.212722311129493,
       "ibovCagrInception": 13.2478,
-      "cdiCagrInception": 12.9786,
-      "alphaVsCdi": 7.2341,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 6.965,
       "error": false
     },
@@ -562,8 +562,8 @@
       "cagr60": 19.962374785288528,
       "cagrInception": 19.2870117902634,
       "ibovCagrInception": 8.3356,
-      "cdiCagrInception": 11.1927,
-      "alphaVsCdi": 8.0943,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 10.9514,
       "error": false
     },
@@ -587,8 +587,8 @@
       "cagr60": 11.106098411572884,
       "cagrInception": 15.561682186502669,
       "ibovCagrInception": 8.3356,
-      "cdiCagrInception": 11.1927,
-      "alphaVsCdi": 4.369,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 7.226,
       "error": false
     },
@@ -712,8 +712,8 @@
       "cagr60": null,
       "cagrInception": 32.057559138793536,
       "ibovCagrInception": 18.2661,
-      "cdiCagrInception": 12.8921,
-      "alphaVsCdi": 19.1654,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 13.7914,
       "error": false
     },
@@ -762,8 +762,8 @@
       "cagr60": null,
       "cagrInception": 21.094124948440186,
       "ibovCagrInception": 14.7257,
-      "cdiCagrInception": 12.9393,
-      "alphaVsCdi": 8.1549,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 6.3684,
       "error": false
     },
@@ -787,8 +787,8 @@
       "cagr60": null,
       "cagrInception": 14.5876759350549,
       "ibovCagrInception": 18.5562,
-      "cdiCagrInception": 12.7018,
-      "alphaVsCdi": 1.8858,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": -3.9685,
       "error": false
     },
@@ -812,8 +812,8 @@
       "cagr60": null,
       "cagrInception": 24.568804774551168,
       "ibovCagrInception": 14.9769,
-      "cdiCagrInception": 12.9177,
-      "alphaVsCdi": 11.6511,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 9.5919,
       "error": false
     },
@@ -862,8 +862,8 @@
       "cagr60": 14.460594512549685,
       "cagrInception": 13.511972005445362,
       "ibovCagrInception": 8.3356,
-      "cdiCagrInception": 11.1927,
-      "alphaVsCdi": 2.3193,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 5.1763,
       "error": false
     },
@@ -912,8 +912,8 @@
       "cagr60": null,
       "cagrInception": 13.545944968723278,
       "ibovCagrInception": 18.5562,
-      "cdiCagrInception": 12.7018,
-      "alphaVsCdi": 0.8441,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": -5.0103,
       "error": false
     },
@@ -937,8 +937,8 @@
       "cagr60": null,
       "cagrInception": 13.91525639513791,
       "ibovCagrInception": 15.734,
-      "cdiCagrInception": 12.7493,
-      "alphaVsCdi": 1.1659,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": -1.8188,
       "error": false
     },
@@ -962,8 +962,8 @@
       "cagr60": null,
       "cagrInception": 12.83244976686646,
       "ibovCagrInception": 15.7083,
-      "cdiCagrInception": 12.7596,
-      "alphaVsCdi": 0.0728,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": -2.8759,
       "error": false
     },
@@ -1037,8 +1037,8 @@
       "cagr60": null,
       "cagrInception": 16.52498217542526,
       "ibovCagrInception": 18.8607,
-      "cdiCagrInception": 12.7081,
-      "alphaVsCdi": 3.8169,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": -2.3358,
       "error": false
     },
@@ -1062,8 +1062,8 @@
       "cagr60": null,
       "cagrInception": 21.82364736081448,
       "ibovCagrInception": 20.672,
-      "cdiCagrInception": 12.7264,
-      "alphaVsCdi": 9.0973,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
       "alphaVsIbov": 1.1516,
       "error": false
     }
