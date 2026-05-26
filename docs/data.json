@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-26T17:55:51.435356+00:00",
+  "generatedAt": "2026-05-26T22:23:13.465292+00:00",
   "anchorDate": "2026-05-22",
   "ibov": {
     "cagr12": 28.386601805872445,
@@ -7,9 +7,9 @@
     "cagr60": 7.522845111865184
   },
   "cdi": {
-    "cagr12": 14.833380267944163,
-    "cagr36": 12.845736807950892,
-    "cagr60": 11.915857679672225
+    "cagr12": 14.832385669467897,
+    "cagr36": 12.87160764436619,
+    "cagr60": 11.92090621617259
   },
   "sp500": {
     "cagr12": 12.289674797122462,
@@ -17,84 +17,84 @@
     "cagr60": 11.306629341451945
   },
   "ntnb": {
-    "ntnb_rate_long": 7.4493,
-    "ntnb_rate_mid": 7.847,
-    "ntnb_fetched_at": "2026-05-26T17:55:50.048057+00:00",
+    "ntnb_rate_long": 7.4341,
+    "ntnb_rate_mid": 7.8802,
+    "ntnb_fetched_at": "2026-05-26T22:21:38.421394+00:00",
     "ntnb_titles": [
       {
         "nome": "NTN-B",
         "vencimento": "2026-08-15",
-        "taxa": 10.4137
+        "taxa": 10.2892
       },
       {
         "nome": "NTN-B",
         "vencimento": "2027-05-15",
-        "taxa": 8.09
+        "taxa": 8.0694
       },
       {
         "nome": "NTN-B",
         "vencimento": "2028-08-15",
-        "taxa": 7.9632
+        "taxa": 7.9731
       },
       {
         "nome": "NTN-B",
         "vencimento": "2029-05-15",
-        "taxa": 7.8503
+        "taxa": 7.88
       },
       {
         "nome": "NTN-B",
         "vencimento": "2030-08-15",
-        "taxa": 7.8933
+        "taxa": 7.93
       },
       {
         "nome": "NTN-B",
         "vencimento": "2031-05-15",
-        "taxa": 7.847
+        "taxa": 7.8802
       },
       {
         "nome": "NTN-B",
         "vencimento": "2032-08-15",
-        "taxa": 7.8318
+        "taxa": 7.8614
       },
       {
         "nome": "NTN-B",
         "vencimento": "2033-05-15",
-        "taxa": 7.8152
+        "taxa": 7.8353
       },
       {
         "nome": "NTN-B",
         "vencimento": "2035-05-15",
-        "taxa": 7.7122
+        "taxa": 7.7209
       },
       {
         "nome": "NTN-B",
         "vencimento": "2037-05-15",
-        "taxa": 7.5999
+        "taxa": 7.598
       },
       {
         "nome": "NTN-B",
         "vencimento": "2040-08-15",
-        "taxa": 7.49
+        "taxa": 7.4778
       },
       {
         "nome": "NTN-B",
         "vencimento": "2045-05-15",
-        "taxa": 7.4079
+        "taxa": 7.39
       },
       {
         "nome": "NTN-B",
         "vencimento": "2050-08-15",
-        "taxa": 7.3145
+        "taxa": 7.2865
       },
       {
         "nome": "NTN-B",
         "vencimento": "2055-05-15",
-        "taxa": 7.3131
+        "taxa": 7.2878
       },
       {
         "nome": "NTN-B",
         "vencimento": "2060-08-15",
-        "taxa": 7.3076
+        "taxa": 7.2777
       }
     ],
     "ntnb_source": "anbima"
@@ -311,35 +311,35 @@
     }
   },
   "jensenAlpha": {
-    "22.232.927/0001-90": 10.8131,
-    "17.400.251/0001-66": 11.5816,
-    "18.302.338/0001-63": -1.9105,
-    "37.495.383/0001-26": 2.1852,
-    "42.698.666/0001-05": 6.0563,
-    "24.623.392/0001-03": 0.9605,
-    "28.747.685/0001-53": -0.1998,
-    "10.500.884/0001-05": -2.1823,
-    "35.744.790/0001-02": 5.7381,
-    "38.954.217/0001-03": -2.0457,
-    "32.073.525/0001-43": 4.5529,
-    "21.689.246/0001-92": 8.3079,
-    "14.438.229/0001-17": 4.8604,
-    "17.397.315/0001-17": 1.3843,
-    "46.351.969/0001-08": 18.0443,
-    "15.334.585/0001-53": -3.4451,
-    "47.511.351/0001-20": 6.1436,
-    "52.116.227/0001-09": 1.1527,
-    "47.612.105/0001-65": 9.9701,
-    "29.726.133/0001-21": 0.9074,
-    "35.828.684/0001-07": 0.4864,
-    "16.876.874/0001-47": -1.7186,
-    "52.239.457/0001-57": 0.5096,
-    "51.253.495/0001-00": 1.1118,
-    "52.969.671/0001-69": -0.055,
-    "07.013.315/0001-12": -1.9472,
-    "14.812.722/0001-55": -1.0878,
-    "48.997.077/0001-04": 3.1134,
-    "52.217.086/0001-02": 7.7144
+    "22.232.927/0001-90": 10.8088,
+    "17.400.251/0001-66": 11.5811,
+    "18.302.338/0001-63": -1.915,
+    "37.495.383/0001-26": 2.1724,
+    "42.698.666/0001-05": 6.0369,
+    "24.623.392/0001-03": 0.9571,
+    "28.747.685/0001-53": -0.2019,
+    "10.500.884/0001-05": -2.1853,
+    "35.744.790/0001-02": 5.7132,
+    "38.954.217/0001-03": -2.0462,
+    "32.073.525/0001-43": 4.5456,
+    "21.689.246/0001-92": 8.2905,
+    "14.438.229/0001-17": 4.8536,
+    "17.397.315/0001-17": 1.373,
+    "46.351.969/0001-08": 18.0252,
+    "15.334.585/0001-53": -3.4459,
+    "47.511.351/0001-20": 6.129,
+    "52.116.227/0001-09": 1.1301,
+    "47.612.105/0001-65": 9.9517,
+    "29.726.133/0001-21": 0.886,
+    "35.828.684/0001-07": 0.4617,
+    "16.876.874/0001-47": -1.7232,
+    "52.239.457/0001-57": 0.4852,
+    "51.253.495/0001-00": 1.0859,
+    "52.969.671/0001-69": -0.0806,
+    "07.013.315/0001-12": -1.9585,
+    "14.812.722/0001-55": -1.1129,
+    "48.997.077/0001-04": 3.0885,
+    "52.217.086/0001-02": 7.695
   },
   "funds": [
     {
@@ -412,8 +412,8 @@
       "cagr60": 13.685277057073808,
       "cagrInception": 14.310523904066685,
       "ibovCagrInception": 6.4012,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 9.8395,
+      "alphaVsCdi": 4.471,
       "alphaVsIbov": 7.9093,
       "error": false
     },
@@ -437,8 +437,8 @@
       "cagr60": 17.091309465343652,
       "cagrInception": 17.092669271558325,
       "ibovCagrInception": 8.0866,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 11.8198,
+      "alphaVsCdi": 5.2728,
       "alphaVsIbov": 9.0061,
       "error": false
     },
@@ -462,8 +462,8 @@
       "cagr60": null,
       "cagrInception": 19.929805019281368,
       "ibovCagrInception": 12.2388,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 13.0107,
+      "alphaVsCdi": 6.9191,
       "alphaVsIbov": 7.691,
       "error": false
     },
@@ -562,8 +562,8 @@
       "cagr60": 19.517746852962105,
       "cagrInception": 18.73812158324739,
       "ibovCagrInception": 7.648,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 11.226,
+      "alphaVsCdi": 7.5121,
       "alphaVsIbov": 11.0902,
       "error": false
     },
@@ -587,8 +587,8 @@
       "cagr60": 10.341093985890936,
       "cagrInception": 14.791319626925748,
       "ibovCagrInception": 7.648,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 11.226,
+      "alphaVsCdi": 3.5653,
       "alphaVsIbov": 7.1434,
       "error": false
     },
@@ -712,8 +712,8 @@
       "cagr60": null,
       "cagrInception": 31.951754018649847,
       "ibovCagrInception": 17.0014,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.9301,
+      "alphaVsCdi": 19.0217,
       "alphaVsIbov": 14.9503,
       "error": false
     },
@@ -762,8 +762,8 @@
       "cagr60": null,
       "cagrInception": 20.765363461544982,
       "ibovCagrInception": 13.6229,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.9738,
+      "alphaVsCdi": 7.7915,
       "alphaVsIbov": 7.1425,
       "error": false
     },
@@ -787,8 +787,8 @@
       "cagr60": null,
       "cagrInception": 14.504215683204414,
       "ibovCagrInception": 16.9111,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.7531,
+      "alphaVsCdi": 1.7511,
       "alphaVsIbov": -2.4069,
       "error": false
     },
@@ -812,8 +812,8 @@
       "cagr60": null,
       "cagrInception": 23.98371079058681,
       "ibovCagrInception": 13.7906,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.955,
+      "alphaVsCdi": 11.0287,
       "alphaVsIbov": 10.1931,
       "error": false
     },
@@ -862,8 +862,8 @@
       "cagr60": 14.727718184478157,
       "cagrInception": 13.516244211863748,
       "ibovCagrInception": 7.648,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 11.226,
+      "alphaVsCdi": 2.2903,
       "alphaVsIbov": 5.8683,
       "error": false
     },
@@ -912,8 +912,8 @@
       "cagr60": null,
       "cagrInception": 13.573754081436729,
       "ibovCagrInception": 16.9111,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.7531,
+      "alphaVsCdi": 0.8206,
       "alphaVsIbov": -3.3373,
       "error": false
     },
@@ -937,8 +937,8 @@
       "cagr60": null,
       "cagrInception": 13.957895727109527,
       "ibovCagrInception": 14.2495,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.7972,
+      "alphaVsCdi": 1.1607,
       "alphaVsIbov": -0.2916,
       "error": false
     },
@@ -962,8 +962,8 @@
       "cagr60": null,
       "cagrInception": 12.840920364032637,
       "ibovCagrInception": 14.0271,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.8138,
+      "alphaVsCdi": 0.0272,
       "alphaVsIbov": -1.1862,
       "error": false
     },
@@ -1037,8 +1037,8 @@
       "cagr60": null,
       "cagrInception": 16.10857432896673,
       "ibovCagrInception": 17.2097,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.7593,
+      "alphaVsCdi": 3.3493,
       "alphaVsIbov": -1.1011,
       "error": false
     },
@@ -1062,8 +1062,8 @@
       "cagr60": null,
       "cagrInception": 21.57245733536117,
       "ibovCagrInception": 18.9158,
-      "cdiCagrInception": null,
-      "alphaVsCdi": null,
+      "cdiCagrInception": 12.7791,
+      "alphaVsCdi": 8.7933,
       "alphaVsIbov": 2.6567,
       "error": false
     }
