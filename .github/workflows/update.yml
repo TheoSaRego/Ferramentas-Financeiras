@@ -101,7 +101,32 @@ jobs:
           git diff --cached --quiet || git commit -m "chore: update breadth $(date -u +%Y-%m-%dT%H:%M)Z"
           git pull --rebase origin main
           git push
-
+          
+  alocador:
+    runs-on: ubuntu-latest
+    needs: [update-breadth]
+    if: always() && (needs.update-breadth.result == 'success' || needs.update-breadth.result == 'skipped')
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install requests pandas numpy
+      - name: Calcula allocation.json (+ e-mail às segundas)
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: |
+          if [ "$(date -u +%u)" = "1" ]; then python scripts/allocator.py --email
+          else python scripts/allocator.py; fi
+      - name: Commit allocation.json
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/allocation.json
+          git diff --cached --quiet || git commit -m "chore: allocation $(date -u +%Y-%m-%d)"
+          git pull --rebase origin main && git push
+          
   # ════════════════════════════════════════════════════════════════════════════
   # JOB 3 — Deploy GitHub Pages
   # Em push: roda direto (sem depender dos jobs de dados)
