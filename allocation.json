@@ -1,9 +1,11 @@
 {
-  "generatedAt": "2026-06-17T06:04:12.854686+00:00",
+  "generatedAt": "2026-06-17T13:57:40.279379+00:00",
   "asof": "2026-06-16",
-  "composite": 7.3,
+  "composite": 7.71,
   "confidence": "ALTA",
-  "missing": [],
+  "missing": [
+    "fund_dd"
+  ],
   "cape_note": "CAPE 9.4x — +15%",
   "cape_mult": 1.15,
   "macro": {
@@ -15,20 +17,20 @@
     "pl_src": "override manual",
     "earnings_yield": 9.199632014719413,
     "dy": 5.7,
-    "ibov": 169648.47,
+    "ibov": 169649.0,
     "ibov_ath": 198657.0,
-    "ibov_dd": -14.602319575952516,
+    "ibov_dd": -14.602052784447562,
     "regime": "bear"
   },
   "decision": {
-    "sinal": "BOM",
-    "cor": "#1a7a52",
-    "tranche": 7900.0,
-    "caixa_alvo_pct": 0.0905,
-    "gap": 0.0595,
+    "sinal": "ATRATIVO",
+    "cor": "#15803d",
+    "tranche": 8700.0,
+    "caixa_alvo_pct": 0.08435,
+    "gap": 0.06565,
     "cashpct": 0.15,
     "ritmo_rodadas": 5,
-    "desc": "piso-alvo de caixa 9% · deploya 22% do gap"
+    "desc": "piso-alvo de caixa 8% · deploya 22% do gap"
   },
   "groups": {
     "Valuation": {
@@ -70,8 +72,8 @@
         {
           "key": "fund_dd",
           "label": "fund_dd",
-          "score": 4.5,
-          "read": "DD médio -9.2% — correção leve",
+          "score": null,
+          "read": "DD fundos ausente",
           "weight": 0.16
         }
       ]
@@ -116,8 +118,8 @@
     "ipca": 4.72,
     "real_cdi": 9.489999999999998,
     "erp": -0.2903679852805858,
-    "ibov_dd": -14.602319575952516,
-    "fund_dd": -9.209547537506367,
+    "ibov_dd": -14.602052784447562,
+    "fund_dd": null,
     "breadth_pct": 23.98,
     "mm200_pct": 28.21,
     "fear_greed": 4,
@@ -203,7 +205,7 @@
       "cap": 0.1,
       "tipo": "acao",
       "motivo": "",
-      "aloc": 1400.0
+      "aloc": 1500.0
     },
     {
       "name": "SPXR11",
@@ -214,7 +216,7 @@
       "cap": 0.16,
       "tipo": "etf",
       "motivo": "",
-      "aloc": 6300.0
+      "aloc": 7000.0
     },
     {
       "name": "HASH11",
