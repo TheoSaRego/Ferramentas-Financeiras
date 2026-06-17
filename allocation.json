@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-06-17T04:45:33.852742+00:00",
+  "generatedAt": "2026-06-17T05:14:29.585786+00:00",
   "asof": "2026-06-16",
-  "composite": 7.68,
+  "composite": 7.3,
   "confidence": "ALTA",
   "missing": [],
   "cape_note": "CAPE 9.4x — +15%",
   "cape_mult": 1.15,
   "macro": {
     "selic": 14.5,
-    "ipca": 5.3,
-    "real_cdi": 8.91,
+    "ipca": 4.72,
+    "real_cdi": 9.489999999999998,
     "ntnb_long": 7.5759,
     "pl": 10.87,
     "pl_src": "override manual",
@@ -21,14 +21,14 @@
     "regime": "bear"
   },
   "decision": {
-    "sinal": "ATRATIVO",
-    "cor": "#15803d",
-    "tranche": 8600.0,
-    "caixa_alvo_pct": 0.08479999999999999,
-    "gap": 0.06520000000000001,
+    "sinal": "BOM",
+    "cor": "#1a7a52",
+    "tranche": 7900.0,
+    "caixa_alvo_pct": 0.0905,
+    "gap": 0.0595,
     "cashpct": 0.15,
     "ritmo_rodadas": 5,
-    "desc": "piso-alvo de caixa 8% · deploya 22% do gap"
+    "desc": "piso-alvo de caixa 9% · deploya 22% do gap"
   },
   "groups": {
     "Valuation": {
@@ -37,8 +37,8 @@
         {
           "key": "erp",
           "label": "erp",
-          "score": 7.0,
-          "read": "ERP real +0.3pp — bolsa levemente acima do juro real",
+          "score": 5.5,
+          "read": "ERP real -0.3pp — juro real levemente superior",
           "weight": 0.22
         },
         {
@@ -113,9 +113,9 @@
     "ey": 9.199632014719413,
     "dy": 5.7,
     "selic": 14.5,
-    "ipca": 5.3,
-    "real_cdi": 8.91,
-    "erp": 0.28963201471941247,
+    "ipca": 4.72,
+    "real_cdi": 9.489999999999998,
+    "erp": -0.2903679852805858,
     "ibov_dd": -14.602319575952516,
     "fund_dd": -9.209547537506367,
     "breadth_pct": 23.98,
@@ -203,7 +203,7 @@
       "cap": 0.1,
       "tipo": "acao",
       "motivo": "",
-      "aloc": 1500.0
+      "aloc": 1400.0
     },
     {
       "name": "SPXR11",
@@ -214,7 +214,7 @@
       "cap": 0.16,
       "tipo": "etf",
       "motivo": "",
-      "aloc": 6900.0
+      "aloc": 6300.0
     },
     {
       "name": "HASH11",
