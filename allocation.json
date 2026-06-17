@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-17T13:53:23.714959+00:00",
+  "generatedAt": "2026-06-17T14:00:26.918089+00:00",
   "asof": "2026-06-16",
-  "carteira_total": 450000,
+  "carteira_total": 600000,
   "caixa": 90000,
-  "brasil": 300000,
-  "sp": 60000,
+  "brasil": 300000.0,
+  "sp": 60000.0,
   "banda": {
     "caixa_min": 0.05,
     "caixa_max": 0.2,
@@ -14,10 +14,10 @@
     "alvo_sp": 0.25
   },
   "brasil_signal": {
-    "score": 6.68,
-    "conf": "ALTA",
-    "label": "BOM",
-    "cor": "#1a7a52",
+    "score": 3.43,
+    "conf": "MÉDIA",
+    "label": "HOLD",
+    "cor": "#b4322a",
     "regime": "bear",
     "groups": {
       "Valuation": {
@@ -25,20 +25,20 @@
         "items": [
           {
             "key": "erp",
-            "score": 7,
-            "read": "ERP real +0.3pp — bolsa levem. acima",
+            "score": 0.5,
+            "read": "ERP real -6.6pp — juro real muito superior",
             "weight": 0.22
           },
           {
             "key": "pl",
-            "score": 7,
-            "read": "10.9x — barato",
+            "score": 0.5,
+            "read": "34.1x — caro/trough",
             "weight": 0.12
           },
           {
             "key": "dy",
-            "score": 7,
-            "read": "5.7% — atrativo",
+            "score": null,
+            "read": "DY n/d",
             "weight": 0.06
           }
         ]
@@ -54,8 +54,8 @@
           },
           {
             "key": "fund_dd",
-            "score": 4.5,
-            "read": "DD médio -9.2% — correção leve",
+            "score": null,
+            "read": "DD fundos n/d",
             "weight": 0.16
           }
         ]
@@ -82,8 +82,8 @@
         "items": [
           {
             "key": "fg",
-            "score": 10,
-            "read": "4/100 — medo extremo",
+            "score": null,
+            "read": "F&G n/d",
             "weight": 0.1
           }
         ]
@@ -91,10 +91,10 @@
     }
   },
   "sp_signal": {
-    "score": 4.03,
-    "conf": "ALTA",
-    "label": "CAUTELOSO",
-    "cor": "#c2541f",
+    "score": 2.51,
+    "conf": "BAIXA",
+    "label": "HOLD",
+    "cor": "#b4322a",
     "regime": "bull",
     "groups": {
       "Valuation": {
@@ -102,14 +102,14 @@
         "items": [
           {
             "key": "erp",
-            "score": 7,
-            "read": "ERP real +1.8pp — bolsa levem. acima",
+            "score": null,
+            "read": "ERP n/d",
             "weight": 0.3
           },
           {
             "key": "pe",
-            "score": 2,
-            "read": "27.0x — caro",
+            "score": null,
+            "read": "P/E n/d",
             "weight": 0.15
           }
         ]
@@ -147,8 +147,8 @@
         "items": [
           {
             "key": "fg",
-            "score": 5,
-            "read": "55/100 — neutro",
+            "score": null,
+            "read": "F&G n/d",
             "weight": 0.1
           }
         ]
@@ -156,46 +156,46 @@
     }
   },
   "decision": {
-    "tranche": 3800.0,
-    "piso": 0.09980000000000001,
-    "cashpct": 0.2,
-    "gap": 0.1002,
-    "want": 9900.0,
-    "aloc_brasil": 3800.0,
+    "tranche": 0.0,
+    "piso": 0.14855000000000002,
+    "cashpct": 0.15,
+    "gap": 0.001449999999999979,
+    "want": 200.0,
+    "aloc_brasil": 0.0,
     "aloc_sp": 0.0,
     "rodadas": 5,
-    "tgt_brasil": 0.67515,
-    "tgt_sp": 0.22505,
-    "cur_brasil": 0.6666666666666666,
-    "cur_sp": 0.13333333333333333,
-    "desc": "piso-alvo de caixa 10% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
+    "tgt_brasil": 0.6385875,
+    "tgt_sp": 0.2128625,
+    "cur_brasil": 0.5,
+    "cur_sp": 0.1,
+    "desc": "caixa acima do piso, mas nada barato E abaixo do alvo agora — segura munição"
   },
   "inputs": {
     "br": {
-      "pl": 10.87,
-      "ey": 9.199632014719413,
-      "dy": 5.7,
+      "pl": 34.1,
+      "ey": 2.932551319648094,
+      "dy": null,
       "selic": 14.5,
-      "ipca": 5.3,
-      "real_cdi": 8.91,
-      "ibov_dd": -14.602319575952516,
-      "fund_dd": -9.209547537506367,
+      "ipca": 4.72,
+      "real_cdi": 9.489999999999998,
+      "ibov_dd": -14.602052784447562,
+      "fund_dd": null,
       "breadth_pct": 23.98,
       "mm200_pct": 28.21,
-      "fg": 4,
-      "ibov": 169648.47,
+      "fg": null,
+      "ibov": 169649.0,
       "regime": "bear",
-      "pl_src": "override"
+      "pl_src": "oceans14"
     },
     "us": {
-      "pe": 27.0,
-      "ey": 3.7037037037037037,
-      "dy": 1.3,
-      "real_us": 1.9,
+      "pe": null,
+      "ey": null,
+      "dy": null,
+      "real_us": 2.15,
       "sp_dd": -3.74,
       "breadth_pct": 56.45,
       "mm200_pct": 62.0,
-      "fg": 55,
+      "fg": null,
       "sp_close": 6180.0,
       "regime": "bull"
     }
@@ -258,8 +258,8 @@
   },
   "decay_flags": [
     {
-      "level": "medio",
-      "msg": "Brasil (Organon+Ártica) em 67% — concentração pessoa-chave; direcione aportes ao S&P/caixa se passar do seu conforto."
+      "level": "ok",
+      "msg": "Sem alertas de capacity/concentração."
     }
   ]
 }
