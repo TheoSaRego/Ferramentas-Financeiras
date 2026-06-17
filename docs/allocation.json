@@ -1,0 +1,238 @@
+{
+  "generatedAt": "2026-06-17T04:45:33.852742+00:00",
+  "asof": "2026-06-16",
+  "composite": 7.68,
+  "confidence": "ALTA",
+  "missing": [],
+  "cape_note": "CAPE 9.4x — +15%",
+  "cape_mult": 1.15,
+  "macro": {
+    "selic": 14.5,
+    "ipca": 5.3,
+    "real_cdi": 8.91,
+    "ntnb_long": 7.5759,
+    "pl": 10.87,
+    "pl_src": "override manual",
+    "earnings_yield": 9.199632014719413,
+    "dy": 5.7,
+    "ibov": 169648.47,
+    "ibov_ath": 198657.0,
+    "ibov_dd": -14.602319575952516,
+    "regime": "bear"
+  },
+  "decision": {
+    "sinal": "ATRATIVO",
+    "cor": "#15803d",
+    "tranche": 8600.0,
+    "caixa_alvo_pct": 0.08479999999999999,
+    "gap": 0.06520000000000001,
+    "cashpct": 0.15,
+    "ritmo_rodadas": 5,
+    "desc": "piso-alvo de caixa 8% · deploya 22% do gap"
+  },
+  "groups": {
+    "Valuation": {
+      "weight": 0.4,
+      "items": [
+        {
+          "key": "erp",
+          "label": "erp",
+          "score": 7.0,
+          "read": "ERP real +0.3pp — bolsa levemente acima do juro real",
+          "weight": 0.22
+        },
+        {
+          "key": "pl",
+          "label": "pl",
+          "score": 7.0,
+          "read": "10.9x — barato",
+          "weight": 0.1
+        },
+        {
+          "key": "dy",
+          "label": "dy",
+          "score": 7.0,
+          "read": "5.7% — atrativo",
+          "weight": 0.08
+        }
+      ]
+    },
+    "Drawdown/contrarian": {
+      "weight": 0.32,
+      "items": [
+        {
+          "key": "ibov_dd",
+          "label": "ibov_dd",
+          "score": 4.5,
+          "read": "-14.6% — correção leve",
+          "weight": 0.16
+        },
+        {
+          "key": "fund_dd",
+          "label": "fund_dd",
+          "score": 4.5,
+          "read": "DD médio -9.2% — correção leve",
+          "weight": 0.16
+        }
+      ]
+    },
+    "Breadth": {
+      "weight": 0.18,
+      "items": [
+        {
+          "key": "breadth",
+          "label": "breadth",
+          "score": 8.5,
+          "read": "24% composto — boa oportunidade",
+          "weight": 0.12
+        },
+        {
+          "key": "mm200",
+          "label": "mm200",
+          "score": 7.0,
+          "read": "28% > MM200 — fraqueza técnica",
+          "weight": 0.06
+        }
+      ]
+    },
+    "Sentimento": {
+      "weight": 0.1,
+      "items": [
+        {
+          "key": "fear_greed",
+          "label": "fear_greed",
+          "score": 10.0,
+          "read": "4/100 — medo extremo",
+          "weight": 0.1
+        }
+      ]
+    }
+  },
+  "inputs": {
+    "pl": 10.87,
+    "ey": 9.199632014719413,
+    "dy": 5.7,
+    "selic": 14.5,
+    "ipca": 5.3,
+    "real_cdi": 8.91,
+    "erp": 0.28963201471941247,
+    "ibov_dd": -14.602319575952516,
+    "fund_dd": -9.209547537506367,
+    "breadth_pct": 23.98,
+    "mm200_pct": 28.21,
+    "fear_greed": 4,
+    "cape": 9.4,
+    "regime": "bear"
+  },
+  "weights": {
+    "erp": 0.22,
+    "pl": 0.1,
+    "dy": 0.08,
+    "ibov_dd": 0.16,
+    "fund_dd": 0.16,
+    "breadth": 0.12,
+    "mm200": 0.06,
+    "fear_greed": 0.1
+  },
+  "groups_map": {
+    "Valuation": [
+      "erp",
+      "pl",
+      "dy"
+    ],
+    "Drawdown/contrarian": [
+      "ibov_dd",
+      "fund_dd"
+    ],
+    "Breadth": [
+      "breadth",
+      "mm200"
+    ],
+    "Sentimento": [
+      "fear_greed"
+    ]
+  },
+  "caixa": 90000,
+  "carteira_total": 600000,
+  "banda": {
+    "piso_barato": 0.05,
+    "piso_caro": 0.2,
+    "lambda": 0.22,
+    "municao_minima": 0.05
+  },
+  "sleeves": [
+    {
+      "name": "Organon",
+      "gate": "aberto",
+      "alvo": 0.24,
+      "atual": 0.25,
+      "sub": -0.010000000000000009,
+      "cap": 0.26,
+      "tipo": "fundo",
+      "motivo": "",
+      "aloc": 0.0
+    },
+    {
+      "name": "Artica",
+      "gate": "aberto",
+      "alvo": 0.24,
+      "atual": 0.24,
+      "sub": 0.0,
+      "cap": 0.26,
+      "tipo": "fundo",
+      "motivo": "",
+      "aloc": 0.0
+    },
+    {
+      "name": "ROXO34",
+      "gate": "fechado",
+      "alvo": 0.12,
+      "atual": 0.12,
+      "sub": 0.0,
+      "cap": 0.13,
+      "tipo": "acao",
+      "motivo": "Aguardando 2T26 (checkpoint binário ago/26) — sem aporte",
+      "aloc": 0.0
+    },
+    {
+      "name": "ALOS3",
+      "gate": "aberto",
+      "alvo": 0.08,
+      "atual": 0.05,
+      "sub": 0.03,
+      "cap": 0.1,
+      "tipo": "acao",
+      "motivo": "",
+      "aloc": 1500.0
+    },
+    {
+      "name": "SPXR11",
+      "gate": "aberto",
+      "alvo": 0.14,
+      "atual": 0.0,
+      "sub": 0.14,
+      "cap": 0.16,
+      "tipo": "etf",
+      "motivo": "",
+      "aloc": 6900.0
+    },
+    {
+      "name": "HASH11",
+      "gate": "aberto",
+      "alvo": 0.02,
+      "atual": 0.015,
+      "sub": 0.005000000000000001,
+      "cap": 0.03,
+      "tipo": "etf",
+      "motivo": "",
+      "aloc": 200.0
+    }
+  ],
+  "decay_flags": [
+    {
+      "level": "ok",
+      "msg": "Sem alertas de capacity/decay nesta rodada."
+    }
+  ],
+  "aum_organon": null
+}

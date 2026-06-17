@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alocador · Ferramentas Financeiras</title>
+<style>
+:root{
+  --bg:#f7f6f2;--surface:#ffffff;--surface2:#faf9f5;--border:rgba(0,0,0,.08);--border-str:rgba(0,0,0,.14);
+  --text:#1a1916;--muted:#7a7870;--green:#1a7a52;--green-bg:#e8f5ee;--amber:#b07d0a;--amber-bg:#fbf3df;
+  --red:#b4322a;--red-bg:#f7e7e4;--blue:#1d4ed8;--violet:#6d28d9;--accent:#e05c2a;
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#141412;--surface:#1e1d1a;--surface2:#191815;--border:rgba(255,255,255,.09);--border-str:rgba(255,255,255,.15);
+  --text:#e8e6e0;--muted:#8a877e;--green:#2db87a;--green-bg:#0d2e1e;--amber:#f7c948;--amber-bg:#2e2510;
+  --red:#e8645a;--red-bg:#2e1512;--blue:#6f9bff;--violet:#a78bfa;--accent:#f07040;
+}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Georgia,'Times New Roman',serif;-webkit-font-smoothing:antialiased;line-height:1.5}
+.wrap{max-width:1080px;margin:0 auto;padding:30px 18px 90px}
+nav{display:flex;gap:18px;font-size:14px;margin-bottom:24px;flex-wrap:wrap}
+nav a{color:var(--muted);text-decoration:none}nav a:hover{color:var(--text)}nav a.on{color:var(--accent);font-weight:bold}
+h1{font-size:25px;margin:0 0 2px}.sub{color:var(--muted);font-size:13px;margin-bottom:22px}
+.layout{display:grid;grid-template-columns:332px 1fr;gap:20px;align-items:start}
+@media(max-width:820px){.layout{grid-template-columns:1fr}}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.panel{position:sticky;top:14px}
+.kicker{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+details{border-top:1px solid var(--border);padding:10px 0}details:first-of-type{border-top:none}
+summary{cursor:pointer;font-weight:bold;font-size:14px;list-style:none;display:flex;justify-content:space-between}
+summary::-webkit-details-marker{display:none}summary::after{content:'+';color:var(--muted)}details[open] summary::after{content:'–'}
+.fld{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:9px 0;font-size:13px}
+.fld label{color:var(--muted);flex:1}
+.fld input,.fld select{width:120px;background:var(--surface2);border:1px solid var(--border-str);color:var(--text);
+  border-radius:8px;padding:6px 8px;font-family:inherit;font-size:13px;text-align:right}
+.fld input[type=range]{width:120px;padding:0}
+.fld .auto{font-size:10px;color:var(--green);margin-left:4px}
+.btn{background:var(--accent);color:#fff;border:none;border-radius:9px;padding:9px 14px;font-family:inherit;font-size:13px;cursor:pointer;font-weight:bold}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--border-str)}
+.row{display:flex;gap:8px;margin-top:10px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.score{font-size:66px;font-weight:bold;line-height:.9}.score small{font-size:22px;color:var(--muted);font-weight:normal}
+.sig{display:inline-block;padding:7px 16px;border-radius:10px;color:#fff;font-size:24px;font-weight:bold;letter-spacing:-.5px}
+.pill{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:bold}
+.big{font-size:28px;font-weight:bold;letter-spacing:-.5px}.muted{color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:normal;padding:6px;border-bottom:1px solid var(--border)}
+td{padding:7px 6px;border-bottom:1px solid var(--border)}.num{text-align:right;font-variant-numeric:tabular-nums}
+.s-hi{background:var(--green-bg);color:var(--green)}.s-mid{background:var(--amber-bg);color:var(--amber)}.s-lo{background:var(--red-bg);color:var(--red)}
+.band{position:relative;height:42px;border-radius:10px;background:linear-gradient(90deg,var(--green-bg),var(--amber-bg) 55%,var(--red-bg));border:1px solid var(--border);margin:16px 0 8px}
+.band .mk{position:absolute;top:-6px;bottom:-6px;width:3px;border-radius:2px}
+.band .lab{position:absolute;font-size:10px;white-space:nowrap}
+.flag{padding:9px 12px;border-radius:9px;margin-top:7px;font-size:12.5px}
+.flag.alto{background:var(--red-bg);color:var(--red)}.flag.medio{background:var(--amber-bg);color:var(--amber)}.flag.ok{background:var(--green-bg);color:var(--green)}
+.foot{color:var(--muted);font-size:12px;margin-top:24px;line-height:1.7}
+.note{font-size:11.5px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <a href="index.html">Início</a><a href="fundos.html">Fundos</a>
+    <a href="simulador.html">Simulador</a><a href="breadth.html">Breadth</a>
+    <a href="alocador.html" class="on">Alocador</a>
+  </nav>
+  <h1>Alocador tático</h1>
+  <div class="sub" id="asof">carregando dados do pipeline…</div>
+
+  <div class="layout">
+    <div class="panel">
+      <div class="card">
+        <div class="kicker">Seus dados &amp; restrições</div>
+        <form id="form">
+          <details open>
+            <summary>Carteira &amp; caixa</summary>
+            <div class="fld"><label>Caixa / munição (R$)</label><input id="caixa" type="number" step="1000"></div>
+            <div class="fld"><label>Carteira total (R$, c/ caixa)</label><input id="carteira_total" type="number" step="1000"></div>
+            <div class="note">O caixa% sai dessas duas. Atualize o caixa a cada rodada.</div>
+          </details>
+          <details>
+            <summary>Sleeves (valor atual R$ &amp; gate)</summary>
+            <div id="sleeveInputs"></div>
+            <div class="note">Gate "fechado" = não recebe aporte (ex.: Nu até 2T26). Alvos/caps ficam no config.</div>
+          </details>
+          <details>
+            <summary>Ritmo &amp; banda de caixa</summary>
+            <div class="fld"><label>λ deploy (% do gap/rodada): <b id="lamv"></b></label><input id="lambda_deploy" type="range" min="0.05" max="0.50" step="0.01"></div>
+            <div class="fld"><label>Piso caixa — barato (%)</label><input id="piso_caixa_barato" type="number" step="1"></div>
+            <div class="fld"><label>Piso caixa — caro (%)</label><input id="piso_caixa_caro" type="number" step="1"></div>
+            <div class="fld"><label>Munição mínima — trava (%)</label><input id="municao_minima" type="number" step="1"></div>
+          </details>
+          <details>
+            <summary>Overrides de mercado</summary>
+            <div class="fld"><label>P/L IBOV <span class="auto" id="a_pl"></span></label><input id="pl" type="number" step="0.1"></div>
+            <div class="fld"><label>Dividend Yield (%) <span class="auto" id="a_dy"></span></label><input id="dy" type="number" step="0.1"></div>
+            <div class="fld"><label>Selic (%) <span class="auto" id="a_selic"></span></label><input id="selic" type="number" step="0.25"></div>
+            <div class="fld"><label>IPCA 12m (%) <span class="auto" id="a_ipca"></span></label><input id="ipca" type="number" step="0.1"></div>
+            <div class="fld"><label>Fear &amp; Greed (0–100)</label><input id="fear_greed" type="number" step="1"></div>
+            <div class="fld"><label>CAPE (mult. regime)</label><input id="cape" type="number" step="0.1"></div>
+            <div class="note">Em branco = usa o valor do pipeline (rótulo verde "auto").</div>
+          </details>
+          <details>
+            <summary>Override de sinal</summary>
+            <div class="fld"><label>Forçar</label>
+              <select id="override_sinal"><option value="">—</option><option value="HOLD">HOLD</option></select></div>
+          </details>
+          <div class="row">
+            <button type="button" class="btn" id="exportCfg">Exportar config.json</button>
+            <button type="button" class="btn ghost" id="reset">Limpar</button>
+          </div>
+          <div class="note">Tudo fica salvo só no seu navegador. "Exportar" gera o config.json p/ o e-mail semanal usar os mesmos números.</div>
+        </form>
+      </div>
+    </div>
+    <div id="out"></div>
+  </div>
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const LS='alocador_inputs_v1';
+const BRL=n=>n==null?'—':'R$ '+Number(n).toLocaleString('pt-BR',{maximumFractionDigits:0});
+const PCT=(n,d=1)=>n==null?'—':Number(n).toFixed(d)+'%';
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const sclass=s=>s==null?'':s>=7?'s-hi':s>=5?'s-mid':'s-lo';
+const scolor=s=>s==null?'#7a7870':s<3.5?'#b4322a':s<5.5?'#c2541f':s<6.5?'#b07d0a':s<7.5?'#1a7a52':s<9.5?'#1d4ed8':'#6d28d9';
+
+function tier(x,t){for(const[l,s,lab]of t)if(x<l)return[s,lab];const z=t[t.length-1];return[z[1],z[2]];}
+const SC={
+ erp:(ey,rc)=>ey==null||rc==null?[null,'ausente',null]:(e=>{const[s,l]=tier(e,[[-6,.5,'juro real muito superior'],[-4,2,'juro real bem superior'],[-2,3.5,'juro real claram. superior'],[0,5.5,'juro real levem. superior'],[2,7,'bolsa levem. acima'],[4,8,'bolsa acima do juro real'],[6,9,'bolsa claram. acima'],[1e9,10,'bolsa supera muito']]);return[s,'ERP real '+(e>=0?'+':'')+e.toFixed(1)+'pp — '+l,e];})(ey-rc),
+ pl:pl=>pl==null?[null,'ausente',null]:(()=>{const[s,l]=tier(pl,[[7,10,'extrem. barato'],[9,8.5,'muito barato'],[11,7,'barato'],[12,6,'levem. barato'],[13,5.5,'abaixo do justo'],[14,5,'justo'],[15,4,'levem. caro'],[17,2.5,'caro'],[19,1.5,'muito caro'],[1e9,.5,'caro/trough']]);return[s,pl.toFixed(1)+'x — '+l,pl];})(),
+ dy:dy=>dy==null?[null,'ausente',null]:(()=>{const[s,l]=tier(-dy,[[-9,10,'altíssimo'],[-7,8.5,'muito atrativo'],[-5.5,7,'atrativo'],[-4,5,'razoável'],[-3,3,'justo'],[-2,1.5,'baixo'],[1e9,0,'muito baixo']]);return[s,dy.toFixed(1)+'% — '+l,dy];})(),
+ ibov_dd:dd=>dd==null?[null,'ausente',null]:(()=>{const[s,l]=tier(Math.abs(dd),[[5,1,'próx. ATH'],[10,2.5,'perto do topo'],[17,4.5,'correção leve'],[25,6,'correção relevante'],[35,7.5,'correção forte'],[45,9,'queda severa'],[1e9,10,'crise histórica']]);return[s,dd.toFixed(1)+'% — '+l,dd];})(),
+ fund_dd:a=>a==null?[null,'ausente',null]:(()=>{const[s,l]=tier(Math.abs(a),[[3,1.5,'em/acima do ATH'],[7,2.5,'próx. ATH'],[14,4.5,'correção leve'],[22,6,'correção relevante'],[30,7.5,'correção forte'],[40,9,'queda muito forte'],[1e9,10,'queda severa']]);return[s,'DD médio '+a.toFixed(1)+'% — '+l,a];})(),
+ breadth:p=>p==null?[null,'ausente',null]:(()=>{const[s,l]=tier(p,[[20,10,'extrema oportunidade'],[35,8.5,'boa oportunidade'],[50,6,'abaixo do meio'],[65,4,'neutro'],[80,2,'momentum positivo'],[1e9,.5,'esticado']]);return[s,p.toFixed(0)+'% composto — '+l,p];})(),
+ mm200:p=>p==null?[null,'ausente',null]:(()=>{const[s,l]=tier(p,[[10,10,'muito oversold'],[20,8.5,'oversold'],[35,7,'fraqueza técnica'],[50,5,'abaixo da média'],[65,3,'neutro'],[80,1.5,'positivo'],[1e9,.5,'esticado']]);return[s,p.toFixed(0)+'% > MM200 — '+l,p];})(),
+ fg:fg=>fg==null?[null,'não informado',null]:(()=>{const[s,l]=tier(fg,[[10,10,'medo extremo'],[20,9,'medo muito alto'],[30,8,'medo alto'],[40,7,'medo moderado'],[50,6,'leve medo'],[60,5,'neutro'],[70,4,'leve ganância'],[80,3,'ganância'],[90,2,'ganância alta'],[1e9,.5,'ganância extrema']]);return[s,fg.toFixed(0)+'/100 — '+l,fg];})(),
+};
+const W={erp:.22,pl:.10,dy:.08,ibov_dd:.16,fund_dd:.16,breadth:.12,mm200:.06,fear_greed:.10};
+const GROUPS={'Valuation':['erp','pl','dy'],'Drawdown/contrarian':['ibov_dd','fund_dd'],'Breadth':['breadth','mm200'],'Sentimento':['fear_greed']};
+function capeMult(c){if(c==null)return[1,'CAPE não informado'];const[m,l]=tier(c,[[10,1.15,'+15%'],[14,1.08,'+8%'],[18,1,'neutro'],[22,.95,'-5%'],[1e9,.88,'-12%']]);return[m,'CAPE '+c.toFixed(1)+'x — '+l];}
+
+function compute(I){
+  const ey=I.pl?100/I.pl:null;
+  const realcdi=(I.selic!=null&&I.ipca!=null)?I.selic*0.98-I.ipca:null;
+  const sc={erp:SC.erp(ey,realcdi),pl:SC.pl(I.pl),dy:SC.dy(I.dy),ibov_dd:SC.ibov_dd(I.ibov_dd),
+            fund_dd:SC.fund_dd(I.fund_dd),breadth:SC.breadth(I.breadth_pct),mm200:SC.mm200(I.mm200_pct),fear_greed:SC.fg(I.fear_greed)};
+  let num=0,den=0,missing=[];
+  for(const k in W){const s=sc[k][0];if(s==null){missing.push(k);continue;}num+=s*W[k];den+=W[k];}
+  let comp=null,conf='BAIXA',capenote='';
+  if(den>0){const cm=capeMult(I.cape);comp=clamp(num/den*cm[0],0,10);capenote=cm[1];conf=den>=.75?'ALTA':den>=.5?'MÉDIA':'BAIXA';}
+  comp=comp==null?null:Math.round(comp*100)/100;
+  const total=Math.max(1,I.carteira_total),cash=I.caixa,cashpct=cash/total;
+  let dec;
+  if(I.override_sinal==='HOLD')dec={sinal:'OVERRIDE: HOLD',cor:'#7a7870',tranche:0,piso:cashpct,gap:0,cashpct,desc:'override manual'};
+  else if(comp==null)dec={sinal:'INCOMPLETO',cor:'#7a7870',tranche:0,piso:cashpct,gap:0,cashpct,desc:'faltam indicadores'};
+  else{const ch=comp/10;let piso=I.piso_caixa_caro-(I.piso_caixa_caro-I.piso_caixa_barato)*ch;piso=Math.max(I.municao_minima,piso);
+    const gap=cashpct-piso;let tr=Math.max(0,I.lambda_deploy*gap*total);tr=Math.min(tr,Math.max(0,cash-I.municao_minima*total));tr=Math.round(tr/100)*100;
+    const sig=comp<3.5?['HOLD','#b4322a']:comp<5.5?['CAUTELOSO','#c2541f']:comp<6.5?['NEUTRO','#b07d0a']:comp<7.5?['BOM','#1a7a52']:comp<8.5?['ATRATIVO','#15803d']:comp<9.5?['EXCELENTE','#1d4ed8']:['CRISE/RARO','#6d28d9'];
+    dec={sinal:sig[0],cor:sig[1],tranche:tr,piso,gap,cashpct,rodadas:Math.round(1/I.lambda_deploy),desc:'piso-alvo de caixa '+(piso*100).toFixed(0)+'% · deploya '+(I.lambda_deploy*100).toFixed(0)+'% do gap'};}
+  const rows=I.sleeves.map(s=>{const ap=s.atual/total;return Object.assign({},s,{atual_pct:ap,sub:s.alvo-ap});});
+  const elig=rows.filter(r=>r.gate==='aberto'&&r.sub>0&&r.atual_pct<r.cap);
+  const need=elig.reduce((a,r)=>a+r.sub,0);const aloc={};
+  rows.forEach(r=>aloc[r.name]=0);
+  if(dec.tranche>0&&need>0)elig.forEach(r=>{aloc[r.name]=Math.round(Math.min(dec.tranche*r.sub/need,Math.max(0,(r.cap-r.atual_pct)*total))/100)*100;});
+  const flags=[];
+  const nucleo=I.sleeves.filter(s=>I.nucleo.indexOf(s.name)>=0).reduce((a,s)=>a+s.atual,0)/total;
+  if(nucleo>I.nucleo_cap)flags.push(['medio','Núcleo '+I.nucleo.join('+')+' em '+(nucleo*100).toFixed(0)+'% (>'+(I.nucleo_cap*100).toFixed(0)+'% cap) — direcione aportes aos sleeves sub-alocados.']);
+  if(!flags.length)flags.push(['ok','Sem alertas de capacity/concentração nesta rodada.']);
+  return{comp,conf,capenote,missing,sc,dec,rows,aloc,flags,ey,realcdi,cashpct};
+}
+
+let AUTO={},I={};
+function render(){
+  const R=compute(I),d=R.dec;
+  const px=v=>clamp(v/25*100,2,98);
+  let h='<div class="card"><div class="grid2">'+
+    '<div><div class="kicker">Score composto · barateza</div>'+
+      '<div class="score" style="color:'+scolor(R.comp)+'">'+(R.comp==null?'—':R.comp)+'<small>/10</small></div>'+
+      '<div style="margin-top:8px"><span class="pill" style="background:var(--border)">confiança '+R.conf+'</span>'+
+      (I.cape!=null?'<span class="pill" style="background:var(--border);color:var(--muted)">'+R.capenote+'</span>':'')+'</div></div>'+
+    '<div style="display:flex;flex-direction:column;justify-content:center">'+
+      '<div class="sig" style="background:'+d.cor+';align-self:flex-start">'+d.sinal+'</div>'+
+      '<div class="muted" style="margin-top:10px;font-size:13px">'+d.desc+'</div></div></div></div>'+
+  '<div class="card"><div class="kicker">Decisão de deploy — esta rodada</div><div class="grid2" style="align-items:center">'+
+    '<div><div class="muted" style="font-size:13px">Tranche a alocar</div>'+
+      '<div class="big" style="color:var(--green)">'+BRL(d.tranche)+'</div>'+
+      '<div class="muted" style="font-size:12.5px;margin-top:6px">Caixa <b>'+(d.cashpct*100).toFixed(0)+'%</b> → piso-alvo <b>'+(d.piso*100).toFixed(0)+'%</b> · deploya <b>'+(I.lambda_deploy*100).toFixed(0)+'%</b> do gap · meia-vida ~'+(d.rodadas||'—')+' rodadas</div></div>'+
+    '<div><div class="muted" style="font-size:11px">Banda de caixa — verde=desova(barato) ↔ vermelho=acumula(caro)</div>'+
+      '<div class="band">'+
+        '<div class="mk" style="left:'+px(d.cashpct*100)+'%;background:var(--text)"></div>'+
+        '<div class="lab" style="left:'+px(d.cashpct*100)+'%;top:-15px;transform:translateX(-50%)">caixa '+(d.cashpct*100).toFixed(0)+'%</div>'+
+        '<div class="mk" style="left:'+px(d.piso*100)+'%;background:var(--accent)"></div>'+
+        '<div class="lab" style="left:'+px(d.piso*100)+'%;bottom:-15px;transform:translateX(-50%);color:var(--accent)">alvo '+(d.piso*100).toFixed(0)+'%</div>'+
+      '</div><div class="muted" style="font-size:11.5px">Gap '+(d.gap*100).toFixed(1)+'pp · munição nunca furada (trava '+(I.municao_minima*100).toFixed(0)+'%)</div></div>'+
+  '</div></div>'+
+  '<div class="card"><div class="kicker">Para onde vai — sleeves</div>'+
+    '<table><tr><th>Sleeve</th><th class="num">Alvo</th><th class="num">Atual</th><th>Status</th><th class="num">Deploy</th></tr>';
+  R.rows.forEach(function(s){var g=s.gate==='fechado'?'<span class="pill s-lo">gate fechado</span>':s.sub>0?'<span class="pill s-mid">abaixo</span>':'<span class="pill s-hi">no alvo</span>';
+    h+='<tr><td><b>'+s.name+'</b>'+(s.motivo?'<div class="muted" style="font-size:11px">'+s.motivo+'</div>':'')+'</td>'+
+      '<td class="num">'+(s.alvo*100).toFixed(0)+'%</td><td class="num">'+(s.atual_pct*100).toFixed(0)+'%</td><td>'+g+'</td>'+
+      '<td class="num">'+(R.aloc[s.name]>0?'<b style="color:var(--green)">'+BRL(R.aloc[s.name])+'</b>':'—')+'</td></tr>';});
+  h+='</table></div>'+
+  '<div class="card"><div class="kicker">Fatores — 4 grupos ortogonais</div>'+
+    '<table><tr><th>Grupo / indicador</th><th>Leitura</th><th class="num">Score</th><th class="num">Peso</th></tr>';
+  for(var g in GROUPS){var ks=GROUPS[g],gw=ks.reduce(function(a,k){return a+W[k];},0);
+    h+='<tr><td colspan="4" style="padding-top:11px"><b>'+g+'</b> <span class="muted">· '+(gw*100).toFixed(0)+'%</span></td></tr>';
+    ks.forEach(function(k){var s=R.sc[k];h+='<tr><td style="padding-left:16px">'+k+'</td><td class="muted" style="font-size:12.5px">'+s[1]+'</td>'+
+      '<td class="num"><span class="pill '+sclass(s[0])+'">'+(s[0]==null?'—':s[0].toFixed(1))+'</span></td><td class="num muted">'+(W[k]*100).toFixed(0)+'%</td></tr>';});}
+  h+='</table></div>'+
+  '<div class="grid2">'+
+    '<div class="card"><div class="kicker">Macro</div><table>'+
+      '<tr><td>Selic</td><td class="num">'+PCT(I.selic,2)+'</td></tr>'+
+      '<tr><td>IPCA 12m</td><td class="num">'+PCT(I.ipca,2)+'</td></tr>'+
+      '<tr><td>CDI real (Selic×0,98−IPCA)</td><td class="num">'+PCT(R.realcdi,2)+'</td></tr>'+
+      '<tr><td>NTN-B longa</td><td class="num">'+PCT(AUTO.ntnb_long,2)+'</td></tr>'+
+      '<tr><td>P/L · earnings yield</td><td class="num">'+(I.pl?I.pl.toFixed(1)+'x · '+R.ey.toFixed(1)+'%':'—')+'</td></tr>'+
+      '<tr><td>IBOV DD do ATH</td><td class="num">'+PCT(I.ibov_dd)+'</td></tr></table></div>'+
+    '<div class="card"><div class="kicker">Monitor de decay</div>'+
+      R.flags.map(function(f){return '<div class="flag '+f[0]+'">'+f[1]+'</div>';}).join('')+'</div>'+
+  '</div>';
+  document.getElementById('out').innerHTML=h;
+  document.getElementById('foot').innerHTML='Leitura do seu material pelo framework — não é recomendação; a decisão é sua. '+
+    'Banda 5–20% e ritmo λ calibrados em backtest (2014-16 / 2020 / 2021-22 / 2026), com aporte fixo real ~inflação.';
+}
+
+function buildSleeveInputs(){
+  var box=document.getElementById('sleeveInputs');box.innerHTML='';
+  I.sleeves.forEach(function(s,i){
+    box.insertAdjacentHTML('beforeend',
+      '<div class="fld"><label>'+s.name+' (R$)</label><input data-si="'+i+'" data-k="atual" type="number" step="1000" value="'+s.atual+'"></div>'+
+      '<div class="fld"><label style="padding-left:10px">↳ gate</label>'+
+        '<select data-si="'+i+'" data-k="gate"><option '+(s.gate==='aberto'?'selected':'')+'>aberto</option><option '+(s.gate==='fechado'?'selected':'')+'>fechado</option></select></div>');
+  });
+  box.querySelectorAll('[data-si]').forEach(function(el){el.addEventListener('input',function(e){
+    var i=+e.target.dataset.si,k=e.target.dataset.k;
+    I.sleeves[i][k]=k==='atual'?(+e.target.value||0):e.target.value;save();render();});});
+}
+var NUMS=['caixa','carteira_total','lambda_deploy','pl','dy','selic','ipca','fear_greed','cape'];
+var PCTS=['piso_caixa_barato','piso_caixa_caro','municao_minima'];
+function syncForm(){
+  NUMS.forEach(function(k){var el=document.getElementById(k);if(el)el.value=I[k]==null?'':I[k];});
+  PCTS.forEach(function(k){var el=document.getElementById(k);if(el)el.value=(I[k]*100).toFixed(0);});
+  document.getElementById('override_sinal').value=I.override_sinal||'';
+  document.getElementById('lamv').textContent=(I.lambda_deploy*100).toFixed(0)+'%';
+  [['pl','a_pl'],['dy','a_dy'],['selic','a_selic'],['ipca','a_ipca']].forEach(function(p){
+    document.getElementById(p[1]).textContent=AUTO[p[0]]!=null?'auto: '+AUTO[p[0]]:'';});
+}
+function readForm(){
+  NUMS.forEach(function(k){var v=document.getElementById(k).value;I[k]=v===''?(AUTO[k]==null?null:AUTO[k]):+v;});
+  PCTS.forEach(function(k){I[k]=(+document.getElementById(k).value||0)/100;});
+  I.override_sinal=document.getElementById('override_sinal').value;
+  document.getElementById('lamv').textContent=(I.lambda_deploy*100).toFixed(0)+'%';
+}
+function reAuto(){I.ibov_dd=AUTO.ibov_dd;I.fund_dd=AUTO.fund_dd;I.breadth_pct=AUTO.breadth_pct;I.mm200_pct=AUTO.mm200_pct;}
+function save(){localStorage.setItem(LS,JSON.stringify(I));}
+function load(){try{return JSON.parse(localStorage.getItem(LS));}catch(e){return null;}}
+
+function init(cfg){
+  AUTO=Object.assign({},cfg.inputs,{ntnb_long:(cfg.macro||{}).ntnb_long});
+  var saved=load();
+  if(saved){I=saved;}
+  else{
+    I={caixa:cfg.caixa,carteira_total:cfg.carteira_total,
+       lambda_deploy:cfg.banda.lambda,piso_caixa_barato:cfg.banda.piso_barato,
+       piso_caixa_caro:cfg.banda.piso_caro,municao_minima:cfg.banda.municao_minima,
+       pl:null,dy:null,selic:null,ipca:null,fear_greed:cfg.inputs.fear_greed,cape:cfg.inputs.cape,
+       override_sinal:'',nucleo:['Organon','Artica'],nucleo_cap:0.50,
+       sleeves:cfg.sleeves.map(function(s){return {name:s.name,alvo:s.alvo,atual:Math.round(s.atual*cfg.carteira_total),
+         gate:s.gate,cap:s.cap,tipo:s.tipo,motivo:s.motivo||''};})};
+  }
+  ['pl','dy','selic','ipca'].forEach(function(k){if(I[k]==null)I[k]=AUTO[k];});
+  reAuto();
+  buildSleeveInputs();syncForm();
+  document.querySelectorAll('#form input,#form select').forEach(function(el){
+    if(el.dataset.si!==undefined)return;
+    el.addEventListener('input',function(){readForm();reAuto();save();render();});});
+  render();
+}
+
+document.getElementById('reset').onclick=function(){localStorage.removeItem(LS);location.reload();};
+document.getElementById('exportCfg').onclick=function(){
+  var cfg={caixa:I.caixa,carteira_total:I.carteira_total,lambda_deploy:I.lambda_deploy,
+    piso_caixa_barato:I.piso_caixa_barato,piso_caixa_caro:I.piso_caixa_caro,municao_minima:I.municao_minima,
+    pl_override:I.pl,dy_override:I.dy,selic_override:I.selic,ipca_override:I.ipca,
+    fear_greed:I.fear_greed,cape:I.cape,override_sinal:I.override_sinal||null,
+    sleeves:Object.fromEntries(I.sleeves.map(function(s){return [s.name,{atual:s.atual,gate:s.gate}];}))};
+  var b=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='config.json';a.click();};
+
+fetch('allocation.json?'+Date.now()).then(function(r){return r.json();}).then(function(cfg){
+  document.getElementById('asof').textContent='Mercado de '+(cfg.asof||'—')+' · regime '+((cfg.macro||{}).regime||cfg.inputs.regime||'—')+' · o pipeline atualiza os dados sozinho; seus dados ficam no navegador.';
+  init(cfg);
+}).catch(function(e){document.getElementById('out').innerHTML='<div class="card">Não consegui carregar <code>allocation.json</code>. Rode <code>python scripts/allocator.py</code> e faça deploy.</div>';});
+</script>
+</body>
+</html>
