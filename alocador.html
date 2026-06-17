@@ -92,6 +92,23 @@
   /* tooltip — dotted + title, padrão do site */
   .tip { border-bottom: 1px dotted var(--muted); cursor: help; }
 
+  /* selos de fonte */
+  .src { font-family: 'Courier New', monospace; font-size: 0.52rem; text-transform: uppercase;
+    letter-spacing: 0.05em; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border);
+    color: var(--muted); white-space: nowrap; }
+  .s-auto { color: var(--green); border-color: var(--green); }
+  .s-config { color: #1d4ed8; border-color: #1d4ed8; }
+  .s-manual { color: var(--accent); border-color: var(--accent); }
+  .s-revisar { color: #b4322a; border-color: #b4322a; }
+  .srclegend { font-family: 'Courier New', monospace; font-size: 0.58rem; color: var(--muted);
+    line-height: 1.9; margin-bottom: 1rem; }
+  .srcnote { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted);
+    line-height: 1.6; margin-top: 0.8rem; font-style: italic; }
+  .carrybox { font-family: 'Courier New', monospace; font-size: 0.66rem; color: var(--muted);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem;
+    margin-top: 0.9rem; line-height: 1.6; }
+  .carrybox b { color: var(--text); }
+
   /* signal cards */
   .signals { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
   .sig { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; }
@@ -183,48 +200,62 @@
 
 <!-- ── AJUSTES FINOS ──────────────────────────────────────────────────────── -->
 <details class="adv">
-  <summary>ajustes finos — sinais de mercado e política (auto-preenchidos; edite para simular)</summary>
+  <summary>ajustes finos — sinais de mercado e política · cada campo mostra a fonte (edite para simular)</summary>
   <div class="panel" style="margin-top:0.5rem">
+    <div class="srclegend">
+      <span class="src s-auto">auto</span> fetch ao vivo OK ·
+      <span class="src s-config">config</span> valor fixado por você ·
+      <span class="src s-manual">manual</span> sem fetch — preencha ·
+      <span class="src s-revisar">revisar</span> seed/indisponível — confira
+    </div>
     <div class="grid2">
       <div>
         <span class="tag">Brasil</span>
-        <div class="field"><label>P/L IBOV</label>
+        <div class="field"><label>P/L IBOV <span class="src" id="src_br_pl"></span></label>
           <div class="stepper"><input id="pl_br" type="text"><span class="unit">x</span></div></div>
-        <div class="field"><label>Dividend yield</label>
+        <div class="field"><label>Dividend yield <span class="src" id="src_br_dy"></span></label>
           <div class="stepper"><input id="dy_br" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Selic</label>
+        <div class="field"><label>Selic <span class="src" id="src_br_selic"></span></label>
           <div class="stepper"><input id="selic" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>IPCA 12m</label>
+        <div class="field"><label>IPCA 12m <span class="src" id="src_br_ipca"></span></label>
           <div class="stepper"><input id="ipca" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>DD IBOV</label>
+        <div class="field"><label>DD IBOV <span class="src" id="src_br_ibov_dd"></span></label>
           <div class="stepper"><input id="ibov_dd" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>DD fundos</label>
+        <div class="field"><label>DD fundos <span class="src" id="src_br_fund_dd"></span></label>
           <div class="stepper"><input id="fund_dd" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Breadth composto</label>
+        <div class="field"><label>Breadth composto <span class="src" id="src_br_breadth"></span></label>
           <div class="stepper"><input id="breadth_br" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>% &gt; MM200</label>
+        <div class="field"><label>% &gt; MM200 <span class="src" id="src_br_mm200"></span></label>
           <div class="stepper"><input id="mm200_br" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>F&amp;G Brasil</label>
+        <div class="field"><label>F&amp;G Brasil <span class="src" id="src_br_fg"></span></label>
           <div class="stepper"><input id="fg_br" type="text"><span class="unit">/100</span></div></div>
       </div>
       <div>
         <span class="tag">S&amp;P 500</span>
-        <div class="field"><label>P/E S&amp;P</label>
+        <div class="field"><label>P/E S&amp;P <span class="src" id="src_us_pe"></span></label>
           <div class="stepper"><input id="pe_us" type="text"><span class="unit">x</span></div></div>
-        <div class="field"><label>Dividend yield</label>
+        <div class="field"><label>CAPE (Shiller) <span class="src" id="src_us_cape"></span></label>
+          <div class="stepper"><input id="cape_us" type="text"><span class="unit">x</span></div></div>
+        <div class="field"><label>Dividend yield <span class="src" id="src_us_dy"></span></label>
           <div class="stepper"><input id="dy_us" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Juro real 10a</label>
+        <div class="field"><label>Juro real 10a <span class="src" id="src_us_real_us"></span></label>
           <div class="stepper"><input id="real_us" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>DD S&amp;P</label>
+        <div class="field"><label>Fed funds <span class="src" id="src_us_fed"></span></label>
+          <div class="stepper"><input id="fed" type="text"><span class="unit">%</span></div></div>
+        <div class="field"><label>CPI 12m (EUA) <span class="src" id="src_us_us_cpi"></span></label>
+          <div class="stepper"><input id="us_cpi" type="text"><span class="unit">%</span></div></div>
+        <div class="field"><label>DD S&amp;P <span class="src" id="src_us_sp_dd"></span></label>
           <div class="stepper"><input id="sp_dd" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Breadth composto</label>
+        <div class="field"><label>Breadth composto <span class="src" id="src_us_breadth"></span></label>
           <div class="stepper"><input id="breadth_us" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>% &gt; MM200</label>
+        <div class="field"><label>% &gt; MM200 <span class="src" id="src_us_mm200"></span></label>
           <div class="stepper"><input id="mm200_us" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>F&amp;G (CNN)</label>
+        <div class="field"><label>F&amp;G (CNN) <span class="src" id="src_us_fg"></span></label>
           <div class="stepper"><input id="fg_us" type="text"><span class="unit">/100</span></div></div>
       </div>
     </div>
+    <div class="srcnote">CPI dos EUA é exibido como contexto — já está embutido no juro real 10a (TIPS), então
+      não é subtraído de novo. CAPE Brasil não é usado (sem fonte confiável; o P/L do IBOV cobre valuation BR).</div>
     <div style="margin-top:1rem"><span class="tag">política de caixa &amp; alvos</span>
       <div class="grid2">
         <div>
@@ -294,6 +325,15 @@ function s_pl_br(pl){ if(pl==null) return [null,'P/L n/d'];
 function s_pe_us(pe){ if(pe==null) return [null,'P/E n/d'];
   const [s,l]=tier(pe,[[13,10,'muito barato'],[16,8.5,'barato'],[18,7,'abaixo da média'],[20,6,'razoável'],[22,5,'justo (~média)'],[25,3.5,'acima da média'],[28,2,'caro'],[32,1,'muito caro'],[INF,.5,'extremo']]);
   return [s,pe.toFixed(1)+'x — '+l]; }
+function s_erp_us(ey, real){ if(ey==null||real==null) return [null,'ERP n/d']; const e=ey-real;
+  const [s,l]=tier(e,[[-1,1.5,'caríssima vs juros (tipo 1999-00)'],[1,3,'cara vs juros'],[2.5,4.5,'abaixo da média (richish)'],[4,6,'~média histórica'],[5.5,7.5,'atrativa'],[7,9,'barata'],[INF,10,'muito barata (tipo 2009)']]);
+  return [s,'ERP real '+(e>=0?'+':'')+e.toFixed(1)+'pp — '+l]; }
+function s_cape_us(cape){ if(cape==null) return [null,'CAPE n/d'];
+  const [s,l]=tier(cape,[[10,10,'muito barato (raro)'],[15,8.5,'barato'],[20,6.5,'na média'],[25,5,'acima da média'],[30,3,'caro'],[35,1.5,'muito caro'],[INF,.5,'extremo (tipo 1999/2021)']]);
+  return [s,'CAPE '+Math.round(cape)+'x — '+l]; }
+function s_dd_us(dd){ if(dd==null) return [null,'DD n/d'];
+  const [s,l]=tier(Math.abs(dd),[[4,1,'no topo/ATH'],[8,2.5,'recuo pequeno'],[12,4,'pullback'],[19,6,'correção'],[28,8,'quase bear/bear'],[40,9.5,'bear severo (tipo 2020)'],[INF,10,'crash histórico (tipo 2008)']]);
+  return [s,dd.toFixed(1)+'% — '+l]; }
 function s_dy(dy){ if(dy==null) return [null,'DY n/d'];
   const [s,l]=tier(-dy,[[-9,10,'altíssimo'],[-7,8.5,'muito atrativo'],[-5.5,7,'atrativo'],[-4,5,'razoável'],[-3,3,'justo'],[-2,1.5,'baixo'],[INF,0,'muito baixo']]);
   return [s,dy.toFixed(1)+'% — '+l]; }
@@ -314,10 +354,10 @@ function s_fg(fg){ if(fg==null) return [null,'F&G n/d'];
   return [s,Math.round(fg)+'/100 — '+l]; }
 
 const WB={erp:.22,pl:.12,dy:.06,ibov_dd:.16,fund_dd:.16,breadth:.12,mm200:.06,fg:.10};
-const WU={erp:.30,pe:.15,sp_dd:.20,breadth:.18,mm200:.07,fg:.10};
+const WU={erp:.22,pe:.12,cape:.16,sp_dd:.18,breadth:.14,mm200:.06,fg:.12};
 const GB={Valuation:['erp','pl','dy'],Drawdown:['ibov_dd','fund_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
-const GU={Valuation:['erp','pe'],Drawdown:['sp_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
-const NAMES={erp:'ERP',pl:'P/L',pe:'P/E',dy:'DY',ibov_dd:'DD IBOV',sp_dd:'DD S&P',fund_dd:'DD fundos',breadth:'Breadth',mm200:'MM200',fg:'F&G'};
+const GU={Valuation:['erp','pe','cape'],Drawdown:['sp_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
+const NAMES={erp:'ERP',pl:'P/L',pe:'P/E',cape:'CAPE',dy:'DY',ibov_dd:'DD IBOV',sp_dd:'DD S&P',fund_dd:'DD fundos',breadth:'Breadth',mm200:'MM200',fg:'F&G'};
 
 function composite(scores, W){ let num=0,den=0; for(const k in W){ const s=scores[k][0];
   if(s==null) continue; num+=s*W[k]; den+=W[k]; }
@@ -356,11 +396,19 @@ function decide(cfg, sBR, sUS){
 
 /* ════════════════════ I/O de inputs ════════════════════ */
 const FIELDS=['caixa','brasil','sp','pl_br','dy_br','selic','ipca','ibov_dd','fund_dd','breadth_br','mm200_br','fg_br',
-  'pe_us','dy_us','real_us','sp_dd','breadth_us','mm200_us','fg_us','alvo_brasil','caixa_min','caixa_max','lambda','municao_min'];
+  'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','breadth_us','mm200_us','fg_us','alvo_brasil','caixa_min','caixa_max','lambda','municao_min'];
 const MONEY=['caixa','brasil','sp'];
 function gv(id){ const el=document.getElementById(id); if(!el) return null;
-  const raw=el.value.replace(/\./g,'').replace(',','.').replace('%','').trim();
-  if(raw==='') return null; const n=parseFloat(raw); return isNaN(n)?null:n; }
+  let raw=el.value.replace('%','').replace(/\s/g,'').trim();
+  if(raw==='') return null;
+  if(MONEY.includes(id)){               // monetário: ponto = milhar
+    raw=raw.replace(/\./g,'').replace(',','.');
+  } else if(raw.indexOf('.')>=0 && raw.indexOf(',')>=0){  // pt-BR "1.234,56"
+    raw=raw.replace(/\./g,'').replace(',','.');
+  } else {                              // decimal com ponto OU vírgula
+    raw=raw.replace(',','.');
+  }
+  const n=parseFloat(raw); return isNaN(n)?null:n; }
 function fmtMoney(n){ return n==null?'—':'R$ '+Math.round(n).toLocaleString('pt-BR'); }
 function bump(id,dir){ const el=document.getElementById(id);
   let v=gv(id)||0; v+=dir*(MONEY.includes(id)?1000:0.1);
@@ -379,7 +427,8 @@ function readCfg(){ const c=gv('caixa')||0,b=gv('brasil')||0,s=gv('sp')||0;
     lambda:gv('lambda')!=null?gv('lambda'):0.22, municao_min:(gv('municao_min')!=null?gv('municao_min'):5)/100,
     pl:gv('pl_br'), dy_br:gv('dy_br'), selic:gv('selic'), ipca:gv('ipca'), ibov_dd:gv('ibov_dd'),
     fund_dd:gv('fund_dd'), breadth_br:gv('breadth_br'), mm200_br:gv('mm200_br'), fg_br:gv('fg_br'),
-    pe:gv('pe_us'), dy_us:gv('dy_us'), real_us:gv('real_us'), sp_dd:gv('sp_dd'),
+    pe:gv('pe_us'), cape:gv('cape_us'), dy_us:gv('dy_us'), real_us:gv('real_us'), fed:gv('fed'),
+    us_cpi:gv('us_cpi'), sp_dd:gv('sp_dd'),
     breadth_us:gv('breadth_us'), mm200_us:gv('mm200_us'), fg_us:gv('fg_us') }; }
 
 function compute(cfg){
@@ -389,8 +438,8 @@ function compute(cfg){
     ibov_dd:s_dd(cfg.ibov_dd), fund_dd:s_fund_dd(cfg.fund_dd),
     breadth:s_breadth(cfg.breadth_br), mm200:s_mm200(cfg.mm200_br), fg:s_fg(cfg.fg_br) };
   const ey_us = cfg.pe? 100/cfg.pe : null;
-  const scUS={ erp:s_erp(ey_us,cfg.real_us), pe:s_pe_us(cfg.pe), sp_dd:s_dd(cfg.sp_dd),
-    breadth:s_breadth(cfg.breadth_us), mm200:s_mm200(cfg.mm200_us), fg:s_fg(cfg.fg_us) };
+  const scUS={ erp:s_erp_us(ey_us,cfg.real_us), pe:s_pe_us(cfg.pe), cape:s_cape_us(cfg.cape),
+    sp_dd:s_dd_us(cfg.sp_dd), breadth:s_breadth(cfg.breadth_us), mm200:s_mm200(cfg.mm200_us), fg:s_fg(cfg.fg_us) };
   const [scoreBR,confBR]=composite(scBR,WB); const [scoreUS,confUS]=composite(scUS,WU);
   return {scBR,scUS,scoreBR,scoreUS,confBR,confUS, dec:decide(cfg,scoreBR,scoreUS)};
 }
@@ -423,7 +472,12 @@ function render(R){ if(!R) return; LAST=R; const d=R.dec;
       '<div class="b"><div class="k">→ S&P</div><div class="v">'+fmtMoney(d.aS)+'</div>'+
         '<div class="meter">alvo '+Math.round(d.tgtS*100)+'% · atual '+Math.round(d.curS*100)+'%</div></div>'+
     '</div>'+
-    '<div class="note">'+d.desc+'. Gap geométrico: desplega só uma fração do excesso de caixa por rodada — nunca zera a munição.</div>';
+    '<div class="note">'+d.desc+'. Gap geométrico: desplega só uma fração do excesso de caixa por rodada — nunca zera a munição.</div>'+
+    (function(){ const cf=readCfg(); if(cf.selic==null||cf.fed==null) return '';
+      const cy=cf.selic-cf.fed;
+      return '<div class="carrybox">Carry do hedge SPXR11 — Selic <b>'+cf.selic.toFixed(2)+'%</b> − Fed <b>'+cf.fed.toFixed(2)+
+      '%</b> = <b>'+(cy>=0?'+':'')+cy.toFixed(1)+'pp</b>/ano. Em BRL, SPXR11 ≈ S&P (USD) + carry; vs CDI o carry quase '+
+      'se anula (excesso ≈ S&P USD − Fed), por isso é contexto, não entra no score.</div>'; })();
   const cfg=readCfg(); const nucleo=cfg.total>0?cfg.brasil/cfg.total:0; let al=[];
   if(nucleo>0.55) al.push('<div class="lvl-medio">Brasil em '+Math.round(nucleo*100)+'% — concentração pessoa-chave; considere direcionar aportes ao S&P/caixa.</div>');
   al.push('<div>Single-names (Nu, ALOS) e cripto ficam fora desta ferramenta — discricionários.</div>');
@@ -445,7 +499,8 @@ function fillFromAllocation(a){
   setF('pl_br',b.pl); setF('dy_br',b.dy); setF('selic',b.selic); setF('ipca',b.ipca);
   setF('ibov_dd',b.ibov_dd); setF('fund_dd',b.fund_dd); setF('breadth_br',b.breadth_pct);
   setF('mm200_br',b.mm200_pct); setF('fg_br',b.fg);
-  setF('pe_us',u.pe); setF('dy_us',u.dy); setF('real_us',u.real_us); setF('sp_dd',u.sp_dd);
+  setF('pe_us',u.pe); setF('cape_us',u.cape); setF('dy_us',u.dy); setF('real_us',u.real_us);
+  setF('fed',u.fed); setF('us_cpi',u.us_cpi); setF('sp_dd',u.sp_dd);
   setF('breadth_us',u.breadth_pct); setF('mm200_us',u.mm200_pct); setF('fg_us',u.fg);
   setF('alvo_brasil',(bd.alvo_brasil!=null?bd.alvo_brasil*100:75));
   setF('caixa_min',(bd.caixa_min!=null?bd.caixa_min*100:5));
@@ -454,8 +509,24 @@ function fillFromAllocation(a){
   setF('municao_min',(bd.municao_minima!=null?bd.municao_minima*100:5));
 }
 const DEFAULTS={caixa:90000,brasil:300000,sp:60000,pl_br:10.9,dy_br:5.7,selic:14.5,ipca:5.3,
-  ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,pe_us:27,dy_us:1.3,real_us:1.9,sp_dd:-4,
-  breadth_us:56,mm200_us:62,fg_us:55,alvo_brasil:75,caixa_min:5,caixa_max:20,lambda:0.22,municao_min:5};
+  ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,pe_us:27,cape_us:37,dy_us:1.3,real_us:1.9,
+  fed:4.5,us_cpi:2.8,sp_dd:-4,breadth_us:56,mm200_us:62,fg_us:55,
+  alvo_brasil:75,caixa_min:5,caixa_max:20,lambda:0.22,municao_min:5};
+
+function classifySrc(s){ s=(s||'').toLowerCase();
+  if(s.indexOf('manual')>=0) return ['s-manual','manual'];
+  if(s.indexOf('config')>=0||s.indexOf('override')>=0) return ['s-config','config'];
+  if(s.indexOf('seed')>=0||s.indexOf('revisar')>=0||s.indexOf('indispon')>=0) return ['s-revisar','revisar'];
+  if(!s) return ['s-revisar','?'];
+  return ['s-auto','auto']; }
+function fillSources(a){
+  const map={br:(a&&a.inputs&&a.inputs.br_src)||{}, us:(a&&a.inputs&&a.inputs.us_src)||{}};
+  for(const side of ['br','us']) for(const k in map[side]){
+    const el=document.getElementById('src_'+side+'_'+k); if(!el) continue;
+    const [cls,lab]=classifySrc(map[side][k]);
+    el.className='src '+cls; el.textContent=lab; el.title=map[side][k];
+  }
+}
 
 let ALLOCATION=null;
 async function boot(){
@@ -464,7 +535,7 @@ async function boot(){
   const stored=localStorage.getItem('alocador_inputs');
   if(stored){ try{ const o=JSON.parse(stored); for(const id in o){ const el=document.getElementById(id); if(el) el.value=o[id]; } }catch(e){} }
   Object.keys(DEFAULTS).forEach(k=>{ const el=document.getElementById(k); if(el && el.value.trim()==='') setF(k,DEFAULTS[k]); });
-  liveSum(); render(compute(readCfg()));
+  fillSources(ALLOCATION); liveSum(); render(compute(readCfg()));
 }
 function resetDefaults(){ if(ALLOCATION) fillFromAllocation(ALLOCATION); else Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k]));
   localStorage.removeItem('alocador_inputs'); liveSum(); render(compute(readCfg())); }
@@ -473,7 +544,8 @@ function exportConfig(){ const c=readCfg();
   const cfg={caixa:c.caixa,brasil:c.brasil,sp:c.sp,alvo_brasil:c.alvo_brasil,alvo_sp:Math.round((1-c.alvo_brasil)*100)/100,
     caixa_min:c.caixa_min,caixa_max:c.caixa_max,lambda_deploy:c.lambda,municao_minima:c.municao_min,
     pl_br_override:c.pl,dy_br_override:c.dy_br,selic_override:c.selic,ipca_override:c.ipca,fg_br:c.fg_br,
-    pe_us_override:c.pe,dy_us_override:c.dy_us,real_us_override:c.real_us,fg_us_override:c.fg_us};
+    pe_us_override:c.pe,cape_us_override:c.cape,dy_us_override:c.dy_us,real_us_override:c.real_us,
+    fed_override:c.fed,us_cpi_override:c.us_cpi,fg_us_override:c.fg_us};
   const blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='config.json'; a.click(); }
 
