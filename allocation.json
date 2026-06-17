@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T13:58:31.634376+00:00",
+  "generatedAt": "2026-06-17T13:59:21.954184+00:00",
   "asof": "2026-06-16",
   "carteira_total": 600000,
   "caixa": 90000,
@@ -91,11 +91,11 @@
     }
   },
   "sp_signal": {
-    "score": null,
+    "score": 2.51,
     "conf": "BAIXA",
-    "label": "INCOMPLETO",
-    "cor": "#7a7870",
-    "regime": null,
+    "label": "HOLD",
+    "cor": "#b4322a",
+    "regime": "bull",
     "groups": {
       "Valuation": {
         "weight": 0.45,
@@ -119,8 +119,8 @@
         "items": [
           {
             "key": "sp_dd",
-            "score": null,
-            "read": "DD n/d",
+            "score": 1,
+            "read": "-3.7% — próx. ATH",
             "weight": 0.2
           }
         ]
@@ -130,14 +130,14 @@
         "items": [
           {
             "key": "breadth",
-            "score": null,
-            "read": "breadth n/d",
+            "score": 4,
+            "read": "56% composto — neutro",
             "weight": 0.18
           },
           {
             "key": "mm200",
-            "score": null,
-            "read": "MM200 n/d",
+            "score": 3,
+            "read": "62% > MM200 — neutro",
             "weight": 0.07
           }
         ]
@@ -192,12 +192,12 @@
       "ey": null,
       "dy": null,
       "real_us": 2.15,
-      "sp_dd": null,
-      "breadth_pct": 0,
-      "mm200_pct": 0,
+      "sp_dd": -3.74,
+      "breadth_pct": 56.45,
+      "mm200_pct": 62.0,
       "fg": null,
-      "sp_close": null,
-      "regime": null
+      "sp_close": 6180.0,
+      "regime": "bull"
     }
   },
   "weights": {
