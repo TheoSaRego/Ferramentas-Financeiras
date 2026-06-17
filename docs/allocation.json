@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T14:23:38.536675+00:00",
+  "generatedAt": "2026-06-17T15:12:17.170915+00:00",
   "asof": "2026-06-17",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -55,7 +55,7 @@
           {
             "key": "fund_dd",
             "score": 4.5,
-            "read": "DD médio -9.7% — correção leve",
+            "read": "DD médio -9.8% — correção leve",
             "weight": 0.16
           }
         ]
@@ -179,7 +179,7 @@
       "ipca": 4.72,
       "real_cdi": 9.489999999999998,
       "ibov_dd": -14.077646395546095,
-      "fund_dd": -9.661230841031308,
+      "fund_dd": -9.773956563187657,
       "breadth_pct": 26.009999999999998,
       "mm200_pct": 29.49,
       "fg": 4,
@@ -188,8 +188,8 @@
       "pl_src": "override",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
-        "organon": -12.379756568945732,
-        "artica": -6.942705113116887
+        "organon": -12.91377586786917,
+        "artica": -6.634137258506145
       }
     },
     "us": {
