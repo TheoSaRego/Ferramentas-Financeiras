@@ -62,7 +62,8 @@ DEFAULT_CONFIG = {
     "pl_br_override": None, "dy_br_override": None,
     "selic_override": None, "ipca_override": None, "fg_br": None, "cape_br": None,
     "pe_us_override": None, "dy_us_override": None, "real_us_override": None,
-    "fg_us_override": None, "override_sinal": None,
+    "fg_us_override": None, "cape_us_override": None, "fed_override": None,
+    "us_cpi_override": None, "override_sinal": None,
 }
 CNPJ = {"Organon": "49.984.812/0001-08", "Artica": "18.302.338/0001-63"}
 
@@ -91,6 +92,13 @@ def rj(name):
 
 def _requests():
     import requests; return requests
+
+def _pick(override, fetch_fn, fetch_label):
+    """(valor, fonte) com override (config) tendo precedência sobre o fetch."""
+    if override is not None: return override, "config (manual)"
+    try: v = fetch_fn()
+    except Exception: v = None
+    return (v, fetch_label) if v is not None else (None, "indisponível")
 
 
 # ── FETCHERS (cada um degrada com graça) ──────────────────────────────────────
@@ -121,12 +129,22 @@ def fetch_multpl(slug, default=None):
     return default
 
 def fetch_fred(series, default=None):
-    """último valor de uma série FRED via CSV (sem chave). ex.: DFII10 (juro real 10a)."""
+    """último valor de uma série FRED via CSV (sem chave). ex.: DFII10 (juro real 10a), DFF (Fed)."""
     try:
         r = _requests().get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}", timeout=20)
         rows = [l for l in r.text.strip().splitlines()[1:] if l.split(",")[-1] not in ("", ".")]
         return float(rows[-1].split(",")[-1])
     except Exception as e: log.warning(f"FRED {series} ({e})"); return default
+
+def fetch_fred_yoy(series, default=None):
+    """variação 12m de uma série de nível FRED (ex.: CPIAUCSL → inflação YoY US)."""
+    try:
+        r = _requests().get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}", timeout=20)
+        vals = [float(l.split(",")[-1]) for l in r.text.strip().splitlines()[1:]
+                if l.split(",")[-1] not in ("", ".")]
+        if len(vals) >= 13: return (vals[-1]/vals[-13] - 1) * 100
+    except Exception as e: log.warning(f"FRED yoy {series} ({e})")
+    return default
 
 def fetch_cnn_fng(default=None):
     try:
@@ -233,6 +251,32 @@ def s_pe_us(pe):
                      (28,2,"caro"),(32,1,"muito caro"),(1e9,.5,"extremo")])
     return s, f"{pe:.1f}x — {l}", pe
 
+def s_erp_us(ey, real):
+    """ERP do S&P sobre o juro real (TIPS), calibrado à história DOS EUA (não do IBOV).
+    Para o SPXR11 hedgeado é a barateza relevante vs CDI (a Selic cancela no hedge)."""
+    if ey is None or real is None: return None, "ERP n/d", None
+    e = ey - real
+    s, l = tier(e, [(-1,1.5,"caríssima vs juros (tipo 1999-00)"),(1,3,"cara vs juros"),
+                    (2.5,4.5,"abaixo da média (richish)"),(4,6,"~média histórica"),
+                    (5.5,7.5,"atrativa"),(7,9,"barata"),(1e9,10,"muito barata (tipo 2009)")])
+    return s, f"ERP real {e:+.1f}pp — {l}", e
+
+def s_cape_us(cape):
+    """CAPE de Shiller, parâmetros históricos do S&P (média ~17; >30 caro; >35 extremo)."""
+    if cape is None: return None, "CAPE n/d", None
+    s, l = tier(cape, [(10,10,"muito barato (raro)"),(15,8.5,"barato"),(20,6.5,"na média"),
+                       (25,5,"acima da média"),(30,3,"caro"),(35,1.5,"muito caro"),
+                       (1e9,0.5,"extremo (tipo 1999/2021)")])
+    return s, f"CAPE {cape:.0f}x — {l}", cape
+
+def s_dd_us(dd):
+    """drawdown do S&P com parâmetros históricos DO S&P (covid −34%, GFC −57%, 2022 −25%)."""
+    if dd is None: return None, "DD n/d", None
+    s, l = tier(abs(dd), [(4,1,"no topo/ATH"),(8,2.5,"recuo pequeno"),(12,4,"pullback"),
+                          (19,6,"correção"),(28,8,"quase bear/bear"),(40,9.5,"bear severo (tipo 2020)"),
+                          (1e9,10,"crash histórico (tipo 2008)")])
+    return s, f"{dd:.1f}% — {l}", dd
+
 def s_dy(dy):
     if dy is None: return None, "DY n/d", None
     s, l = tier(-dy, [(-9,10,"altíssimo"),(-7,8.5,"muito atrativo"),(-5.5,7,"atrativo"),
@@ -275,9 +319,9 @@ def s_fg(fg):
     return s, f"{fg:.0f}/100 — {l}", fg
 
 WEIGHTS_BR = {"erp":.22,"pl":.12,"dy":.06,"ibov_dd":.16,"fund_dd":.16,"breadth":.12,"mm200":.06,"fg":.10}
-WEIGHTS_US = {"erp":.30,"pe":.15,"sp_dd":.20,"breadth":.18,"mm200":.07,"fg":.10}
+WEIGHTS_US = {"erp":.22,"pe":.12,"cape":.16,"sp_dd":.18,"breadth":.14,"mm200":.06,"fg":.12}
 GROUPS_BR = {"Valuation":["erp","pl","dy"],"Drawdown":["ibov_dd","fund_dd"],"Breadth":["breadth","mm200"],"Sentimento":["fg"]}
-GROUPS_US = {"Valuation":["erp","pe"],"Drawdown":["sp_dd"],"Breadth":["breadth","mm200"],"Sentimento":["fg"]}
+GROUPS_US = {"Valuation":["erp","pe","cape"],"Drawdown":["sp_dd"],"Breadth":["breadth","mm200"],"Sentimento":["fg"]}
 
 def composite(scores, weights):
     num = den = 0.0; missing = []
@@ -366,33 +410,58 @@ def build():
 
     # ── Brasil ──
     pl, pl_src = fetch_pl_ibov(cfg)
-    selic = fetch_bcb(432, cfg.get("selic_override"))
+    selic, selic_src = _pick(cfg.get("selic_override"), lambda: fetch_bcb(432), "BCB SGS 432")
     ip = d.get("ipca_focus"); ip = ip.get("ipca_12m") if isinstance(ip, dict) else ip
-    ipca = fetch_bcb(13522, cfg.get("ipca_override") or ip)
+    ipca, ipca_src = _pick(cfg.get("ipca_override"), lambda: fetch_bcb(13522), "BCB SGS 13522")
+    if ipca is None and ip is not None: ipca, ipca_src = ip, "data.json (Focus)"
     real_cdi = (selic*0.98 - ipca) if (selic is not None and ipca is not None) else None
     ey_br = (100/pl) if pl else None
     dy_br = cfg.get("dy_br_override")
+    dy_br_src = "config (manual)" if dy_br is not None else "MANUAL — sem fetch (use statusinvest)"
     dd_ibov, ibov_cur, ibov_ath = ibov_dd()
     fdd, fdd_detail, fdd_src = fetch_fund_dd_from_sheet()
     if fdd is None:
-        fdd = fund_dd_avg(); fdd_src = "data.json (CVM, defasado)"
+        fdd = fund_dd_avg(); fdd_src = "data.json (CVM, defasado)" if fdd is not None else "indisponível"
+    br_breadth_ok = bBR.get("composite") is not None
+    fg_br = cfg.get("fg_br")
+    src_br = {
+        "pl": pl_src, "dy": dy_br_src, "selic": selic_src, "ipca": ipca_src,
+        "ibov_dd": "ibov_price.json" if dd_ibov is not None else "indisponível",
+        "fund_dd": fdd_src,
+        "breadth": "breadth.json" if br_breadth_ok else "SEED — revisar",
+        "mm200": "breadth.json" if bBR.get("breadth_200") is not None else "SEED — revisar",
+        "fg": "config (manual)" if fg_br is not None else "MANUAL — sem fetch BR",
+    }
     scBR = {"erp": s_erp(ey_br, real_cdi), "pl": s_pl_br(pl), "dy": s_dy(dy_br),
             "ibov_dd": s_dd(dd_ibov), "fund_dd": s_fund_dd(fdd),
             "breadth": s_breadth(bBR.get("composite")), "mm200": s_mm200(bBR.get("breadth_200")),
-            "fg": s_fg(cfg.get("fg_br"))}
+            "fg": s_fg(fg_br)}
     score_br, miss_br, conf_br = composite(scBR, WEIGHTS_BR)
 
     # ── S&P ──
-    pe = cfg.get("pe_us_override") or fetch_multpl("s-p-500-pe-ratio")
-    dy_us = cfg.get("dy_us_override") or fetch_multpl("s-p-500-dividend-yield")
-    real_us = cfg.get("real_us_override")
-    if real_us is None: real_us = fetch_fred("DFII10")
-    fg_us = cfg.get("fg_us_override") or fetch_cnn_fng()
+    pe, pe_src = _pick(cfg.get("pe_us_override"), lambda: fetch_multpl("s-p-500-pe-ratio"), "multpl.com")
+    cape, cape_src = _pick(cfg.get("cape_us_override"), lambda: fetch_multpl("shiller-pe"), "multpl.com (Shiller)")
+    dy_us, dy_us_src = _pick(cfg.get("dy_us_override"), lambda: fetch_multpl("s-p-500-dividend-yield"), "multpl.com")
+    real_us, real_us_src = _pick(cfg.get("real_us_override"), lambda: fetch_fred("DFII10"), "FRED DFII10 (TIPS)")
+    fed, fed_src = _pick(cfg.get("fed_override"), lambda: fetch_fred("DFF"), "FRED DFF")
+    us_cpi, us_cpi_src = _pick(cfg.get("us_cpi_override"), lambda: fetch_fred_yoy("CPIAUCSL"), "FRED CPIAUCSL (YoY)")
+    fg_us, fg_us_src = _pick(cfg.get("fg_us_override"), lambda: fetch_cnn_fng(), "CNN")
     ey_us = (100/pe) if pe else None
     sp_dd = bUS.get("sp_dd")
-    scUS = {"erp": s_erp(ey_us, real_us), "pe": s_pe_us(pe), "sp_dd": s_dd(sp_dd),
-            "breadth": s_breadth(bUS.get("composite")), "mm200": s_mm200(bUS.get("breadth_200")),
-            "fg": s_fg(fg_us)}
+    us_breadth_ok = bUS.get("composite") is not None and not (rj("breadth_us.json") or {}).get("_nota")
+    bsrc = (bUS.get("source") or "")
+    breadth_us_label = ("S5TW/S5FI/S5TH" if bsrc == "indices_oficiais"
+                        else "cálculo próprio" if bsrc == "calculo_proprio" else "SEED — revisar")
+    carry = (selic - fed) if (selic is not None and fed is not None) else None
+    src_us = {
+        "pe": pe_src, "cape": cape_src, "dy": dy_us_src, "real_us": real_us_src,
+        "sp_dd": "breadth_us.json (^GSPC)" if sp_dd is not None and bsrc else "SEED — revisar",
+        "breadth": breadth_us_label, "mm200": breadth_us_label,
+        "fg": fg_us_src, "fed": fed_src, "us_cpi": us_cpi_src,
+    }
+    scUS = {"erp": s_erp_us(ey_us, real_us), "pe": s_pe_us(pe), "cape": s_cape_us(cape),
+            "sp_dd": s_dd_us(sp_dd), "breadth": s_breadth(bUS.get("composite")),
+            "mm200": s_mm200(bUS.get("breadth_200")), "fg": s_fg(fg_us)}
     score_us, miss_us, conf_us = composite(scUS, WEIGHTS_US)
 
     dec = decide(cfg, score_br, score_us)
@@ -419,15 +488,21 @@ def build():
         "decision": dec,
         # bloco cru p/ a página recalcular client-side
         "inputs": {
+            "br_src": src_br, "us_src": src_us,
             "br": {"pl": pl, "ey": ey_br, "dy": dy_br, "selic": selic, "ipca": ipca,
                    "real_cdi": real_cdi, "ibov_dd": dd_ibov, "fund_dd": fdd,
                    "breadth_pct": (bBR.get("composite") or 0)*100, "mm200_pct": (bBR.get("breadth_200") or 0)*100,
                    "fg": cfg.get("fg_br"), "ibov": ibov_cur, "regime": bBR.get("regime"), "pl_src": pl_src,
                    "fund_dd_src": fdd_src, "fund_dd_detail": fdd_detail},
-            "us": {"pe": pe, "ey": ey_us, "dy": dy_us, "real_us": real_us, "sp_dd": sp_dd,
+            "us": {"pe": pe, "cape": cape, "ey": ey_us, "dy": dy_us, "real_us": real_us, "sp_dd": sp_dd,
                    "breadth_pct": (bUS.get("composite") or 0)*100, "mm200_pct": (bUS.get("breadth_200") or 0)*100,
-                   "fg": fg_us, "sp_close": bUS.get("sp_close"), "regime": bUS.get("regime")},
+                   "fg": fg_us, "fed": fed, "us_cpi": us_cpi, "carry": carry,
+                   "sp_close": bUS.get("sp_close"), "regime": bUS.get("regime")},
         },
+        "carry": {"selic": selic, "fed": fed, "diff": carry,
+                  "nota": ("Carry do hedge do SPXR11 ≈ Selic − Fed. Em BRL, SPXR11 ≈ retorno do S&P (USD) "
+                           "+ carry. Vs CDI o carry quase se anula (excesso ≈ S&P USD − Fed), por isso "
+                           "não entra no score — é exibido como contexto da posição.")},
         "weights": {"br": WEIGHTS_BR, "us": WEIGHTS_US},
         "groups_map": {"br": GROUPS_BR, "us": GROUPS_US},
         "decay_flags": [{"level": lv, "msg": m} for lv, m in flags],
