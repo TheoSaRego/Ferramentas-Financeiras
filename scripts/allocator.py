@@ -140,7 +140,53 @@ def ibov_dd():
     cl = [r["close"] for r in d if r.get("close")]
     return ((cl[-1]/max(cl)-1)*100, cl[-1], max(cl)) if cl else (None, None, None)
 
+# ── DD dos fundos ─────────────────────────────────────────────────────────────
+# Fonte preferida: a SUA planilha de cotas diárias (mesma lógica do seu Apps Script —
+# ATH sempre sobre cota_cvm; cota atual = cota_cvm, com fallback p/ cota_site quando a
+# CVM ainda não publicou). Fonte de fallback: data.json (só CVM, atrasa 2-3 d.u.).
+COTAS_SHEET_ID = "1PT-cCVZsmLzbqm_B6BxoFDWzeqeXm543OT_ZbuIfOgE"
+
+def _gviz_csv(sheet_name):
+    url = (f"https://docs.google.com/spreadsheets/d/{COTAS_SHEET_ID}"
+           f"/gviz/tq?tqx=out:csv&sheet={sheet_name}")
+    r = _requests().get(url, timeout=20)
+    import io, csv
+    return list(csv.reader(io.StringIO(r.text)))
+
+def _dd_from_rows(rows, cota_idx, fallback_idx=None):
+    """ATH = máx(cota base, col cota_idx); cota atual = última linha com cota_idx,
+    ou fallback_idx se vazia. Se a atual superar o ATH histórico, ATH := atual (novo topo).
+    Replica _calcMetrics() do seu Apps Script."""
+    ath = 0.0; last = None
+    for row in rows[1:]:
+        if not row or cota_idx >= len(row): continue
+        try: base = float(row[cota_idx])
+        except Exception: base = None
+        if base and base > ath: ath = base
+        cur = base
+        if cur is None and fallback_idx is not None and fallback_idx < len(row):
+            try: cur = float(row[fallback_idx])
+            except Exception: cur = None
+        if cur: last = cur
+    if last and last > ath: ath = last
+    return (last/ath - 1.0) * 100.0 if (last and ath) else None
+
+def fetch_fund_dd_from_sheet():
+    """DD médio (Organon + Ártica) a partir da planilha de cotas diárias."""
+    try:
+        org = _gviz_csv("organon")  # date, cota_cvm, cota_site
+        art = _gviz_csv("artica")   # date, cota, cdi, ibov
+        dd_org = _dd_from_rows(org, 1, 2)
+        dd_art = _dd_from_rows(art, 1, None)
+        dds = [d for d in (dd_org, dd_art) if d is not None]
+        if dds:
+            return sum(dds)/len(dds), {"organon": dd_org, "artica": dd_art}, "planilha"
+    except Exception as e:
+        log.warning(f"planilha de cotas ({e})")
+    return None, {}, "indisponível"
+
 def fund_dd_avg():
+    """Fallback: DD via data.json (CVM, defasado)."""
     d = rj("data.json") or {}; dds = []
     for f in d.get("funds", []):
         nm = (f.get("name") or "").lower()
@@ -327,7 +373,9 @@ def build():
     ey_br = (100/pl) if pl else None
     dy_br = cfg.get("dy_br_override")
     dd_ibov, ibov_cur, ibov_ath = ibov_dd()
-    fdd = fund_dd_avg()
+    fdd, fdd_detail, fdd_src = fetch_fund_dd_from_sheet()
+    if fdd is None:
+        fdd = fund_dd_avg(); fdd_src = "data.json (CVM, defasado)"
     scBR = {"erp": s_erp(ey_br, real_cdi), "pl": s_pl_br(pl), "dy": s_dy(dy_br),
             "ibov_dd": s_dd(dd_ibov), "fund_dd": s_fund_dd(fdd),
             "breadth": s_breadth(bBR.get("composite")), "mm200": s_mm200(bBR.get("breadth_200")),
@@ -374,7 +422,8 @@ def build():
             "br": {"pl": pl, "ey": ey_br, "dy": dy_br, "selic": selic, "ipca": ipca,
                    "real_cdi": real_cdi, "ibov_dd": dd_ibov, "fund_dd": fdd,
                    "breadth_pct": (bBR.get("composite") or 0)*100, "mm200_pct": (bBR.get("breadth_200") or 0)*100,
-                   "fg": cfg.get("fg_br"), "ibov": ibov_cur, "regime": bBR.get("regime"), "pl_src": pl_src},
+                   "fg": cfg.get("fg_br"), "ibov": ibov_cur, "regime": bBR.get("regime"), "pl_src": pl_src,
+                   "fund_dd_src": fdd_src, "fund_dd_detail": fdd_detail},
             "us": {"pe": pe, "ey": ey_us, "dy": dy_us, "real_us": real_us, "sp_dd": sp_dd,
                    "breadth_pct": (bUS.get("composite") or 0)*100, "mm200_pct": (bUS.get("breadth_200") or 0)*100,
                    "fg": fg_us, "sp_close": bUS.get("sp_close"), "regime": bUS.get("regime")},
