@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-17T15:12:17.170915+00:00",
+  "generatedAt": "2026-06-17T16:48:00.437453+00:00",
   "asof": "2026-06-17",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -49,7 +49,7 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-14.1% — correção leve",
+            "read": "-13.9% — correção leve",
             "weight": 0.16
           },
           {
@@ -66,13 +66,13 @@
           {
             "key": "breadth",
             "score": 8.5,
-            "read": "26% composto — boa oportunidade",
+            "read": "27% composto — boa oportunidade",
             "weight": 0.12
           },
           {
             "key": "mm200",
             "score": 7,
-            "read": "29% > MM200 — fraqueza técnica",
+            "read": "31% > MM200 — fraqueza técnica",
             "weight": 0.06
           }
         ]
@@ -178,12 +178,12 @@
       "selic": 14.5,
       "ipca": 4.72,
       "real_cdi": 9.489999999999998,
-      "ibov_dd": -14.077646395546095,
+      "ibov_dd": -13.850868582531707,
       "fund_dd": -9.773956563187657,
-      "breadth_pct": 26.009999999999998,
-      "mm200_pct": 29.49,
+      "breadth_pct": 27.279999999999998,
+      "mm200_pct": 30.769999999999996,
       "fg": 4,
-      "ibov": 170690.77,
+      "ibov": 171141.28,
       "regime": "bear",
       "pl_src": "override",
       "fund_dd_src": "planilha",
