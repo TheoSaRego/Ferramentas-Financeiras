@@ -258,7 +258,7 @@
           <div class="stepper"><input id="real_us" type="text"><span class="unit">%</span></div></div>
         <div class="field"><label>Fed funds <span class="src" id="src_us_fed"></span></label>
           <div class="stepper"><input id="fed" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>CPI 12m (EUA) <span class="src" id="src_us_us_cpi"></span></label>
+        <div class="field"><label>CPI 12m (EUA) <span class="src" id="src_us_cpi"></span></label>
           <div class="stepper"><input id="us_cpi" type="text"><span class="unit">%</span></div></div>
         <div class="field"><label>DD S&amp;P <span class="src" id="src_us_sp_dd"></span></label>
           <div class="stepper"><input id="sp_dd" type="text"><span class="unit">%</span></div></div>
@@ -286,7 +286,8 @@
         </div>
       </div>
     </div>
-    <button class="apply ghost" onclick="resetDefaults()">restaurar do allocation.json</button>
+    <button class="apply ghost" onclick="reloadAllocation()" data-tip="Baixa o allocation.json mais recente do servidor e repõe todos os campos com os valores do último fetch automático. Descarta qualquer edição manual que você tenha feito.">↺ repor do servidor</button>
+    <button class="apply ghost" onclick="resetDefaults()" data-tip="Repõe os campos com os valores padrão hardcoded — útil se o allocation.json não carregar ou para comparar com um cenário base.">⚙ padrões de fábrica</button>
   </div>
 </details>
 
@@ -370,7 +371,7 @@ function s_fg(fg){ if(fg==null) return [null,'F&G n/d'];
 const WB={erp:.22,pl:.12,dy:.06,ibov_dd:.16,fund_dd:.16,breadth:.12,mm200:.06,fg:.10};
 const WU={erp:.22,pe:.14,cape:.16,sp_dd:.22,fg:.26};
 const GB={Valuation:['erp','pl','dy'],Drawdown:['ibov_dd','fund_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
-const GU={Valuation:['erp','pe','cape'],Drawdown:['sp_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
+const GU={Valuation:['erp','pe','cape'],Drawdown:['sp_dd'],Sentimento:['fg']};
 const NAMES={erp:'ERP',pl:'P/L',pe:'P/E',cape:'CAPE',dy:'DY',ibov_dd:'DD IBOV',sp_dd:'DD S&P',fund_dd:'DD fundos',breadth:'Breadth',mm200:'MM200',fg:'F&G'};
 
 function composite(scores, W){ let num=0,den=0; for(const k in W){ const s=scores[k][0];
@@ -545,7 +546,7 @@ const SRC_LINKS={
   us_cape:  'https://www.multpl.com/shiller-pe',
   us_dy:    'https://www.multpl.com/s-p-500-dividend-yield',
   us_real_us: 'https://www.multpl.com/10-year-real-interest-rate',
-  us_fed:   'https://www.multpl.com/federal-funds-rate',
+  us_fed:   'https://www.multpl.com/fed-funds-rate',
   us_cpi:   'https://www.multpl.com/inflation',
   us_sp_dd: 'https://finance.yahoo.com/quote/%5EGSPC/',
   us_fg:    'https://edition.cnn.com/markets/fear-and-greed',
@@ -574,6 +575,16 @@ async function boot(){
 }
 function resetDefaults(){ if(ALLOCATION) fillFromAllocation(ALLOCATION); else Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k]));
   localStorage.removeItem('alocador_inputs'); liveSum(); render(compute(readCfg())); }
+async function reloadAllocation(){
+  try{
+    const r = await fetch('allocation.json?t='+Date.now(), {cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    ALLOCATION = await r.json();
+    localStorage.removeItem('alocador_inputs');
+    fillFromAllocation(ALLOCATION);
+    liveSum(); render(compute(readCfg()));
+  } catch(e){ alert('Não foi possível baixar o allocation.json: '+e.message); }
+}
 
 function exportConfig(){ const c=readCfg();
   const cfg={caixa:c.caixa,brasil:c.brasil,sp:c.sp,alvo_brasil:c.alvo_brasil,alvo_sp:Math.round((1-c.alvo_brasil)*100)/100,
