@@ -167,6 +167,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add docs/allocation.json
+          [ -f docs/sp_ath.json ] && git add docs/sp_ath.json
           git diff --cached --quiet || git commit -m "chore: allocation $(date -u +%Y-%m-%d)"
           git pull --rebase origin main && git push
           
