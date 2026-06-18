@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18T16:52:43.346240+00:00",
+  "generatedAt": "2026-06-18T17:54:02.738111+00:00",
   "asof": "2026-06-18",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -91,26 +91,25 @@
     }
   },
   "sp_signal": {
-    "score": 3.07,
+    "score": 2.92,
     "conf": "ALTA",
     "label": "HOLD",
     "cor": "#b4322a",
-    "regime": "bull",
     "groups": {
       "Valuation": {
-        "weight": 0.5,
+        "weight": 0.52,
         "items": [
           {
             "key": "erp",
-            "score": 4.5,
-            "read": "ERP real +1.6pp — abaixo da média (richish)",
+            "score": 3,
+            "read": "ERP real +0.9pp — cara vs juros",
             "weight": 0.22
           },
           {
             "key": "pe",
-            "score": 2,
-            "read": "26.7x — caro",
-            "weight": 0.12
+            "score": 1,
+            "read": "32.0x — muito caro",
+            "weight": 0.14
           },
           {
             "key": "cape",
@@ -121,41 +120,24 @@
         ]
       },
       "Drawdown": {
-        "weight": 0.18,
+        "weight": 0.22,
         "items": [
           {
             "key": "sp_dd",
             "score": 1,
             "read": "-1.4% — no topo/ATH",
-            "weight": 0.18
-          }
-        ]
-      },
-      "Breadth": {
-        "weight": 0.2,
-        "items": [
-          {
-            "key": "breadth",
-            "score": 4,
-            "read": "59% composto — neutro",
-            "weight": 0.14
-          },
-          {
-            "key": "mm200",
-            "score": 3,
-            "read": "61% > MM200 — neutro",
-            "weight": 0.06
+            "weight": 0.22
           }
         ]
       },
       "Sentimento": {
-        "weight": 0.12,
+        "weight": 0.26,
         "items": [
           {
             "key": "fg",
             "score": 7,
             "read": "37/100 — medo moderado",
-            "weight": 0.12
+            "weight": 0.26
           }
         ]
       }
@@ -189,16 +171,14 @@
       "fg": "MANUAL — sem fetch (não existe F&G oficial p/ Brasil; veja breadth/DD ao lado p/ formar sua leitura)"
     },
     "us_src": {
-      "pe": "yfinance (SPY trailingPE, fallback)",
-      "cape": "multpl.com (Shiller)",
-      "dy": "yfinance (SPY dividendYield, fallback)",
-      "real_us": "FRED DFII10 (TIPS)",
-      "sp_dd": "breadth_us.json (^GSPC)",
-      "breadth": "cálculo próprio",
-      "mm200": "cálculo próprio",
+      "pe": "multpl.com",
+      "cape": "multpl.com",
+      "dy": "multpl.com",
+      "real_us": "multpl.com",
+      "sp_dd": "yfinance ^GSPC + ATH persistido",
       "fg": "CNN",
-      "fed": "FRED DFF",
-      "us_cpi": "FRED CPIAUCSL (YoY)"
+      "fed": "FRED DFF (fallback)",
+      "us_cpi": "multpl.com"
     },
     "br": {
       "pl": 11.03,
@@ -207,12 +187,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -15.344780199036535,
+      "ibov_dd": -15.27705542719361,
       "fund_dd": -11.526312201877083,
-      "breadth_pct": 23.22,
+      "breadth_pct": 23.41,
       "mm200_pct": 29.49,
       "fg": null,
-      "ibov": 168173.52,
+      "ibov": 168308.06,
       "regime": "bear",
       "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
@@ -222,20 +202,18 @@
       }
     },
     "us": {
-      "pe": 26.74,
+      "pe": 31.98,
       "cape": 41.38,
-      "ey": 3.7397157816005984,
-      "dy": 0.98,
-      "real_us": 2.14,
-      "sp_dd": -1.45,
-      "breadth_pct": 58.79,
-      "mm200_pct": 61.4,
+      "ey": 3.1269543464665417,
+      "dy": 1.05,
+      "real_us": 2.23,
+      "sp_dd": -1.4,
       "fg": 37,
       "fed": 3.63,
-      "us_cpi": 4.270032656680245,
+      "us_cpi": 4.25,
       "carry": 10.620000000000001,
-      "sp_close": 7499.42,
-      "regime": "bull"
+      "sp_cur": 7503.57,
+      "sp_ath": 7609.78
     }
   },
   "carry": {
@@ -257,12 +235,10 @@
     },
     "us": {
       "erp": 0.22,
-      "pe": 0.12,
+      "pe": 0.14,
       "cape": 0.16,
-      "sp_dd": 0.18,
-      "breadth": 0.14,
-      "mm200": 0.06,
-      "fg": 0.12
+      "sp_dd": 0.22,
+      "fg": 0.26
     }
   },
   "groups_map": {
@@ -292,10 +268,6 @@
       ],
       "Drawdown": [
         "sp_dd"
-      ],
-      "Breadth": [
-        "breadth",
-        "mm200"
       ],
       "Sentimento": [
         "fg"
