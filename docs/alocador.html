@@ -91,6 +91,8 @@
 
   /* tooltip — dotted + title, padrão do site */
   .tip { border-bottom: 1px dotted var(--muted); cursor: help; }
+  .src-link { text-decoration: underline dotted; cursor: pointer; }
+  .src-link:hover { opacity: 0.75; }
 
   /* selos de fonte */
   .src { font-family: 'Courier New', monospace; font-size: 0.52rem; text-transform: uppercase;
@@ -244,10 +246,6 @@
           <div class="stepper"><input id="us_cpi" type="text"><span class="unit">%</span></div></div>
         <div class="field"><label>DD S&amp;P <span class="src" id="src_us_sp_dd"></span></label>
           <div class="stepper"><input id="sp_dd" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Breadth composto <span class="src" id="src_us_breadth"></span></label>
-          <div class="stepper"><input id="breadth_us" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>% &gt; MM200 <span class="src" id="src_us_mm200"></span></label>
-          <div class="stepper"><input id="mm200_us" type="text"><span class="unit">%</span></div></div>
         <div class="field"><label>F&amp;G (CNN) <span class="src" id="src_us_fg"></span></label>
           <div class="stepper"><input id="fg_us" type="text"><span class="unit">/100</span></div></div>
       </div>
@@ -354,7 +352,7 @@ function s_fg(fg){ if(fg==null) return [null,'F&G n/d'];
   return [s,Math.round(fg)+'/100 — '+l]; }
 
 const WB={erp:.22,pl:.12,dy:.06,ibov_dd:.16,fund_dd:.16,breadth:.12,mm200:.06,fg:.10};
-const WU={erp:.22,pe:.12,cape:.16,sp_dd:.18,breadth:.14,mm200:.06,fg:.12};
+const WU={erp:.22,pe:.14,cape:.16,sp_dd:.22,fg:.26};
 const GB={Valuation:['erp','pl','dy'],Drawdown:['ibov_dd','fund_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
 const GU={Valuation:['erp','pe','cape'],Drawdown:['sp_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
 const NAMES={erp:'ERP',pl:'P/L',pe:'P/E',cape:'CAPE',dy:'DY',ibov_dd:'DD IBOV',sp_dd:'DD S&P',fund_dd:'DD fundos',breadth:'Breadth',mm200:'MM200',fg:'F&G'};
@@ -396,7 +394,7 @@ function decide(cfg, sBR, sUS){
 
 /* ════════════════════ I/O de inputs ════════════════════ */
 const FIELDS=['caixa','brasil','sp','pl_br','dy_br','selic','ipca','ibov_dd','fund_dd','breadth_br','mm200_br','fg_br',
-  'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','breadth_us','mm200_us','fg_us','alvo_brasil','caixa_min','caixa_max','lambda','municao_min'];
+  'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','fg_us','alvo_brasil','caixa_min','caixa_max','lambda','municao_min'];
 const MONEY=['caixa','brasil','sp'];
 function gv(id){ const el=document.getElementById(id); if(!el) return null;
   let raw=el.value.replace('%','').replace(/\s/g,'').trim();
@@ -429,7 +427,7 @@ function readCfg(){ const c=gv('caixa')||0,b=gv('brasil')||0,s=gv('sp')||0;
     fund_dd:gv('fund_dd'), breadth_br:gv('breadth_br'), mm200_br:gv('mm200_br'), fg_br:gv('fg_br'),
     pe:gv('pe_us'), cape:gv('cape_us'), dy_us:gv('dy_us'), real_us:gv('real_us'), fed:gv('fed'),
     us_cpi:gv('us_cpi'), sp_dd:gv('sp_dd'),
-    breadth_us:gv('breadth_us'), mm200_us:gv('mm200_us'), fg_us:gv('fg_us') }; }
+    fg_us:gv('fg_us') }; }
 
 function compute(cfg){
   const ey_br = cfg.pl? 100/cfg.pl : null;
@@ -439,7 +437,7 @@ function compute(cfg){
     breadth:s_breadth(cfg.breadth_br), mm200:s_mm200(cfg.mm200_br), fg:s_fg(cfg.fg_br) };
   const ey_us = cfg.pe? 100/cfg.pe : null;
   const scUS={ erp:s_erp_us(ey_us,cfg.real_us), pe:s_pe_us(cfg.pe), cape:s_cape_us(cfg.cape),
-    sp_dd:s_dd_us(cfg.sp_dd), breadth:s_breadth(cfg.breadth_us), mm200:s_mm200(cfg.mm200_us), fg:s_fg(cfg.fg_us) };
+    sp_dd:s_dd_us(cfg.sp_dd), fg:s_fg(cfg.fg_us) };
   const [scoreBR,confBR]=composite(scBR,WB); const [scoreUS,confUS]=composite(scUS,WU);
   return {scBR,scUS,scoreBR,scoreUS,confBR,confUS, dec:decide(cfg,scoreBR,scoreUS)};
 }
@@ -500,8 +498,7 @@ function fillFromAllocation(a){
   setF('ibov_dd',b.ibov_dd); setF('fund_dd',b.fund_dd); setF('breadth_br',b.breadth_pct);
   setF('mm200_br',b.mm200_pct); setF('fg_br',b.fg);
   setF('pe_us',u.pe); setF('cape_us',u.cape); setF('dy_us',u.dy); setF('real_us',u.real_us);
-  setF('fed',u.fed); setF('us_cpi',u.us_cpi); setF('sp_dd',u.sp_dd);
-  setF('breadth_us',u.breadth_pct); setF('mm200_us',u.mm200_pct); setF('fg_us',u.fg);
+  setF('fed',u.fed); setF('us_cpi',u.us_cpi); setF('sp_dd',u.sp_dd); setF('fg_us',u.fg);
   setF('alvo_brasil',(bd.alvo_brasil!=null?bd.alvo_brasil*100:75));
   setF('caixa_min',(bd.caixa_min!=null?bd.caixa_min*100:5));
   setF('caixa_max',(bd.caixa_max!=null?bd.caixa_max*100:20));
@@ -510,7 +507,7 @@ function fillFromAllocation(a){
 }
 const DEFAULTS={caixa:90000,brasil:300000,sp:60000,pl_br:10.9,dy_br:5.7,selic:14.5,ipca:5.3,
   ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,pe_us:27,cape_us:37,dy_us:1.3,real_us:1.9,
-  fed:4.5,us_cpi:2.8,sp_dd:-4,breadth_us:56,mm200_us:62,fg_us:55,
+  fed:4.5,us_cpi:2.8,sp_dd:-4,fg_us:55,
   alvo_brasil:75,caixa_min:5,caixa_max:20,lambda:0.22,municao_min:5};
 
 function classifySrc(s){ s=(s||'').toLowerCase();
@@ -518,12 +515,35 @@ function classifySrc(s){ s=(s||'').toLowerCase();
   if(s.indexOf('seed')>=0||s.indexOf('revisar')>=0||s.indexOf('indispon')>=0) return ['s-revisar','revisar'];
   if(!s) return ['s-revisar','?'];
   return ['s-auto','auto']; }
+const SRC_LINKS={
+  br_pl:    'https://www.oceans14.com.br/acoes/historico-pl-bovespa',
+  br_dy:    'https://statusinvest.com.br/indices/ibovespa',
+  br_selic: 'https://investidor10.com.br/indices/selic/',
+  br_ipca:  'https://investidor10.com.br/indices/ipca/',
+  br_ibov_dd: 'https://www.b3.com.br/pt_br/para-voce',
+  br_fund_dd: null,
+  br_breadth: 'https://theotheo10.github.io/Ferramentas-Financeiras/breadth.html',
+  br_mm200:   'https://theotheo10.github.io/Ferramentas-Financeiras/breadth.html',
+  br_fg:    'https://en.macromicro.me/charts/128837/brazil-mm-fear-and-greed-index-vs-bovespa-index',
+  us_pe:    'https://www.multpl.com/s-p-500-pe-ratio',
+  us_cape:  'https://www.multpl.com/shiller-pe',
+  us_dy:    'https://www.multpl.com/s-p-500-dividend-yield',
+  us_real_us: 'https://www.multpl.com/10-year-real-interest-rate',
+  us_fed:   'https://www.multpl.com/federal-funds-rate',
+  us_cpi:   'https://www.multpl.com/cpi',
+  us_sp_dd: 'https://finance.yahoo.com/quote/%5EGSPC/',
+  us_fg:    'https://edition.cnn.com/markets/fear-and-greed',
+};
 function fillSources(a){
   const map={br:(a&&a.inputs&&a.inputs.br_src)||{}, us:(a&&a.inputs&&a.inputs.us_src)||{}};
   for(const side of ['br','us']) for(const k in map[side]){
     const el=document.getElementById('src_'+side+'_'+k); if(!el) continue;
     const [cls,lab]=classifySrc(map[side][k]);
-    el.className='src '+cls; el.textContent=lab; el.title=map[side][k];
+    const href=SRC_LINKS[side+'_'+k]||null;
+    el.className='src '+cls+(href?' src-link':'');
+    el.textContent=lab; el.title=map[side][k];
+    if(href){ el.style.cursor='pointer'; el.onclick=()=>window.open(href,'_blank'); }
+    else { el.style.cursor=''; el.onclick=null; }
   }
 }
 
