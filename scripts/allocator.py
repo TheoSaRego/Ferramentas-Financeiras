@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
- ALOCADOR  v10  —  três baldes (Caixa · Brasil · S&P), dois sinais independentes
+ ALOCADOR  v11  —  três baldes (Caixa · Brasil · S&P), dois sinais independentes
 ================================================================================
 
 Reescrita conceitual pedida pelo Théo. Em vez de timar sleeves específicos (e o
@@ -21,18 +21,28 @@ erro de desplegar SPXR11 pelo breadth do IBOV), agora:
 Server-side: junta tudo num docs/allocation.json e manda o e-mail. A página
 docs/alocador.html recalcula ao vivo no navegador a partir desses inputs.
 
-Fontes (todas fetchables por default; cada uma com fallback p/ não derrubar o
-pipeline). Override em config.json só deve existir quando preenchido manualmente
-pelo usuário pela tela — não como substituto silencioso de um fetch funcional:
-  BR  breadth.json, data.json, ibov_price.json [repo] · P/L Oceans14 · Selic/IPCA BCB SGS
-      · F&G Brasil: CALCULADO (breadth+DD IBOV+DD fundos — não existe índice oficial
-      público p/ o Brasil; override manual disponível se preferir)
-  US  breadth_us.json [fetch_breadth_us.py, agora rodando no CI] · P/E+DY via SPY
-      (yfinance, fallback multpl.com) · CAPE multpl.com (Shiller) · juro real FRED DFII10
-      · Fed FRED DFF · CPI FRED CPIAUCSL · F&G CNN dataviz · drawdown ^GSPC
-
-  ÚNICO campo sem fetch viável hoje: DY do índice IBOV (dy_br_override) — não há
-  API gratuita/sem-chave confiável p/ DY agregado do índice. Genuinamente MANUAL.
+Fontes. Override em config.json só deve existir quando preenchido manualmente
+pelo usuário pela tela/config — não como substituto silencioso de um fetch
+funcional:
+  BR  breadth.json, data.json, ibov_price.json [repo] · Selic/IPCA BCB SGS
+      · P/L IBOV: MANUAL (pl_br_override) — a Oceans14 (fonte do gráfico real)
+        protege o endpoint de dados com JWT de sessão logada, expira em horas;
+        não automatizável sem guardar login como secret. Confira manualmente
+        em oceans14.com.br/acoes/historico-pl-bovespa.
+      · F&G Brasil: MANUAL (fg_br) — não existe índice oficial público para o
+        Brasil (só o da CNN, que é dos EUA). Use breadth/DD ao lado (já na
+        tela) pra formar sua própria leitura de sentimento, em vez de um
+        proxy sintético que reembalharia o mesmo dado de forma menos clara.
+      · DY IBOV: MANUAL (dy_br_override) — sem API gratuita/sem-chave
+        confiável para DY agregado do índice.
+  US  breadth_us.json [fetch_breadth_us.py, rodando no CI como job próprio —
+      se aparecer REVISAR, confira se esse job já rodou pelo menos uma vez no
+      GitHub Actions desde o deploy] · P/E e DY: multpl.com primeiro (mesma
+      fonte/função que já funciona pro CAPE), SPY/yfinance .info como
+      fallback (esse endpoint específico do yfinance é o mais sujeito a
+      rate-limit; .download(), usado no breadth, é mais robusto) · CAPE
+      multpl.com (Shiller) · juro real FRED DFII10 · Fed FRED DFF · CPI FRED
+      CPIAUCSL · F&G CNN dataviz · drawdown ^GSPC
 """
 import json, logging, os, re, smtplib, ssl, sys
 from datetime import datetime, timezone
@@ -120,15 +130,19 @@ def _pick2(override, fetch_fn):
 
 # ── FETCHERS (cada um degrada com graça) ──────────────────────────────────────
 def fetch_pl_ibov(cfg):
-    if cfg.get("pl_br_override"): return float(cfg["pl_br_override"]), "override"
-    try:
-        r = _requests().get("https://oceans14.com.br/acoes/historico-pl-bovespa",
-                            headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
-        vals = [float(c.replace(",", ".")) for c in re.findall(r"(\d{1,2}[.,]\d{1,2})", r.text)]
-        vals = [v for v in vals if 4 <= v <= 40]
-        if vals: return vals[0], "oceans14"
-    except Exception as e: log.warning(f"P/L IBOV ({e})")
-    return None, "indisponível"
+    """P/L do IBOV: GENUINAMENTE MANUAL, sem fetch.
+    Histórico: o scraping de oceans14.com.br/acoes/historico-pl-bovespa via
+    requests+regex pegava qualquer número 4-40 do HTML/JS de configuração da
+    página (o gráfico real é renderizado via JS), gerando leituras erradas
+    (ex.: 34.1x quando o P/L real era ~11x). A página tem um endpoint interno
+    real (gHistoricoPlBovespa.aspx) que devolve o dado certo, mas exige um JWT
+    de sessão logada (sessionId + userAgent + expiração em horas) — não dá pra
+    automatizar isso no GitHub Actions sem guardar login/senha como secret e
+    ficar refém de qualquer mudança no fluxo de auth deles. Não vale o risco.
+    Preencha manualmente em config.json (pl_br_override) ou pela tela; veja o
+    P/L atual em oceans14.com.br/acoes/historico-pl-bovespa (à mão)."""
+    if cfg.get("pl_br_override"): return float(cfg["pl_br_override"]), "manual (override)"
+    return None, "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)"
 
 def fetch_bcb(series, default=None):
     try:
@@ -138,42 +152,52 @@ def fetch_bcb(series, default=None):
 
 def fetch_multpl(slug, default=None):
     """valor corrente de multpl.com (ex.: 's-p-500-pe-ratio', 's-p-500-dividend-yield').
-    Frágil (scraping de HTML, costuma bloquear scrapers) — usado como FALLBACK
-    de fetch_spy_pe/fetch_spy_dy, que tentam o Yahoo (SPY) primeiro."""
+    Scraping de HTML — funciona na prática (é a mesma função usada pro CAPE), mas
+    cada slug pode ter formatação ligeiramente diferente, daí o log distinguir
+    'sem resposta' (rede/bloqueio) de 'sem match' (página respondeu mas o regex
+    não bateu — geralmente sinal de mudança de layout na página)."""
     try:
         r = _requests().get(f"https://www.multpl.com/{slug}", headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+        if r.status_code != 200:
+            log.warning(f"multpl {slug}: HTTP {r.status_code}"); return default
         m = re.search(r"Current\s*[\d\w\s\.:]*?([0-9]{1,3}\.[0-9]{1,2})", r.text)
         if m: return float(m.group(1))
+        log.warning(f"multpl {slug}: HTTP 200 mas regex não bateu (layout pode ter mudado)")
     except Exception as e: log.warning(f"multpl {slug} ({e})")
     return default
 
 def fetch_spy_pe(default=None):
-    """P/E do S&P 500 via trailingPE do ETF SPY (Yahoo Finance/yfinance).
-    Mais estável que scraping de multpl.com; cai para multpl.com se o Yahoo falhar."""
+    """P/E do S&P 500. multpl.com primeiro — é a mesma fonte/função que já funciona
+    para o CAPE (fetch_multpl('shiller-pe') vem AUTO em produção), então é a aposta
+    mais segura. yfinance (SPY trailingPE) como fallback: o endpoint .info do
+    yfinance é historicamente o mais frágil/rate-limited da lib (ao contrário do
+    .download() usado no breadth, que é mais robusto) — por isso ficou em segundo."""
+    v = fetch_multpl("s-p-500-pe-ratio")
+    if v is not None: return v, "multpl.com"
     try:
         import yfinance as yf
         pe = yf.Ticker("SPY").info.get("trailingPE")
-        if pe: return round(float(pe), 2), "yfinance (SPY trailingPE)"
+        if pe: return round(float(pe), 2), "yfinance (SPY trailingPE, fallback)"
     except Exception as e: log.warning(f"P/E via SPY ({e})")
-    v = fetch_multpl("s-p-500-pe-ratio")
-    return (v, "multpl.com (fallback)") if v is not None else (default, "indisponível")
+    return default, "indisponível"
 
 def fetch_spy_dy(default=None):
-    """Dividend yield do S&P 500 via dividendYield do ETF SPY (Yahoo Finance/yfinance).
-    Mais estável que scraping de multpl.com; cai para multpl.com se o Yahoo falhar.
+    """Dividend yield do S&P 500. multpl.com primeiro (mesmo motivo de fetch_spy_pe).
+    yfinance (SPY dividendYield) como fallback.
     NOTA: yfinance já mudou o formato desse campo entre versões (fração 0.013 vs
     já-em-% 1.3) — normaliza por faixa plausível (DY de SPY historicamente 1-3%)
     em vez de assumir um formato fixo, pra não gerar erro de fator 100x silencioso."""
+    v = fetch_multpl("s-p-500-dividend-yield")
+    if v is not None: return v, "multpl.com"
     try:
         import yfinance as yf
         dy = yf.Ticker("SPY").info.get("dividendYield")
         if dy:
             dy = float(dy)
             if dy < 0.5: dy *= 100  # veio como fração (ex.: 0.013 → 1.3%)
-            return round(dy, 2), "yfinance (SPY dividendYield)"
+            return round(dy, 2), "yfinance (SPY dividendYield, fallback)"
     except Exception as e: log.warning(f"DY via SPY ({e})")
-    v = fetch_multpl("s-p-500-dividend-yield")
-    return (v, "multpl.com (fallback)") if v is not None else (default, "indisponível")
+    return default, "indisponível"
 
 def fetch_fred(series, default=None):
     """último valor de uma série FRED via CSV (sem chave). ex.: DFII10 (juro real 10a), DFF (Fed)."""
@@ -267,29 +291,6 @@ def fund_alpha():
         k = "Organon" if "organon" in nm else "Artica" if "artica" in nm or "ártica" in nm else None
         if k: out[k] = f.get("alphaVsCdi")
     return out
-
-
-# ── F&G Brasil (sintético) ─────────────────────────────────────────────────────
-# Não existe um Fear & Greed oficial p/ o mercado brasileiro (a CNN só cobre EUA, e
-# os "índices de medo" PT-BR que circulam são na real o mesmo dado da CNN). Em vez
-# de deixar isso eternamente MANUAL, computamos um proxy 0-100 com os mesmos
-# ingredientes que a CNN usa (momentum/força via breadth, drawdown vs ATH) — só que
-# aplicados ao IBOV e aos fundos, que já fazem parte do pipeline. Convenção igual à
-# CNN: 0=medo extremo, 100=ganância extrema.
-def compute_fg_br(breadth_pct, ibov_dd, fund_dd):
-    """F&G Brasil sintético: breadth composto (50%) + DD IBOV (25%) + DD fundos (25%).
-    breadth_pct já em 0-100 (quanto maior, mais "ganância"/momentum). DD em % negativo
-    (quanto mais perto de 0/ATH, mais "ganância"; drawdowns fundos no padrão de DD)."""
-    parts, weights = [], []
-    if breadth_pct is not None:
-        parts.append(max(0.0, min(100.0, breadth_pct))); weights.append(0.50)
-    if ibov_dd is not None:
-        # DD 0% → 100 (ganância/topo); DD -30% ou pior → 0 (medo extremo)
-        parts.append(max(0.0, min(100.0, 100 + (ibov_dd/30)*100))); weights.append(0.25)
-    if fund_dd is not None:
-        parts.append(max(0.0, min(100.0, 100 + (fund_dd/30)*100))); weights.append(0.25)
-    if not parts: return None
-    return round(sum(p*w for p, w in zip(parts, weights)) / sum(weights))
 
 
 # ── SCORERS (tier; 0=caro/ruim p/ comprar .. 10=barato/ótimo) ─────────────────
@@ -494,11 +495,7 @@ def build():
         fdd = fund_dd_avg(); fdd_src = "data.json (CVM, defasado)" if fdd is not None else "indisponível"
     br_breadth_ok = bBR.get("composite") is not None
     fg_br = cfg.get("fg_br")
-    fg_br_src = "manual (override)" if fg_br is not None else None
-    if fg_br is None:
-        breadth_pct_br = (bBR.get("composite") or 0)*100 if br_breadth_ok else None
-        fg_br = compute_fg_br(breadth_pct_br, dd_ibov, fdd)
-        fg_br_src = "calculado (breadth+DD IBOV+DD fundos)" if fg_br is not None else "indisponível"
+    fg_br_src = "manual (override)" if fg_br is not None else "MANUAL — sem fetch (não existe F&G oficial p/ Brasil; veja breadth/DD ao lado p/ formar sua leitura)"
     src_br = {
         "pl": pl_src, "dy": dy_br_src, "selic": selic_src, "ipca": ipca_src,
         "ibov_dd": "ibov_price.json" if dd_ibov is not None else "indisponível",
