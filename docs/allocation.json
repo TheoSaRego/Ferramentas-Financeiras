@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18T00:58:31.792700+00:00",
+  "generatedAt": "2026-06-18T12:57:03.384228+00:00",
   "asof": "2026-06-17",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -14,10 +14,10 @@
     "alvo_sp": 0.25
   },
   "brasil_signal": {
-    "score": 3.95,
+    "score": 5.81,
     "conf": "ALTA",
-    "label": "CAUTELOSO",
-    "cor": "#c2541f",
+    "label": "NEUTRO",
+    "cor": "#b07d0a",
     "regime": "bear",
     "groups": {
       "Valuation": {
@@ -25,20 +25,20 @@
         "items": [
           {
             "key": "erp",
-            "score": 0.5,
-            "read": "ERP real -6.3pp — juro real muito superior",
+            "score": 5.5,
+            "read": "ERP real -0.2pp — juro real levem. superior",
             "weight": 0.22
           },
           {
             "key": "pl",
-            "score": 0.5,
-            "read": "34.1x — caro/trough",
+            "score": 6,
+            "read": "11.0x — levem. barato",
             "weight": 0.12
           },
           {
             "key": "dy",
-            "score": 5,
-            "read": "5.0% — razoável",
+            "score": 7,
+            "read": "5.7% — atrativo",
             "weight": 0.06
           }
         ]
@@ -82,8 +82,8 @@
         "items": [
           {
             "key": "fg",
-            "score": 6,
-            "read": "40/100 — leve medo",
+            "score": null,
+            "read": "F&G n/d",
             "weight": 0.1
           }
         ]
@@ -163,22 +163,22 @@
   },
   "decision": {
     "tranche": 0.0,
-    "piso": 0.14075,
+    "piso": 0.11285,
     "cashpct": 0.2,
-    "gap": 0.059250000000000025,
-    "want": 5900.0,
+    "gap": 0.08715,
+    "want": 8600.0,
     "aloc_brasil": 0.0,
     "aloc_sp": 0.0,
     "rodadas": 5,
-    "tgt_brasil": 0.6444375000000001,
-    "tgt_sp": 0.21481250000000005,
+    "tgt_brasil": 0.6653625,
+    "tgt_sp": 0.2217875,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
     "desc": "caixa acima do piso, mas nada barato E abaixo do alvo agora — segura munição"
   },
   "inputs": {
     "br_src": {
-      "pl": "oceans14",
+      "pl": "manual (override)",
       "dy": "manual (override)",
       "selic": "BCB SGS 432",
       "ipca": "BCB SGS 13522",
@@ -186,7 +186,7 @@
       "fund_dd": "planilha",
       "breadth": "breadth.json",
       "mm200": "breadth.json",
-      "fg": "calculado (breadth+DD IBOV+DD fundos)"
+      "fg": "MANUAL — sem fetch (não existe F&G oficial p/ Brasil; veja breadth/DD ao lado p/ formar sua leitura)"
     },
     "us_src": {
       "pe": "indisponível",
@@ -201,9 +201,9 @@
       "us_cpi": "FRED CPIAUCSL (YoY)"
     },
     "br": {
-      "pl": 34.1,
-      "ey": 2.932551319648094,
-      "dy": 5,
+      "pl": 11.03,
+      "ey": 9.066183136899365,
+      "dy": 5.7,
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
@@ -214,7 +214,7 @@
       "fg": null,
       "ibov": 168453.94,
       "regime": "bear",
-      "pl_src": "oceans14",
+      "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
         "organon": -12.91377586786917,
