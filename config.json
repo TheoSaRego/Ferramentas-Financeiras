@@ -8,17 +8,6 @@
   "caixa_max": 0.2,
   "lambda_deploy": 0.22,
   "municao_minima": 0.05,
-  "pl_br_override": 10.87,
-  "dy_br_override": 5.7,
-  "selic_override": 14.5,
-  "ipca_override": 5.3,
-  "fg_br": 4,
-  "pe_us_override": 27.0,
-  "dy_us_override": 1.3,
-  "real_us_override": 1.9,
-  "fg_us_override": 55,
-  "email_to": "theo.fernandes10@gmail.com",
-  "cape_us_override": 37.0,
-  "fed_override": 4.5,
-  "us_cpi_override": 2.8
+  "dy_br_override": 5,
+  "email_to": "theo.fernandes10@gmail.com"
 }
