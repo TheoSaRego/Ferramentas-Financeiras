@@ -135,7 +135,8 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/breadth_us.json data/prices_us.parquet
+          git add docs/breadth_us.json
+          [ -f data/prices_us.parquet ] && git add data/prices_us.parquet
           git diff --cached --quiet || git commit -m "chore: update breadth US $(date -u +%Y-%m-%dT%H:%M)Z"
           git pull --rebase origin main
           git push
