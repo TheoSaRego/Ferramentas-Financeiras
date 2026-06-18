@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
- ALOCADOR  v9  —  três baldes (Caixa · Brasil · S&P), dois sinais independentes
+ ALOCADOR  v10  —  três baldes (Caixa · Brasil · S&P), dois sinais independentes
 ================================================================================
 
 Reescrita conceitual pedida pelo Théo. Em vez de timar sleeves específicos (e o
@@ -21,10 +21,18 @@ erro de desplegar SPXR11 pelo breadth do IBOV), agora:
 Server-side: junta tudo num docs/allocation.json e manda o e-mail. A página
 docs/alocador.html recalcula ao vivo no navegador a partir desses inputs.
 
-Fontes (todas fetchables; cada uma com fallback p/ não derrubar o pipeline):
+Fontes (todas fetchables por default; cada uma com fallback p/ não derrubar o
+pipeline). Override em config.json só deve existir quando preenchido manualmente
+pelo usuário pela tela — não como substituto silencioso de um fetch funcional:
   BR  breadth.json, data.json, ibov_price.json [repo] · P/L Oceans14 · Selic/IPCA BCB SGS
-  US  breadth_us.json [fetch_breadth_us.py] · P/E+DY multpl.com · juro real FRED DFII10
-      · F&G CNN dataviz · drawdown ^GSPC (via breadth_us.json)
+      · F&G Brasil: CALCULADO (breadth+DD IBOV+DD fundos — não existe índice oficial
+      público p/ o Brasil; override manual disponível se preferir)
+  US  breadth_us.json [fetch_breadth_us.py, agora rodando no CI] · P/E+DY via SPY
+      (yfinance, fallback multpl.com) · CAPE multpl.com (Shiller) · juro real FRED DFII10
+      · Fed FRED DFF · CPI FRED CPIAUCSL · F&G CNN dataviz · drawdown ^GSPC
+
+  ÚNICO campo sem fetch viável hoje: DY do índice IBOV (dy_br_override) — não há
+  API gratuita/sem-chave confiável p/ DY agregado do índice. Genuinamente MANUAL.
 """
 import json, logging, os, re, smtplib, ssl, sys
 from datetime import datetime, timezone
@@ -94,11 +102,20 @@ def _requests():
     import requests; return requests
 
 def _pick(override, fetch_fn, fetch_label):
-    """(valor, fonte) com override (config) tendo precedência sobre o fetch."""
-    if override is not None: return override, "config (manual)"
+    """(valor, fonte) com override (config) tendo precedência sobre o fetch.
+    'manual (override)' é classificado como MANUAL na UI — é um valor seu, não um fetch."""
+    if override is not None: return override, "manual (override)"
     try: v = fetch_fn()
     except Exception: v = None
     return (v, fetch_label) if v is not None else (None, "indisponível")
+
+def _pick2(override, fetch_fn):
+    """Como _pick, mas para fetchers que já retornam (valor, fonte) — evita chamar
+    o fetcher duas vezes (1x p/ valor, 1x p/ label) como _pick exigiria."""
+    if override is not None: return override, "manual (override)"
+    try: v, src = fetch_fn()
+    except Exception: v, src = None, "indisponível"
+    return (v, src) if v is not None else (None, "indisponível")
 
 
 # ── FETCHERS (cada um degrada com graça) ──────────────────────────────────────
@@ -120,13 +137,43 @@ def fetch_bcb(series, default=None):
     except Exception as e: log.warning(f"BCB {series} ({e})"); return default
 
 def fetch_multpl(slug, default=None):
-    """valor corrente de multpl.com (ex.: 's-p-500-pe-ratio', 's-p-500-dividend-yield')."""
+    """valor corrente de multpl.com (ex.: 's-p-500-pe-ratio', 's-p-500-dividend-yield').
+    Frágil (scraping de HTML, costuma bloquear scrapers) — usado como FALLBACK
+    de fetch_spy_pe/fetch_spy_dy, que tentam o Yahoo (SPY) primeiro."""
     try:
         r = _requests().get(f"https://www.multpl.com/{slug}", headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
         m = re.search(r"Current\s*[\d\w\s\.:]*?([0-9]{1,3}\.[0-9]{1,2})", r.text)
         if m: return float(m.group(1))
     except Exception as e: log.warning(f"multpl {slug} ({e})")
     return default
+
+def fetch_spy_pe(default=None):
+    """P/E do S&P 500 via trailingPE do ETF SPY (Yahoo Finance/yfinance).
+    Mais estável que scraping de multpl.com; cai para multpl.com se o Yahoo falhar."""
+    try:
+        import yfinance as yf
+        pe = yf.Ticker("SPY").info.get("trailingPE")
+        if pe: return round(float(pe), 2), "yfinance (SPY trailingPE)"
+    except Exception as e: log.warning(f"P/E via SPY ({e})")
+    v = fetch_multpl("s-p-500-pe-ratio")
+    return (v, "multpl.com (fallback)") if v is not None else (default, "indisponível")
+
+def fetch_spy_dy(default=None):
+    """Dividend yield do S&P 500 via dividendYield do ETF SPY (Yahoo Finance/yfinance).
+    Mais estável que scraping de multpl.com; cai para multpl.com se o Yahoo falhar.
+    NOTA: yfinance já mudou o formato desse campo entre versões (fração 0.013 vs
+    já-em-% 1.3) — normaliza por faixa plausível (DY de SPY historicamente 1-3%)
+    em vez de assumir um formato fixo, pra não gerar erro de fator 100x silencioso."""
+    try:
+        import yfinance as yf
+        dy = yf.Ticker("SPY").info.get("dividendYield")
+        if dy:
+            dy = float(dy)
+            if dy < 0.5: dy *= 100  # veio como fração (ex.: 0.013 → 1.3%)
+            return round(dy, 2), "yfinance (SPY dividendYield)"
+    except Exception as e: log.warning(f"DY via SPY ({e})")
+    v = fetch_multpl("s-p-500-dividend-yield")
+    return (v, "multpl.com (fallback)") if v is not None else (default, "indisponível")
 
 def fetch_fred(series, default=None):
     """último valor de uma série FRED via CSV (sem chave). ex.: DFII10 (juro real 10a), DFF (Fed)."""
@@ -220,6 +267,29 @@ def fund_alpha():
         k = "Organon" if "organon" in nm else "Artica" if "artica" in nm or "ártica" in nm else None
         if k: out[k] = f.get("alphaVsCdi")
     return out
+
+
+# ── F&G Brasil (sintético) ─────────────────────────────────────────────────────
+# Não existe um Fear & Greed oficial p/ o mercado brasileiro (a CNN só cobre EUA, e
+# os "índices de medo" PT-BR que circulam são na real o mesmo dado da CNN). Em vez
+# de deixar isso eternamente MANUAL, computamos um proxy 0-100 com os mesmos
+# ingredientes que a CNN usa (momentum/força via breadth, drawdown vs ATH) — só que
+# aplicados ao IBOV e aos fundos, que já fazem parte do pipeline. Convenção igual à
+# CNN: 0=medo extremo, 100=ganância extrema.
+def compute_fg_br(breadth_pct, ibov_dd, fund_dd):
+    """F&G Brasil sintético: breadth composto (50%) + DD IBOV (25%) + DD fundos (25%).
+    breadth_pct já em 0-100 (quanto maior, mais "ganância"/momentum). DD em % negativo
+    (quanto mais perto de 0/ATH, mais "ganância"; drawdowns fundos no padrão de DD)."""
+    parts, weights = [], []
+    if breadth_pct is not None:
+        parts.append(max(0.0, min(100.0, breadth_pct))); weights.append(0.50)
+    if ibov_dd is not None:
+        # DD 0% → 100 (ganância/topo); DD -30% ou pior → 0 (medo extremo)
+        parts.append(max(0.0, min(100.0, 100 + (ibov_dd/30)*100))); weights.append(0.25)
+    if fund_dd is not None:
+        parts.append(max(0.0, min(100.0, 100 + (fund_dd/30)*100))); weights.append(0.25)
+    if not parts: return None
+    return round(sum(p*w for p, w in zip(parts, weights)) / sum(weights))
 
 
 # ── SCORERS (tier; 0=caro/ruim p/ comprar .. 10=barato/ótimo) ─────────────────
@@ -417,20 +487,25 @@ def build():
     real_cdi = (selic*0.98 - ipca) if (selic is not None and ipca is not None) else None
     ey_br = (100/pl) if pl else None
     dy_br = cfg.get("dy_br_override")
-    dy_br_src = "config (manual)" if dy_br is not None else "MANUAL — sem fetch (use statusinvest)"
+    dy_br_src = "manual (override)" if dy_br is not None else "MANUAL — sem fetch (use statusinvest)"
     dd_ibov, ibov_cur, ibov_ath = ibov_dd()
     fdd, fdd_detail, fdd_src = fetch_fund_dd_from_sheet()
     if fdd is None:
         fdd = fund_dd_avg(); fdd_src = "data.json (CVM, defasado)" if fdd is not None else "indisponível"
     br_breadth_ok = bBR.get("composite") is not None
     fg_br = cfg.get("fg_br")
+    fg_br_src = "manual (override)" if fg_br is not None else None
+    if fg_br is None:
+        breadth_pct_br = (bBR.get("composite") or 0)*100 if br_breadth_ok else None
+        fg_br = compute_fg_br(breadth_pct_br, dd_ibov, fdd)
+        fg_br_src = "calculado (breadth+DD IBOV+DD fundos)" if fg_br is not None else "indisponível"
     src_br = {
         "pl": pl_src, "dy": dy_br_src, "selic": selic_src, "ipca": ipca_src,
         "ibov_dd": "ibov_price.json" if dd_ibov is not None else "indisponível",
         "fund_dd": fdd_src,
         "breadth": "breadth.json" if br_breadth_ok else "SEED — revisar",
         "mm200": "breadth.json" if bBR.get("breadth_200") is not None else "SEED — revisar",
-        "fg": "config (manual)" if fg_br is not None else "MANUAL — sem fetch BR",
+        "fg": fg_br_src,
     }
     scBR = {"erp": s_erp(ey_br, real_cdi), "pl": s_pl_br(pl), "dy": s_dy(dy_br),
             "ibov_dd": s_dd(dd_ibov), "fund_dd": s_fund_dd(fdd),
@@ -439,9 +514,9 @@ def build():
     score_br, miss_br, conf_br = composite(scBR, WEIGHTS_BR)
 
     # ── S&P ──
-    pe, pe_src = _pick(cfg.get("pe_us_override"), lambda: fetch_multpl("s-p-500-pe-ratio"), "multpl.com")
+    pe, pe_src = _pick2(cfg.get("pe_us_override"), fetch_spy_pe)
     cape, cape_src = _pick(cfg.get("cape_us_override"), lambda: fetch_multpl("shiller-pe"), "multpl.com (Shiller)")
-    dy_us, dy_us_src = _pick(cfg.get("dy_us_override"), lambda: fetch_multpl("s-p-500-dividend-yield"), "multpl.com")
+    dy_us, dy_us_src = _pick2(cfg.get("dy_us_override"), fetch_spy_dy)
     real_us, real_us_src = _pick(cfg.get("real_us_override"), lambda: fetch_fred("DFII10"), "FRED DFII10 (TIPS)")
     fed, fed_src = _pick(cfg.get("fed_override"), lambda: fetch_fred("DFF"), "FRED DFF")
     us_cpi, us_cpi_src = _pick(cfg.get("us_cpi_override"), lambda: fetch_fred_yoy("CPIAUCSL"), "FRED CPIAUCSL (YoY)")
