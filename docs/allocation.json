@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18T13:09:00.269770+00:00",
+  "generatedAt": "2026-06-18T13:30:46.977033+00:00",
   "asof": "2026-06-17",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -91,8 +91,8 @@
     }
   },
   "sp_signal": {
-    "score": 1.85,
-    "conf": "MÉDIA",
+    "score": 3.07,
+    "conf": "ALTA",
     "label": "HOLD",
     "cor": "#b4322a",
     "regime": "bull",
@@ -102,14 +102,14 @@
         "items": [
           {
             "key": "erp",
-            "score": null,
-            "read": "ERP n/d",
+            "score": 4.5,
+            "read": "ERP real +1.6pp — abaixo da média (richish)",
             "weight": 0.22
           },
           {
             "key": "pe",
-            "score": null,
-            "read": "P/E n/d",
+            "score": 2,
+            "read": "26.8x — caro",
             "weight": 0.12
           },
           {
@@ -126,7 +126,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-3.7% — no topo/ATH",
+            "read": "-2.5% — no topo/ATH",
             "weight": 0.18
           }
         ]
@@ -137,7 +137,7 @@
           {
             "key": "breadth",
             "score": 4,
-            "read": "56% composto — neutro",
+            "read": "58% composto — neutro",
             "weight": 0.14
           },
           {
@@ -153,8 +153,8 @@
         "items": [
           {
             "key": "fg",
-            "score": null,
-            "read": "F&G n/d",
+            "score": 7,
+            "read": "32/100 — medo moderado",
             "weight": 0.12
           }
         ]
@@ -189,14 +189,14 @@
       "fg": "MANUAL — sem fetch (não existe F&G oficial p/ Brasil; veja breadth/DD ao lado p/ formar sua leitura)"
     },
     "us_src": {
-      "pe": "indisponível",
+      "pe": "yfinance (SPY trailingPE, fallback)",
       "cape": "multpl.com (Shiller)",
-      "dy": "indisponível",
+      "dy": "yfinance (SPY dividendYield, fallback)",
       "real_us": "FRED DFII10 (TIPS)",
-      "sp_dd": "SEED — revisar",
-      "breadth": "SEED — revisar",
-      "mm200": "SEED — revisar",
-      "fg": "indisponível",
+      "sp_dd": "breadth_us.json (^GSPC)",
+      "breadth": "cálculo próprio",
+      "mm200": "cálculo próprio",
+      "fg": "CNN",
       "fed": "FRED DFF",
       "us_cpi": "FRED CPIAUCSL (YoY)"
     },
@@ -207,12 +207,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -15.20362232390502,
+      "ibov_dd": -15.203592121093145,
       "fund_dd": -9.773956563187657,
       "breadth_pct": 20.990000000000002,
       "mm200_pct": 26.919999999999998,
       "fg": null,
-      "ibov": 168453.94,
+      "ibov": 168454.0,
       "regime": "bear",
       "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
@@ -222,19 +222,19 @@
       }
     },
     "us": {
-      "pe": null,
+      "pe": 26.78,
       "cape": 41.38,
-      "ey": null,
-      "dy": null,
+      "ey": 3.7341299477221805,
+      "dy": 0.98,
       "real_us": 2.14,
-      "sp_dd": -3.74,
-      "breadth_pct": 56.45,
-      "mm200_pct": 62.0,
-      "fg": null,
+      "sp_dd": -2.49,
+      "breadth_pct": 57.74,
+      "mm200_pct": 61.6,
+      "fg": 32,
       "fed": 3.63,
       "us_cpi": 4.270032656680245,
       "carry": 10.620000000000001,
-      "sp_close": 6180.0,
+      "sp_close": 7420.1,
       "regime": "bull"
     }
   },
