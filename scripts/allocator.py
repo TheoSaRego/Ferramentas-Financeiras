@@ -219,8 +219,14 @@ def fetch_fred_yoy(series, default=None):
 
 def fetch_cnn_fng(default=None):
     try:
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+            "Accept": "application/json",
+            "Referer": "https://edition.cnn.com/markets/fear-and-greed",
+            "Origin": "https://edition.cnn.com",
+        }
         r = _requests().get("https://production.dataviz.cnn.io/index/fearandgreed/graphdata",
-                            headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"}, timeout=20)
+                            headers=headers, timeout=20)
         return round(float(r.json()["fear_and_greed"]["score"]))
     except Exception as e: log.warning(f"CNN F&G ({e})"); return default
 
