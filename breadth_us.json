@@ -1,19 +1,16 @@
 {
   "latest": {
-    "date": "2026-06-16",
-    "breadth_20": 0.41,
-    "breadth_50": 0.55,
-    "breadth_200": 0.62,
-    "count_20": 503,
-    "count_50": 503,
-    "count_200": 501,
+    "date": "2026-06-18",
+    "breadth_20": 0.5179,
+    "breadth_50": 0.5478,
+    "breadth_200": 0.616,
     "n_constituents": 503,
-    "composite": 0.5645,
+    "source": "calculo_proprio",
+    "composite": 0.5774,
     "regime": "bull",
-    "sp_close": 6180.0,
-    "sp_ath": 6420.0,
-    "sp_dd": -3.74
+    "sp_close": 7420.1,
+    "sp_ath": 7609.78,
+    "sp_dd": -2.49
   },
-  "count": 1,
-  "_nota": "SEED de exemplo — o fetch_breadth_us.py sobrescreve com dados reais no Actions"
+  "count": 1
 }
