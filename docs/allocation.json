@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-18T00:36:11.510539+00:00",
+  "generatedAt": "2026-06-18T00:37:16.977905+00:00",
   "asof": "2026-06-17",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -14,10 +14,10 @@
     "alvo_sp": 0.25
   },
   "brasil_signal": {
-    "score": 6.68,
+    "score": 3.95,
     "conf": "ALTA",
-    "label": "BOM",
-    "cor": "#1a7a52",
+    "label": "CAUTELOSO",
+    "cor": "#c2541f",
     "regime": "bear",
     "groups": {
       "Valuation": {
@@ -25,20 +25,20 @@
         "items": [
           {
             "key": "erp",
-            "score": 7,
-            "read": "ERP real +0.3pp — bolsa levem. acima",
+            "score": 0.5,
+            "read": "ERP real -6.3pp — juro real muito superior",
             "weight": 0.22
           },
           {
             "key": "pl",
-            "score": 7,
-            "read": "10.9x — barato",
+            "score": 0.5,
+            "read": "34.1x — caro/trough",
             "weight": 0.12
           },
           {
             "key": "dy",
-            "score": 7,
-            "read": "5.7% — atrativo",
+            "score": 5,
+            "read": "5.0% — razoável",
             "weight": 0.06
           }
         ]
@@ -82,8 +82,8 @@
         "items": [
           {
             "key": "fg",
-            "score": 10,
-            "read": "4/100 — medo extremo",
+            "score": 6,
+            "read": "40/100 — leve medo",
             "weight": 0.1
           }
         ]
@@ -91,8 +91,8 @@
     }
   },
   "sp_signal": {
-    "score": 2.83,
-    "conf": "ALTA",
+    "score": 1.85,
+    "conf": "MÉDIA",
     "label": "HOLD",
     "cor": "#b4322a",
     "regime": "bull",
@@ -102,20 +102,20 @@
         "items": [
           {
             "key": "erp",
-            "score": 4.5,
-            "read": "ERP real +1.8pp — abaixo da média (richish)",
+            "score": null,
+            "read": "ERP n/d",
             "weight": 0.22
           },
           {
             "key": "pe",
-            "score": 2,
-            "read": "27.0x — caro",
+            "score": null,
+            "read": "P/E n/d",
             "weight": 0.12
           },
           {
             "key": "cape",
             "score": 0.5,
-            "read": "CAPE 37x — extremo (tipo 1999/2021)",
+            "read": "CAPE 41x — extremo (tipo 1999/2021)",
             "weight": 0.16
           }
         ]
@@ -153,8 +153,8 @@
         "items": [
           {
             "key": "fg",
-            "score": 5,
-            "read": "55/100 — neutro",
+            "score": null,
+            "read": "F&G n/d",
             "weight": 0.12
           }
         ]
@@ -162,59 +162,59 @@
     }
   },
   "decision": {
-    "tranche": 3800.0,
-    "piso": 0.09980000000000001,
+    "tranche": 0.0,
+    "piso": 0.14075,
     "cashpct": 0.2,
-    "gap": 0.1002,
-    "want": 9900.0,
-    "aloc_brasil": 3800.0,
+    "gap": 0.059250000000000025,
+    "want": 5900.0,
+    "aloc_brasil": 0.0,
     "aloc_sp": 0.0,
     "rodadas": 5,
-    "tgt_brasil": 0.67515,
-    "tgt_sp": 0.22505,
+    "tgt_brasil": 0.6444375000000001,
+    "tgt_sp": 0.21481250000000005,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
-    "desc": "piso-alvo de caixa 10% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
+    "desc": "caixa acima do piso, mas nada barato E abaixo do alvo agora — segura munição"
   },
   "inputs": {
     "br_src": {
-      "pl": "override",
-      "dy": "config (manual)",
-      "selic": "config (manual)",
-      "ipca": "config (manual)",
+      "pl": "oceans14",
+      "dy": "manual (override)",
+      "selic": "BCB SGS 432",
+      "ipca": "BCB SGS 13522",
       "ibov_dd": "ibov_price.json",
       "fund_dd": "planilha",
       "breadth": "breadth.json",
       "mm200": "breadth.json",
-      "fg": "config (manual)"
+      "fg": "calculado (breadth+DD IBOV+DD fundos)"
     },
     "us_src": {
-      "pe": "config (manual)",
-      "cape": "config (manual)",
-      "dy": "config (manual)",
-      "real_us": "config (manual)",
+      "pe": "indisponível",
+      "cape": "multpl.com (Shiller)",
+      "dy": "indisponível",
+      "real_us": "FRED DFII10 (TIPS)",
       "sp_dd": "SEED — revisar",
       "breadth": "SEED — revisar",
       "mm200": "SEED — revisar",
-      "fg": "config (manual)",
-      "fed": "config (manual)",
-      "us_cpi": "config (manual)"
+      "fg": "indisponível",
+      "fed": "FRED DFF",
+      "us_cpi": "FRED CPIAUCSL (YoY)"
     },
     "br": {
-      "pl": 10.87,
-      "ey": 9.199632014719413,
-      "dy": 5.7,
-      "selic": 14.5,
-      "ipca": 5.3,
-      "real_cdi": 8.91,
+      "pl": 34.1,
+      "ey": 2.932551319648094,
+      "dy": 5,
+      "selic": 14.25,
+      "ipca": 4.72,
+      "real_cdi": 9.245000000000001,
       "ibov_dd": -15.20362232390502,
       "fund_dd": -9.773956563187657,
       "breadth_pct": 20.990000000000002,
       "mm200_pct": 26.919999999999998,
-      "fg": 4,
+      "fg": null,
       "ibov": 168453.94,
       "regime": "bear",
-      "pl_src": "override",
+      "pl_src": "oceans14",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
         "organon": -12.91377586786917,
@@ -222,26 +222,26 @@
       }
     },
     "us": {
-      "pe": 27.0,
-      "cape": 37.0,
-      "ey": 3.7037037037037037,
-      "dy": 1.3,
-      "real_us": 1.9,
+      "pe": null,
+      "cape": 41.38,
+      "ey": null,
+      "dy": null,
+      "real_us": 2.14,
       "sp_dd": -3.74,
       "breadth_pct": 56.45,
       "mm200_pct": 62.0,
-      "fg": 55,
-      "fed": 4.5,
-      "us_cpi": 2.8,
-      "carry": 10.0,
+      "fg": null,
+      "fed": 3.63,
+      "us_cpi": 4.270032656680245,
+      "carry": 10.620000000000001,
       "sp_close": 6180.0,
       "regime": "bull"
     }
   },
   "carry": {
-    "selic": 14.5,
-    "fed": 4.5,
-    "diff": 10.0,
+    "selic": 14.25,
+    "fed": 3.63,
+    "diff": 10.620000000000001,
     "nota": "Carry do hedge do SPXR11 ≈ Selic − Fed. Em BRL, SPXR11 ≈ retorno do S&P (USD) + carry. Vs CDI o carry quase se anula (excesso ≈ S&P USD − Fed), por isso não entra no score — é exibido como contexto da posição."
   },
   "weights": {
