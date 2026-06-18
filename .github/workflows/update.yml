@@ -102,10 +102,51 @@ jobs:
           git pull --rebase origin main
           git push
           
+  # ════════════════════════════════════════════════════════════════════════════
+  # JOB 2b — Breadth S&P 500 (mesma cadência do breadth IBOV; roda em paralelo)
+  # ════════════════════════════════════════════════════════════════════════════
+  update-breadth-us:
+    runs-on: ubuntu-latest
+    needs: [update-fundos]
+    if: |
+      always() &&
+      (needs.update-fundos.result == 'success' ||
+       needs.update-fundos.result == 'skipped') &&
+      (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch')
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies (breadth US)
+        run: pip install pandas numpy yfinance pyarrow requests
+
+      - name: Gera breadth_us.json
+        run: python scripts/fetch_breadth_us.py
+
+      - name: Commit dados de breadth US
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/breadth_us.json data/prices_us.parquet
+          git diff --cached --quiet || git commit -m "chore: update breadth US $(date -u +%Y-%m-%dT%H:%M)Z"
+          git pull --rebase origin main
+          git push
+
   alocador:
     runs-on: ubuntu-latest
-    needs: [update-breadth]
-    if: always() && (needs.update-breadth.result == 'success' || needs.update-breadth.result == 'skipped')
+    needs: [update-breadth, update-breadth-us]
+    if: |
+      always() &&
+      (needs.update-breadth.result == 'success' || needs.update-breadth.result == 'skipped') &&
+      (needs.update-breadth-us.result == 'success' || needs.update-breadth-us.result == 'skipped')
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
@@ -130,12 +171,12 @@ jobs:
   # ════════════════════════════════════════════════════════════════════════════
   # JOB 3 — Deploy GitHub Pages
   # Em push: roda direto (sem depender dos jobs de dados)
-  # Em schedule/dispatch: roda após update-breadth
+  # Em schedule/dispatch: roda após alocador (que por sua vez espera os dois breadths)
   # ════════════════════════════════════════════════════════════════════════════
   deploy:
     runs-on: ubuntu-latest
-    needs: [update-breadth]
-    if: always() && (needs.update-breadth.result == 'success' || needs.update-breadth.result == 'skipped')
+    needs: [alocador]
+    if: always() && (needs.alocador.result == 'success' || needs.alocador.result == 'skipped')
 
     steps:
       - name: Checkout
