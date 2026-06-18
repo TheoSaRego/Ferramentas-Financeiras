@@ -151,71 +151,41 @@ def fetch_bcb(series, default=None):
     except Exception as e: log.warning(f"BCB {series} ({e})"); return default
 
 def fetch_multpl(slug, default=None):
-    """valor corrente de multpl.com (ex.: 's-p-500-pe-ratio', 's-p-500-dividend-yield').
-    Scraping de HTML — funciona na prática (é a mesma função usada pro CAPE), mas
-    cada slug pode ter formatação ligeiramente diferente, daí o log distinguir
-    'sem resposta' (rede/bloqueio) de 'sem match' (página respondeu mas o regex
-    não bateu — geralmente sinal de mudança de layout na página)."""
+    """valor corrente de multpl.com. Scraping de HTML — funciona em produção.
+    Distingue falha de rede de falha de regex no log."""
     try:
-        r = _requests().get(f"https://www.multpl.com/{slug}", headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+        r = _requests().get(f"https://www.multpl.com/{slug}",
+                            headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
         if r.status_code != 200:
             log.warning(f"multpl {slug}: HTTP {r.status_code}"); return default
-        m = re.search(r"Current\s*[\d\w\s\.:]*?([0-9]{1,3}\.[0-9]{1,2})", r.text)
-        if m: return float(m.group(1))
+        m = re.search(r"Current\s*[\d\w\s\.:]*?([0-9]{1,3}[\.,][0-9]{1,2})", r.text)
+        if m: return float(m.group(1).replace(",", "."))
         log.warning(f"multpl {slug}: HTTP 200 mas regex não bateu (layout pode ter mudado)")
     except Exception as e: log.warning(f"multpl {slug} ({e})")
     return default
 
-def fetch_spy_pe(default=None):
-    """P/E do S&P 500. multpl.com primeiro — é a mesma fonte/função que já funciona
-    para o CAPE (fetch_multpl('shiller-pe') vem AUTO em produção), então é a aposta
-    mais segura. yfinance (SPY trailingPE) como fallback: o endpoint .info do
-    yfinance é historicamente o mais frágil/rate-limited da lib (ao contrário do
-    .download() usado no breadth, que é mais robusto) — por isso ficou em segundo."""
-    v = fetch_multpl("s-p-500-pe-ratio")
+# Tabela de slugs multpl.com + série FRED de fallback para cada indicador US
+# Formato: (slug_multpl, serie_fred, usa_yoy_fred)
+_US_SOURCES = {
+    "pe":       ("s-p-500-pe-ratio",         "CAPE",         False),  # CAPE como fb se P/E falhar
+    "cape":     ("shiller-pe",               None,           False),
+    "dy":       ("s-p-500-dividend-yield",   None,           False),
+    "real":     ("10-year-real-interest-rate","DFII10",       False),
+    "fed":      ("federal-funds-rate",        "DFF",          False),
+    "cpi":      ("cpi",                       "CPIAUCSL",     True),   # CPI multpl vem em YoY %
+}
+
+def _fetch_us(key, cfg_override=None):
+    """Busca um indicador US: multpl primeiro, FRED como fallback.
+    Retorna (valor, fonte_label)."""
+    if cfg_override is not None: return cfg_override, "manual (override)"
+    slug, fred_series, fred_yoy = _US_SOURCES[key]
+    v = fetch_multpl(slug)
     if v is not None: return v, "multpl.com"
-    try:
-        import yfinance as yf
-        pe = yf.Ticker("SPY").info.get("trailingPE")
-        if pe: return round(float(pe), 2), "yfinance (SPY trailingPE, fallback)"
-    except Exception as e: log.warning(f"P/E via SPY ({e})")
-    return default, "indisponível"
-
-def fetch_spy_dy(default=None):
-    """Dividend yield do S&P 500. multpl.com primeiro (mesmo motivo de fetch_spy_pe).
-    yfinance (SPY dividendYield) como fallback.
-    NOTA: yfinance já mudou o formato desse campo entre versões (fração 0.013 vs
-    já-em-% 1.3) — normaliza por faixa plausível (DY de SPY historicamente 1-3%)
-    em vez de assumir um formato fixo, pra não gerar erro de fator 100x silencioso."""
-    v = fetch_multpl("s-p-500-dividend-yield")
-    if v is not None: return v, "multpl.com"
-    try:
-        import yfinance as yf
-        dy = yf.Ticker("SPY").info.get("dividendYield")
-        if dy:
-            dy = float(dy)
-            if dy < 0.5: dy *= 100  # veio como fração (ex.: 0.013 → 1.3%)
-            return round(dy, 2), "yfinance (SPY dividendYield, fallback)"
-    except Exception as e: log.warning(f"DY via SPY ({e})")
-    return default, "indisponível"
-
-def fetch_fred(series, default=None):
-    """último valor de uma série FRED via CSV (sem chave). ex.: DFII10 (juro real 10a), DFF (Fed)."""
-    try:
-        r = _requests().get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}", timeout=20)
-        rows = [l for l in r.text.strip().splitlines()[1:] if l.split(",")[-1] not in ("", ".")]
-        return float(rows[-1].split(",")[-1])
-    except Exception as e: log.warning(f"FRED {series} ({e})"); return default
-
-def fetch_fred_yoy(series, default=None):
-    """variação 12m de uma série de nível FRED (ex.: CPIAUCSL → inflação YoY US)."""
-    try:
-        r = _requests().get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}", timeout=20)
-        vals = [float(l.split(",")[-1]) for l in r.text.strip().splitlines()[1:]
-                if l.split(",")[-1] not in ("", ".")]
-        if len(vals) >= 13: return (vals[-1]/vals[-13] - 1) * 100
-    except Exception as e: log.warning(f"FRED yoy {series} ({e})")
-    return default
+    if fred_series:
+        v = (fetch_fred_yoy(fred_series) if fred_yoy else fetch_fred(fred_series))
+        if v is not None: return v, f"FRED {fred_series} (fallback)"
+    return None, "indisponível"
 
 def fetch_cnn_fng(default=None):
     try:
@@ -227,8 +197,74 @@ def fetch_cnn_fng(default=None):
         }
         r = _requests().get("https://production.dataviz.cnn.io/index/fearandgreed/graphdata",
                             headers=headers, timeout=20)
+        if r.status_code != 200:
+            log.warning(f"CNN F&G: HTTP {r.status_code}"); return default
         return round(float(r.json()["fear_and_greed"]["score"]))
     except Exception as e: log.warning(f"CNN F&G ({e})"); return default
+
+# ── DD do S&P 500 — ATH persistido ────────────────────────────────────────────
+# Lógica: sp_ath.json guarda o pico histórico conhecido. A cada execução:
+#   1) busca o preço atual do ^GSPC via yfinance (tempo real)
+#   2) se preço atual > ATH salvo → atualiza ATH
+#   3) calcula DD = (atual / ATH - 1) * 100
+# O arquivo sp_ath.json fica no repo (commitado junto com breadth_us.json).
+# "Para todo o sempre" = esse arquivo só cresce, nunca é apagado.
+SP_ATH_FILE = DOCS / "sp_ath.json"
+
+def fetch_sp_price():
+    """Preço mais recente do ^GSPC via yfinance download (mais robusto que .info)."""
+    import yfinance as yf
+    try:
+        g = yf.download("^GSPC", period="5d", auto_adjust=True, progress=False, threads=False)
+        c = (g["Close"] if "Close" in g else g).dropna().squeeze()
+        return round(float(c.iloc[-1]), 2)
+    except Exception as e:
+        log.warning(f"^GSPC preço ({e})"); return None
+
+def fetch_sp_ath_and_dd():
+    """Calcula DD do S&P com ATH persistido em sp_ath.json.
+    Inicializa o ATH com 6 meses de histórico na primeira execução (garante que
+    o pico real dos últimos 6m está capturado, sem precisar ir mais longe).
+    Retorna (preco_atual, ath, dd_pct, fonte)."""
+    import yfinance as yf
+    # 1) carrega ATH salvo (ou inicializa)
+    ath_data = {}
+    if SP_ATH_FILE.exists():
+        try: ath_data = json.loads(SP_ATH_FILE.read_text())
+        except Exception: pass
+    saved_ath = ath_data.get("ath")
+
+    # 2) se não há ATH salvo, inicializa com 6 meses de histórico
+    if saved_ath is None:
+        log.info("sp_ath.json não existe — inicializando ATH com 6 meses de histórico")
+        try:
+            g = yf.download("^GSPC", period="6mo", auto_adjust=True, progress=False, threads=False)
+            c = (g["Close"] if "Close" in g else g).dropna().squeeze()
+            saved_ath = round(float(c.max()), 2)
+            log.info(f"ATH inicializado: {saved_ath} (pico dos últimos 6 meses)")
+        except Exception as e:
+            log.warning(f"falha ao inicializar ATH ({e})"); return None, None, None, "indisponível"
+
+    # 3) preço atual
+    cur = fetch_sp_price()
+    if cur is None: return None, None, None, "indisponível"
+
+    # 4) atualiza ATH se necessário
+    ath = saved_ath
+    if cur > ath:
+        log.info(f"novo ATH do S&P: {cur} (anterior: {ath})")
+        ath = cur
+
+    # 5) persiste
+    try:
+        SP_ATH_FILE.write_text(json.dumps(
+            {"ath": ath, "updated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")},
+            indent=2), encoding="utf-8")
+    except Exception as e:
+        log.warning(f"não consegui salvar sp_ath.json ({e})")
+
+    dd = round((cur / ath - 1) * 100, 2)
+    return cur, ath, dd, "yfinance ^GSPC + ATH persistido"
 
 def ibov_dd():
     j = rj("ibov_price.json") or {}; d = j.get("data", [])
@@ -396,9 +432,9 @@ def s_fg(fg):
     return s, f"{fg:.0f}/100 — {l}", fg
 
 WEIGHTS_BR = {"erp":.22,"pl":.12,"dy":.06,"ibov_dd":.16,"fund_dd":.16,"breadth":.12,"mm200":.06,"fg":.10}
-WEIGHTS_US = {"erp":.22,"pe":.12,"cape":.16,"sp_dd":.18,"breadth":.14,"mm200":.06,"fg":.12}
+WEIGHTS_US = {"erp":.22,"pe":.14,"cape":.16,"sp_dd":.22,"fg":.26}
 GROUPS_BR = {"Valuation":["erp","pl","dy"],"Drawdown":["ibov_dd","fund_dd"],"Breadth":["breadth","mm200"],"Sentimento":["fg"]}
-GROUPS_US = {"Valuation":["erp","pe","cape"],"Drawdown":["sp_dd"],"Breadth":["breadth","mm200"],"Sentimento":["fg"]}
+GROUPS_US = {"Valuation":["erp","pe","cape"],"Drawdown":["sp_dd"],"Sentimento":["fg"]}
 
 def composite(scores, weights):
     num = den = 0.0; missing = []
@@ -482,7 +518,6 @@ def decay_monitor(cfg):
 def build():
     cfg = load_config()
     bBR = (rj("breadth.json") or {}).get("latest", {})
-    bUS = (rj("breadth_us.json") or {}).get("latest", {})
     d = rj("data.json") or {}
 
     # ── Brasil ──
@@ -517,29 +552,27 @@ def build():
     score_br, miss_br, conf_br = composite(scBR, WEIGHTS_BR)
 
     # ── S&P ──
-    pe, pe_src = _pick2(cfg.get("pe_us_override"), fetch_spy_pe)
-    cape, cape_src = _pick(cfg.get("cape_us_override"), lambda: fetch_multpl("shiller-pe"), "multpl.com (Shiller)")
-    dy_us, dy_us_src = _pick2(cfg.get("dy_us_override"), fetch_spy_dy)
-    real_us, real_us_src = _pick(cfg.get("real_us_override"), lambda: fetch_fred("DFII10"), "FRED DFII10 (TIPS)")
-    fed, fed_src = _pick(cfg.get("fed_override"), lambda: fetch_fred("DFF"), "FRED DFF")
-    us_cpi, us_cpi_src = _pick(cfg.get("us_cpi_override"), lambda: fetch_fred_yoy("CPIAUCSL"), "FRED CPIAUCSL (YoY)")
-    fg_us, fg_us_src = _pick(cfg.get("fg_us_override"), lambda: fetch_cnn_fng(), "CNN")
+    pe,      pe_src      = _fetch_us("pe",   cfg.get("pe_us_override"))
+    cape,    cape_src    = _fetch_us("cape", cfg.get("cape_us_override"))
+    dy_us,   dy_us_src   = _fetch_us("dy",   cfg.get("dy_us_override"))
+    real_us, real_us_src = _fetch_us("real", cfg.get("real_us_override"))
+    fed,     fed_src     = _fetch_us("fed",  cfg.get("fed_override"))
+    us_cpi,  us_cpi_src  = _fetch_us("cpi",  cfg.get("us_cpi_override"))
+    fg_us_raw = cfg.get("fg_us_override")
+    if fg_us_raw is not None:
+        fg_us, fg_us_src = fg_us_raw, "manual (override)"
+    else:
+        fg_us = fetch_cnn_fng()
+        fg_us_src = "CNN" if fg_us is not None else "MANUAL — CNN indisponível; preencha você"
+    sp_cur, sp_ath, sp_dd, sp_dd_src = fetch_sp_ath_and_dd()
     ey_us = (100/pe) if pe else None
-    sp_dd = bUS.get("sp_dd")
-    us_breadth_ok = bUS.get("composite") is not None and not (rj("breadth_us.json") or {}).get("_nota")
-    bsrc = (bUS.get("source") or "")
-    breadth_us_label = ("S5TW/S5FI/S5TH" if bsrc == "indices_oficiais"
-                        else "cálculo próprio" if bsrc == "calculo_proprio" else "SEED — revisar")
     carry = (selic - fed) if (selic is not None and fed is not None) else None
     src_us = {
         "pe": pe_src, "cape": cape_src, "dy": dy_us_src, "real_us": real_us_src,
-        "sp_dd": "breadth_us.json (^GSPC)" if sp_dd is not None and bsrc else "SEED — revisar",
-        "breadth": breadth_us_label, "mm200": breadth_us_label,
-        "fg": fg_us_src, "fed": fed_src, "us_cpi": us_cpi_src,
+        "sp_dd": sp_dd_src, "fg": fg_us_src, "fed": fed_src, "us_cpi": us_cpi_src,
     }
     scUS = {"erp": s_erp_us(ey_us, real_us), "pe": s_pe_us(pe), "cape": s_cape_us(cape),
-            "sp_dd": s_dd_us(sp_dd), "breadth": s_breadth(bUS.get("composite")),
-            "mm200": s_mm200(bUS.get("breadth_200")), "fg": s_fg(fg_us)}
+            "sp_dd": s_dd_us(sp_dd), "fg": s_fg(fg_us)}
     score_us, miss_us, conf_us = composite(scUS, WEIGHTS_US)
 
     dec = decide(cfg, score_br, score_us)
@@ -562,7 +595,7 @@ def build():
         "brasil_signal": {"score": score_br, "conf": conf_br, "label": sigBR[0], "cor": sigBR[1],
                           "regime": bBR.get("regime"), "groups": grp(GROUPS_BR, scBR, WEIGHTS_BR)},
         "sp_signal": {"score": score_us, "conf": conf_us, "label": sigUS[0], "cor": sigUS[1],
-                      "regime": bUS.get("regime"), "groups": grp(GROUPS_US, scUS, WEIGHTS_US)},
+                      "groups": grp(GROUPS_US, scUS, WEIGHTS_US)},
         "decision": dec,
         # bloco cru p/ a página recalcular client-side
         "inputs": {
@@ -573,9 +606,8 @@ def build():
                    "fg": cfg.get("fg_br"), "ibov": ibov_cur, "regime": bBR.get("regime"), "pl_src": pl_src,
                    "fund_dd_src": fdd_src, "fund_dd_detail": fdd_detail},
             "us": {"pe": pe, "cape": cape, "ey": ey_us, "dy": dy_us, "real_us": real_us, "sp_dd": sp_dd,
-                   "breadth_pct": (bUS.get("composite") or 0)*100, "mm200_pct": (bUS.get("breadth_200") or 0)*100,
                    "fg": fg_us, "fed": fed, "us_cpi": us_cpi, "carry": carry,
-                   "sp_close": bUS.get("sp_close"), "regime": bUS.get("regime")},
+                   "sp_cur": sp_cur, "sp_ath": sp_ath},
         },
         "carry": {"selic": selic, "fed": fed, "diff": carry,
                   "nota": ("Carry do hedge do SPXR11 ≈ Selic − Fed. Em BRL, SPXR11 ≈ retorno do S&P (USD) "
