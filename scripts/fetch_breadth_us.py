@@ -89,9 +89,21 @@ def fetch_breadth_indices():
 
 
 def compute_from_constituents():
-    """Fallback: baixa os ~500 constituintes e computa o breadth (mais pesado/frágil)."""
+    """Fallback: baixa os ~500 constituintes e computa o breadth (mais pesado/frágil).
+    Salva um cache em CACHE (data/prices_us.parquet) — a variável já existia no
+    módulo mas nunca era escrita, o que também quebrava o workflow (git add
+    falhava com pathspec error porque o arquivo nunca existia; corrigido também
+    no update.yml). O cache não é lido de volta hoje (cada chamada baixa fresco),
+    mas fica disponível pra debugging/auditoria e para uma futura otimização de
+    leitura incremental."""
     syms = get_constituents()
     px = fetch_prices(syms)
+    try:
+        DATA.mkdir(exist_ok=True)
+        px.to_parquet(CACHE)
+        log.info(f"cache salvo em {CACHE} ({px.shape[0]} datas x {px.shape[1]} símbolos)")
+    except Exception as e:
+        log.warning(f"não consegui salvar cache em {CACHE} ({e}) — seguindo sem cache")
     cols = [c for c in px.columns if c != "^GSPC"]
     stk = px[cols]; last = stk.index[-1]; out = {}
     for w in MA:
@@ -101,6 +113,7 @@ def compute_from_constituents():
         out[w] = round(float((p[valid] > m[valid]).sum()) / n, 4) if n >= 5 else None
     out["n"] = len(cols)
     return out
+
 
 
 def fetch_gspc_dd():
