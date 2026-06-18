@@ -116,16 +116,6 @@ def compute_from_constituents():
 
 
 
-def fetch_gspc_dd():
-    """drawdown do índice ^GSPC (sempre via Yahoo — símbolo robusto)."""
-    import yfinance as yf
-    try:
-        g = yf.download("^GSPC", period="2y", auto_adjust=True, progress=False, threads=False)
-        c = (g["Close"] if "Close" in g else g).dropna().squeeze()
-        cur, ath = float(c.iloc[-1]), float(c.max())
-        return round(cur, 2), round(ath, 2), round((cur/ath - 1)*100, 2)
-    except Exception as e:
-        log.warning(f"^GSPC dd ({e})"); return None, None, None
 
 
 def build():
@@ -143,14 +133,12 @@ def build():
            "n_constituents": n, "source": src}
     row["composite"] = composite(b[20], b[50], b[200])
     row["regime"] = classify_regime(b[200])
-
-    cur, ath, dd = fetch_gspc_dd()
-    if cur is not None:
-        row.update({"sp_close": cur, "sp_ath": ath, "sp_dd": dd})
+    # NOTA: sp_dd foi removido daqui — agora é calculado no allocator.py via ATH
+    # persistido em docs/sp_ath.json, independente deste job.
 
     out = {"latest": row, "count": 1}
     OUT.write_text(json.dumps(out, ensure_ascii=False, indent=2), encoding="utf-8")
-    log.info(f"breadth_us.json [{src}]: composite={row['composite']} regime={row['regime']} dd={row.get('sp_dd')}")
+    log.info(f"breadth_us.json [{src}]: composite={row['composite']} regime={row['regime']}")
     return out
 
 
