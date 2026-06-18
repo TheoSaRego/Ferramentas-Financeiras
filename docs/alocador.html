@@ -89,8 +89,23 @@
   details.adv > summary:hover { color: var(--text); }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; }
 
-  /* tooltip — dotted + title, padrão do site */
-  .tip { border-bottom: 1px dotted var(--muted); cursor: help; }
+  /* ── Global custom tooltip — idêntico ao fundos.html ── */
+  #g-tip {
+    position: fixed;
+    background: var(--text); color: var(--bg);
+    font-family: 'Courier New', monospace; font-size: 0.60rem;
+    padding: 9px 13px; border-radius: 6px;
+    white-space: pre-line; word-break: break-word;
+    width: max-content; max-width: 280px;
+    pointer-events: none;
+    opacity: 0; transform: translateY(4px);
+    transition: opacity 0.13s ease, transform 0.13s ease;
+    z-index: 99999; line-height: 1.72;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.28);
+  }
+  #g-tip.visible { opacity: 1; transform: translateY(0); }
+  [data-tip] { cursor: help; }
+  .tip { border-bottom: 1px dotted var(--muted); }
   .src-link { text-decoration: underline dotted; cursor: pointer; }
   .src-link:hover { opacity: 0.75; }
 
@@ -154,12 +169,13 @@
 </style>
 </head>
 <body>
+<div id="g-tip"></div>
 
 <div class="top-bar">
   <a class="wordmark" href="index.html">ferramentas financeiras</a>
   <div class="top-bar-right">
     <a class="back" href="index.html">← módulos</a>
-    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Alternar tema">◑</button>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" data-tip="Alternar tema">◑</button>
   </div>
 </div>
 
@@ -255,7 +271,7 @@
     <div style="margin-top:1rem"><span class="tag">política de caixa &amp; alvos</span>
       <div class="grid2">
         <div>
-          <div class="field"><label><span class="tip" title="alvo do risco para o Brasil; o S&P recebe o complemento">Alvo Brasil</span></label>
+          <div class="field"><label><span class="tip" data-tip="alvo do risco para o Brasil; o S&P recebe o complemento">Alvo Brasil</span></label>
             <div class="stepper"><input id="alvo_brasil" type="text"><span class="unit">%</span></div></div>
           <div class="field"><label>Caixa mín (barato)</label>
             <div class="stepper"><input id="caixa_min" type="text"><span class="unit">%</span></div></div>
@@ -263,7 +279,7 @@
             <div class="stepper"><input id="caixa_max" type="text"><span class="unit">%</span></div></div>
         </div>
         <div>
-          <div class="field"><label><span class="tip" title="fração do gap até o piso desplegada por rodada — quanto menor, mais suave">λ deploy</span></label>
+          <div class="field"><label><span class="tip" data-tip="fração do gap até o piso desplegada por rodada — quanto menor, mais suave">λ deploy</span></label>
             <div class="stepper"><input id="lambda" type="text"></div></div>
           <div class="field"><label>Munição mínima</label>
             <div class="stepper"><input id="municao_min" type="text"><span class="unit">%</span></div></div>
@@ -530,7 +546,7 @@ const SRC_LINKS={
   us_dy:    'https://www.multpl.com/s-p-500-dividend-yield',
   us_real_us: 'https://www.multpl.com/10-year-real-interest-rate',
   us_fed:   'https://www.multpl.com/federal-funds-rate',
-  us_cpi:   'https://www.multpl.com/cpi',
+  us_cpi:   'https://www.multpl.com/inflation',
   us_sp_dd: 'https://finance.yahoo.com/quote/%5EGSPC/',
   us_fg:    'https://edition.cnn.com/markets/fear-and-greed',
 };
@@ -541,7 +557,7 @@ function fillSources(a){
     const [cls,lab]=classifySrc(map[side][k]);
     const href=SRC_LINKS[side+'_'+k]||null;
     el.className='src '+cls+(href?' src-link':'');
-    el.textContent=lab; el.title=map[side][k];
+    el.textContent=lab; el.setAttribute('data-tip', map[side][k]);
     if(href){ el.style.cursor='pointer'; el.onclick=()=>window.open(href,'_blank'); }
     else { el.style.cursor=''; el.onclick=null; }
   }
@@ -569,6 +585,44 @@ function exportConfig(){ const c=readCfg();
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='config.json'; a.click(); }
 
 boot();
+
+// ── GLOBAL CUSTOM TOOLTIP — idêntico ao fundos.html ──────────────────────────
+(function(){
+  const tip = document.getElementById('g-tip');
+  if (!tip) return;
+  let activeEl = null;
+  function show(el, e) {
+    const text = el.getAttribute('data-tip');
+    if (!text || !text.trim()) return;
+    tip.textContent = text;
+    tip.classList.add('visible');
+    move(e); activeEl = el;
+  }
+  function hide() { tip.classList.remove('visible'); activeEl = null; }
+  function move(e) {
+    if (!tip.classList.contains('visible')) return;
+    const rect = tip.getBoundingClientRect();
+    const tw = rect.width || 200, th = rect.height || 60, mg = 14;
+    let x = e.clientX + mg, y = e.clientY + mg;
+    if (x + tw > window.innerWidth  - mg) x = e.clientX - tw - mg;
+    if (x < mg) x = mg;
+    if (y + th > window.innerHeight - mg) y = e.clientY - th - mg;
+    if (y < mg) y = mg;
+    tip.style.left = x + 'px'; tip.style.top = y + 'px';
+  }
+  document.addEventListener('mouseover', function(e) {
+    const el = e.target.closest('[data-tip]');
+    if (el && el !== activeEl) show(el, e);
+    else if (!el && activeEl) hide();
+  });
+  document.addEventListener('mouseout', function(e) {
+    const el = e.target.closest('[data-tip]');
+    if (el && !el.contains(e.relatedTarget)) hide();
+  });
+  document.addEventListener('mousemove', move);
+  document.addEventListener('scroll', hide, true);
+  document.addEventListener('click', hide);
+})();
 </script>
 </body>
 </html>
