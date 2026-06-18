@@ -194,7 +194,7 @@ _US_SOURCES = {
     "cape":     ("shiller-pe",                None,       False),
     "dy":       ("s-p-500-dividend-yield",    None,       False),
     "real":     ("10-year-real-interest-rate", "DFII10",  False),
-    "fed":      ("federal-funds-rate",         "DFF",     False),
+    "fed":      ("fed-funds-rate",             "DFF",     False),
     "cpi":      ("inflation",                  "CPIAUCSL", True),  # multpl.com/inflation = YoY%
 }
 
