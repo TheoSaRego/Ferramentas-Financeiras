@@ -151,28 +151,51 @@ def fetch_bcb(series, default=None):
     except Exception as e: log.warning(f"BCB {series} ({e})"); return default
 
 def fetch_multpl(slug, default=None):
-    """valor corrente de multpl.com. Scraping de HTML — funciona em produção.
-    Distingue falha de rede de falha de regex no log."""
+    """valor corrente de multpl.com via meta-description (o gráfico é JS; o HTML
+    estático tem o dado em <meta name='description' content='... is 31.98 ...'>.
+    Mantém fallback para o regex antigo caso o formato mude."""
     try:
         r = _requests().get(f"https://www.multpl.com/{slug}",
                             headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
         if r.status_code != 200:
             log.warning(f"multpl {slug}: HTTP {r.status_code}"); return default
-        m = re.search(r"Current\s*[\d\w\s\.:]*?([0-9]{1,3}[\.,][0-9]{1,2})", r.text)
-        if m: return float(m.group(1).replace(",", "."))
-        log.warning(f"multpl {slug}: HTTP 200 mas regex não bateu (layout pode ter mudado)")
+        # 1) meta description: "... is 31.98, a change of ..."
+        m = re.search(r'<meta[^>]+name=["\']description["\'][^>]+content=["\'][^"\']*?is\s+([\d]+\.[\d]+)', r.text)
+        if m: return float(m.group(1))
+        # 2) fallback: qualquer "Current ... número" no body
+        m = re.search(r"Current\s*[\d\w\s\.:]*?([\d]+\.[\d]{1,2})", r.text)
+        if m: return float(m.group(1))
+        log.warning(f"multpl {slug}: HTTP 200 mas nenhum regex bateu (layout pode ter mudado)")
     except Exception as e: log.warning(f"multpl {slug} ({e})")
+    return default
+
+def fetch_fred(series, default=None):
+    """último valor de uma série FRED via CSV (sem chave). ex.: DFII10, DFF."""
+    try:
+        r = _requests().get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}", timeout=20)
+        rows = [l for l in r.text.strip().splitlines()[1:] if l.split(",")[-1] not in ("", ".")]
+        return float(rows[-1].split(",")[-1])
+    except Exception as e: log.warning(f"FRED {series} ({e})"); return default
+
+def fetch_fred_yoy(series, default=None):
+    """variação 12m de uma série de nível FRED (ex.: CPIAUCSL → inflação YoY US)."""
+    try:
+        r = _requests().get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series}", timeout=20)
+        vals = [float(l.split(",")[-1]) for l in r.text.strip().splitlines()[1:]
+                if l.split(",")[-1] not in ("", ".")]
+        if len(vals) >= 13: return round((vals[-1]/vals[-13] - 1) * 100, 2)
+    except Exception as e: log.warning(f"FRED yoy {series} ({e})")
     return default
 
 # Tabela de slugs multpl.com + série FRED de fallback para cada indicador US
 # Formato: (slug_multpl, serie_fred, usa_yoy_fred)
 _US_SOURCES = {
-    "pe":       ("s-p-500-pe-ratio",         "CAPE",         False),  # CAPE como fb se P/E falhar
-    "cape":     ("shiller-pe",               None,           False),
-    "dy":       ("s-p-500-dividend-yield",   None,           False),
-    "real":     ("10-year-real-interest-rate","DFII10",       False),
-    "fed":      ("federal-funds-rate",        "DFF",          False),
-    "cpi":      ("cpi",                       "CPIAUCSL",     True),   # CPI multpl vem em YoY %
+    "pe":       ("s-p-500-pe-ratio",          None,       False),  # sem série FRED de trailing PE
+    "cape":     ("shiller-pe",                None,       False),
+    "dy":       ("s-p-500-dividend-yield",    None,       False),
+    "real":     ("10-year-real-interest-rate", "DFII10",  False),
+    "fed":      ("federal-funds-rate",         "DFF",     False),
+    "cpi":      ("inflation",                  "CPIAUCSL", True),  # multpl.com/inflation = YoY%
 }
 
 def _fetch_us(key, cfg_override=None):
