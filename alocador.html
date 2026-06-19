@@ -504,7 +504,7 @@ function facHTML(side,k,scoreArr,editId,unit){
   const w=na?0:Math.max(2,s*10);
   let editor='';
   if(editId){
-    editor='<span class="finput"><input id="'+editId+'" type="text" inputmode="decimal" oninput="onSigEdit()">'+
+    editor='<span class="finput"><input id="'+editId+'" type="text" inputmode="decimal" oninput="cacheSig(this)" onchange="onSigEdit()">'+
            '<span class="u">'+unit+'</span></span>';
   }
   return '<div class="fac'+(na?' na':'')+'">'+
@@ -544,7 +544,7 @@ function renderSig(elId, market, score, conf, scores, groups, weights, side){
     : [['real_us','juro real 10a','%'],['fed','Fed funds','%'],['us_cpi','CPI 12m','%']];
   let macroHTML='<div class="macro"><div class="mhd">insumos macro — entram no ERP'+(side==='us'?' / carry':'')+'</div><div class="mrow">';
   for(const [id,nm,u] of macro){
-    macroHTML+='<span class="mitem">'+nm+' <span class="finput"><input id="'+id+'" type="text" inputmode="decimal" oninput="onSigEdit()">'+
+    macroHTML+='<span class="mitem">'+nm+' <span class="finput"><input id="'+id+'" type="text" inputmode="decimal" oninput="cacheSig(this)" onchange="onSigEdit()">'+
       '<span class="u">'+u+'</span></span><span class="src" id="src_'+side+'_'+id+'"></span></span>';
   }
   macroHTML+='</div></div>';
@@ -634,6 +634,7 @@ function flagNeedsEdit(R){
 }
 
 let _sigCache={};
+function cacheSig(el){ if(el&&el.id){ _sigCache[el.id]=el.value; } }   // só guarda; não re-renderiza
 function onSigEdit(){ SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); render(compute(readCfg())); }
 function restoreSigInputs(){ for(const id in _sigCache){ const el=document.getElementById(id); if(el && _sigCache[id]!=null) el.value=_sigCache[id]; } }
 
