@@ -650,7 +650,7 @@ function fillFromAllocation(a){ if(!a) return;
   setF('municao_min',(bd.municao_minima!=null?bd.municao_minima*100:5));
   const af=document.getElementById('asof'); if(af&&a.asof) af.textContent='sinais de '+a.asof+' · recalcula no navegador a partir dos seus números';
 }
-const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,alvo_brasil:75,caixa_min:3,caixa_max:30,municao_min:3,
+const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,alvo_brasil:75,caixa_min:5,caixa_max:30,municao_min:5,
   k_barateza:1.0,k_reserva:1.0,
   pl_br:10.9,dy_br:5.7,selic:14.5,ipca:5.3,ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,
   pe_us:27,cape_us:37,dy_us:1.3,real_us:1.9,fed:4.5,us_cpi:2.8,sp_dd:-4,fg_us:55};
