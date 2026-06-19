@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T21:35:52.221866+00:00",
+  "generatedAt": "2026-06-19T21:47:53.328003+00:00",
   "asof": "2026-06-19",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -14,7 +14,7 @@
     "alvo_sp": 0.25
   },
   "brasil_signal": {
-    "score": 5.81,
+    "score": 6.18,
     "conf": "ALTA",
     "label": "NEUTRO",
     "cor": "#b07d0a",
@@ -25,8 +25,8 @@
         "items": [
           {
             "key": "erp",
-            "score": 5.5,
-            "read": "ERP real -0.2pp — juro real levem. superior",
+            "score": 7,
+            "read": "ERP real +0.4pp — bolsa levem. acima",
             "weight": 0.22
           },
           {
@@ -144,26 +144,26 @@
     }
   },
   "decision": {
-    "tranche": 0.0,
-    "piso": 0.11285,
+    "tranche": 1300.0,
+    "piso": 0.10729999999999999,
     "cashpct": 0.2,
-    "gap": 0.08715,
-    "want": 8600.0,
-    "aloc_brasil": 0.0,
+    "gap": 0.09270000000000002,
+    "want": 9200.0,
+    "aloc_brasil": 1300.0,
     "aloc_sp": 0.0,
     "rodadas": 5,
-    "tgt_brasil": 0.6653625,
-    "tgt_sp": 0.2217875,
+    "tgt_brasil": 0.669525,
+    "tgt_sp": 0.223175,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
-    "desc": "caixa acima do piso, mas nada barato E abaixo do alvo agora — segura munição"
+    "desc": "piso-alvo de caixa 11% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
   },
   "inputs": {
     "br_src": {
       "pl": "manual (override)",
       "dy": "manual (override)",
       "selic": "BCB SGS 432",
-      "ipca": "BCB SGS 13522",
+      "ipca": "data.json (Focus)",
       "ibov_dd": "ibov_price.json",
       "fund_dd": "planilha",
       "breadth": "breadth.json",
@@ -185,8 +185,8 @@
       "ey": 9.066183136899365,
       "dy": 5.7,
       "selic": 14.25,
-      "ipca": 4.72,
-      "real_cdi": 9.245000000000001,
+      "ipca": 5.3,
+      "real_cdi": 8.665,
       "ibov_dd": -15.264194063133951,
       "fund_dd": -11.743008543839267,
       "breadth_pct": 22.97,
