@@ -11,11 +11,13 @@
     --bg: #f7f6f2; --surface: #ffffff; --border: rgba(0,0,0,0.08);
     --border-str: rgba(0,0,0,0.16); --text: #1a1916; --muted: #7a7870;
     --green: #1a7a52; --green-light: #e8f5ee; --accent: #e05c2a;
+    --track: rgba(0,0,0,0.06);
   }
   [data-theme=dark] {
     --bg: #141412; --surface: #1e1d1a; --border: rgba(255,255,255,0.09);
     --border-str: rgba(255,255,255,0.18); --text: #e8e6e0; --muted: #7a7870;
     --green: #2db87a; --green-light: #0d2e1e; --accent: #f07040;
+    --track: rgba(255,255,255,0.07);
   }
 
   body {
@@ -24,56 +26,159 @@
     transition: background 0.2s, color 0.2s;
   }
 
-  /* header — idêntico ao index */
   .top-bar { display: flex; justify-content: space-between; align-items: center;
     margin-bottom: 2.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
   .wordmark { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--muted);
     letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none; }
   .wordmark:hover { color: var(--text); }
   .top-bar-right { display: flex; align-items: center; gap: 0.75rem; }
-  .back { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--muted);
-    text-decoration: none; }
+  .back { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--muted); text-decoration: none; }
   .back:hover { color: var(--text); }
   .theme-btn { font-family: 'Courier New', monospace; font-size: 0.72rem; padding: 5px 14px;
     border-radius: 20px; border: 1px solid var(--border); background: transparent;
     color: var(--muted); cursor: pointer; transition: all 0.15s; }
   .theme-btn:hover { border-color: var(--text); color: var(--text); }
 
-  .hero { margin-bottom: 2.25rem; }
-  .hero h1 { font-size: 2.1rem; font-weight: normal; letter-spacing: -0.03em; line-height: 1.15;
-    margin-bottom: 0.6rem; }
-  .hero p { font-family: 'Courier New', monospace; font-size: 0.76rem; color: var(--muted);
-    line-height: 1.6; max-width: 540px; }
+  .hero { margin-bottom: 2rem; }
+  .hero h1 { font-size: 2.1rem; font-weight: normal; letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 0.6rem; }
+  .hero p { font-family: 'Courier New', monospace; font-size: 0.76rem; color: var(--muted); line-height: 1.6; max-width: 560px; }
+  .asof { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); margin-top: 0.7rem; letter-spacing: 0.04em; }
 
-  /* mono UI helpers */
   .tag { font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase;
     letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; display: block; }
-
   .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
     padding: 1.5rem 1.5rem 1.4rem; margin-bottom: 1rem; }
   .panel h2 { font-size: 1.15rem; font-weight: normal; letter-spacing: -0.02em; margin-bottom: 0.2rem; }
 
-  /* inputs / steppers — linguagem do site (mono, tokens) */
+  /* ── VERDICT: caixa-alvo (o output principal) ─────────────────────────── */
+  .verdict { background: var(--surface); border: 1px solid var(--border-str); border-radius: 14px;
+    padding: 1.7rem 1.6rem 1.5rem; margin-bottom: 1rem; }
+  .verdict .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.1rem; }
+  .verdict .head .lbl { font-family: 'Courier New', monospace; font-size: 0.62rem;
+    text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+  .verdict .head .when { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted); }
+
+  .target-row { display: flex; align-items: baseline; gap: 1.1rem; flex-wrap: wrap; }
+  .target-big { font-size: 3rem; font-weight: normal; letter-spacing: -0.03em; line-height: 1; }
+  .target-big small { font-size: 1rem; color: var(--muted); letter-spacing: 0; }
+  .action-pill { font-family: 'Courier New', monospace; font-size: 0.72rem; font-weight: bold;
+    padding: 6px 14px; border-radius: 22px; border: 1px solid; letter-spacing: 0.02em; }
+  .act-deploy { color: var(--accent); border-color: var(--accent); background: transparent; }
+  .act-hold   { color: var(--green); border-color: var(--green); background: transparent; }
+  .act-build  { color: #b07d0a; border-color: #b07d0a; background: transparent; }
+
+  /* gauge: caixa atual vs alvo dentro da banda min..max */
+  .gauge { margin: 1.3rem 0 0.5rem; }
+  .gauge .track { position: relative; height: 12px; border-radius: 7px; background: var(--track); }
+  .gauge .fill { position: absolute; left:0; top:0; height: 100%; border-radius: 7px;
+    background: var(--text); opacity: 0.16; }
+  .gauge .cur { position: absolute; top: -5px; width: 3px; height: 22px; border-radius: 2px; background: var(--text); }
+  .gauge .tgt { position: absolute; top: -8px; width: 0; height: 0;
+    border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 9px solid var(--accent); transform: translateX(-6px); }
+  .gauge .band { position: absolute; top: -3px; width: 2px; height: 18px; background: var(--border-str); }
+  .gauge .scale { display: flex; justify-content: space-between; font-family: 'Courier New', monospace;
+    font-size: 0.56rem; color: var(--muted); margin-top: 10px; }
+  .gauge-legend { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted);
+    display: flex; gap: 1.1rem; margin-top: 0.6rem; flex-wrap: wrap; }
+  .gauge-legend b { color: var(--text); font-weight: normal; }
+
+  .why { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--muted);
+    line-height: 1.7; margin-top: 1.1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  .why b { color: var(--text); }
+  .why .layer { display: flex; gap: 0.6rem; padding: 3px 0; }
+  .why .layer .ic { color: var(--accent); flex: 0 0 auto; }
+
+  /* convergência: barras por mercado */
+  .conv { margin-top: 1.1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; }
+  .conv .c { border: 1px solid var(--border); border-radius: 10px; padding: 0.8rem 0.95rem; background: var(--bg); }
+  .conv .ck { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.06em; display: flex; justify-content: space-between; align-items: center; }
+  .conv .cstate { font-family: 'Courier New', monospace; font-size: 0.5rem; padding: 2px 6px; border-radius: 10px; border: 1px solid var(--border-str); color: var(--muted); }
+  .conv .cstate.cheap { color: var(--green); border-color: var(--green); }
+  .conv .cstate.rich  { color: #b4322a; border-color: #b4322a; }
+  .conv .pbar { position: relative; height: 7px; border-radius: 4px; background: var(--track); margin: 0.6rem 0 0; }
+  .conv .pbar > i { position: absolute; left:0; top:0; height:100%; border-radius:4px; background: var(--text); opacity: 0.5; }
+  .conv .pbar > .t { position: absolute; top: -3px; width: 2px; height: 13px; background: var(--accent); border-radius: 1px; }
+  .conv .cap { font-family: 'Courier New', monospace; font-size: 0.56rem; color: var(--muted); display: flex; justify-content: space-between; margin-top: 5px; }
+
+  .carrybox { font-family: 'Courier New', monospace; font-size: 0.64rem; color: var(--muted);
+    background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem; margin-top: 1rem; line-height: 1.6; }
+  .carrybox b { color: var(--text); }
+
+  /* ── SINAIS DE MERCADO — agora peça central, colapsável aberto ────────── */
+  details.signals-wrap { margin-bottom: 1rem; }
+  details.signals-wrap > summary { list-style: none; cursor: pointer; }
+  details.signals-wrap > summary::-webkit-details-marker { display: none; }
+  .sig-summary { display: flex; justify-content: space-between; align-items: center;
+    font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted); padding: 0.3rem 0 0.9rem; }
+  .sig-summary .hint { text-transform: none; letter-spacing: 0; }
+  details.signals-wrap[open] .sig-summary .chev::before { content: '▾ '; }
+  .sig-summary .chev::before { content: '▸ '; }
+
+  .signals { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .sig { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; }
+  .sig .market { font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted); }
+  .sig .scorerow { display: flex; align-items: baseline; justify-content: space-between; margin: 0.3rem 0 0; }
+  .sig .score { font-size: 2.6rem; font-weight: normal; letter-spacing: -0.03em; line-height: 1.1; }
+  .sig .score small { font-size: 1rem; color: var(--muted); }
+  .sig .label { font-family: 'Courier New', monospace; font-size: 0.72rem; font-weight: bold; }
+  .sig .conf { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted); margin-top: 2px; }
+  .bar { height: 6px; border-radius: 3px; background: var(--track); margin: 0.8rem 0 1.1rem; overflow: hidden; }
+  .bar > span { display: block; height: 100%; border-radius: 3px; }
+
+  /* fator agora editável inline */
+  .grp { margin-top: 0.9rem; }
+  .grp:first-of-type { margin-top: 0; }
+  .grp .gname { font-family: 'Courier New', monospace; font-size: 0.58rem; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--text); margin-bottom: 0.45rem; display: flex; justify-content: space-between; }
+  .grp .gname span:last-child { color: var(--muted); }
+  .fac { margin-bottom: 0.6rem; }
+  .fac .fhead { display: flex; justify-content: space-between; gap: 0.5rem; align-items: center;
+    font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); margin-bottom: 4px; }
+  .fac .fhead .fn { color: var(--text); display: inline-flex; align-items: center; gap: 5px; }
+  .fac .fbar { height: 4px; border-radius: 2px; background: var(--track); overflow: hidden; }
+  .fac .fbar > i { display: block; height: 100%; border-radius: 2px; }
+  .fac .fread { font-family: 'Courier New', monospace; font-size: 0.55rem; color: var(--muted); margin-top: 3px; }
+  .fac.na { opacity: 0.6; }
+  .fac.na .fread { color: #b4322a; }
+
+  /* mini input inline no fator */
+  .finput { display: inline-flex; align-items: center; border: 1px solid var(--border-str);
+    border-radius: 6px; overflow: hidden; height: 24px; }
+  .finput input { font-family: 'Courier New', monospace; font-size: 0.66rem; width: 52px; height: 100%;
+    border: none; background: transparent; color: var(--text); text-align: right; padding: 0 5px; }
+  .finput input:focus { outline: none; background: var(--green-light); }
+  .finput .u { font-family: 'Courier New', monospace; font-size: 0.55rem; color: var(--muted); padding: 0 5px 0 0; }
+  .src { font-family: 'Courier New', monospace; font-size: 0.5rem; text-transform: uppercase;
+    letter-spacing: 0.04em; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border); color: var(--muted); white-space: nowrap; }
+  .s-auto { color: var(--green); border-color: var(--green); }
+  .s-manual { color: var(--accent); border-color: var(--accent); }
+  .s-revisar { color: #b4322a; border-color: #b4322a; }
+  .src-link { text-decoration: underline dotted; cursor: pointer; }
+  .src-link:hover { opacity: 0.75; }
+  .needs-edit { font-family: 'Courier New', monospace; font-size: 0.58rem; color: var(--accent);
+    line-height: 1.6; margin: 0.4rem 0 0.9rem; padding: 0.5rem 0.7rem; border: 1px dashed var(--accent); border-radius: 8px; }
+
+  /* ── POSIÇÃO em % ─────────────────────────────────────────────────────── */
   .field { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
     padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
   .field:last-child { border-bottom: none; }
   .field label { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--text); }
-  .field .sub { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted);
-    display: block; margin-top: 2px; }
-  .stepper { display: inline-flex; align-items: center; gap: 0; border: 1px solid var(--border-str);
-    border-radius: 8px; overflow: hidden; }
+  .field .sub { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted); display: block; margin-top: 2px; }
+  .stepper { display: inline-flex; align-items: center; border: 1px solid var(--border-str); border-radius: 8px; overflow: hidden; }
   .stepper button { font-family: 'Courier New', monospace; font-size: 0.9rem; width: 26px; height: 30px;
     border: none; background: transparent; color: var(--muted); cursor: pointer; transition: all 0.12s; }
   .stepper button:hover { background: var(--green-light); color: var(--text); }
-  .stepper input { font-family: 'Courier New', monospace; font-size: 0.74rem; width: 88px; height: 30px;
+  .stepper input { font-family: 'Courier New', monospace; font-size: 0.74rem; width: 66px; height: 30px;
     border: none; border-left: 1px solid var(--border); border-right: 1px solid var(--border);
     background: transparent; color: var(--text); text-align: right; padding: 0 8px; }
   .stepper input:focus { outline: none; background: var(--green-light); }
-  .stepper .unit { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted);
-    padding: 0 8px; }
-
+  .stepper .unit { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); padding: 0 8px; }
   .sumline { font-family: 'Courier New', monospace; font-size: 0.68rem; margin-top: 0.8rem;
     padding-top: 0.8rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .sumline.warn span:last-child { color: var(--accent); }
 
   .apply { font-family: 'Courier New', monospace; font-size: 0.74rem; margin-top: 1.1rem;
     padding: 9px 22px; border-radius: 22px; border: 1px solid var(--accent); background: var(--accent);
@@ -89,82 +194,27 @@
   details.adv > summary:hover { color: var(--text); }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; }
 
-  /* ── Global custom tooltip — idêntico ao fundos.html ── */
-  #g-tip {
-    position: fixed;
-    background: var(--text); color: var(--bg);
-    font-family: 'Courier New', monospace; font-size: 0.60rem;
-    padding: 9px 13px; border-radius: 6px;
-    white-space: pre-line; word-break: break-word;
-    width: max-content; max-width: 280px;
-    pointer-events: none;
-    opacity: 0; transform: translateY(4px);
-    transition: opacity 0.13s ease, transform 0.13s ease;
-    z-index: 99999; line-height: 1.72;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.28);
-  }
+  #g-tip { position: fixed; background: var(--text); color: var(--bg);
+    font-family: 'Courier New', monospace; font-size: 0.60rem; padding: 9px 13px; border-radius: 6px;
+    white-space: pre-line; word-break: break-word; width: max-content; max-width: 280px;
+    pointer-events: none; opacity: 0; transform: translateY(4px);
+    transition: opacity 0.13s ease, transform 0.13s ease; z-index: 99999; line-height: 1.72;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.28); }
   #g-tip.visible { opacity: 1; transform: translateY(0); }
   [data-tip] { cursor: help; }
   .tip { border-bottom: 1px dotted var(--muted); }
-  .src-link { text-decoration: underline dotted; cursor: pointer; }
-  .src-link:hover { opacity: 0.75; }
 
-  /* selos de fonte */
-  .src { font-family: 'Courier New', monospace; font-size: 0.52rem; text-transform: uppercase;
-    letter-spacing: 0.05em; padding: 1px 5px; border-radius: 4px; border: 1px solid var(--border);
-    color: var(--muted); white-space: nowrap; }
-  .s-auto { color: var(--green); border-color: var(--green); }
-  .s-manual { color: var(--accent); border-color: var(--accent); }
-  .s-revisar { color: #b4322a; border-color: #b4322a; }
-  .srclegend { font-family: 'Courier New', monospace; font-size: 0.58rem; color: var(--muted);
-    line-height: 1.9; margin-bottom: 1rem; }
-  .srcnote { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted);
-    line-height: 1.6; margin-top: 0.8rem; font-style: italic; }
-  .carrybox { font-family: 'Courier New', monospace; font-size: 0.66rem; color: var(--muted);
-    background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 0.7rem 0.9rem;
-    margin-top: 0.9rem; line-height: 1.6; }
-  .carrybox b { color: var(--text); }
-
-  /* signal cards */
-  .signals { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem; }
-  .sig { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1.4rem; }
-  .sig .market { font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--muted); }
-  .sig .score { font-size: 2.6rem; font-weight: normal; letter-spacing: -0.03em; line-height: 1.1; margin: 0.3rem 0 0; }
-  .sig .score small { font-size: 1rem; color: var(--muted); }
-  .sig .label { font-family: 'Courier New', monospace; font-size: 0.72rem; font-weight: bold; }
-  .sig .regime { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); margin-top: 2px; }
-  .bar { height: 6px; border-radius: 3px; background: var(--border); margin: 0.8rem 0 1rem; overflow: hidden; }
-  .bar > span { display: block; height: 100%; border-radius: 3px; }
-  .factors { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); }
-  .factors .g { color: var(--text); margin-top: 0.5rem; }
-  .factors .row { display: flex; justify-content: space-between; gap: 0.5rem; padding: 1px 0; }
-  .factors .row b { font-weight: normal; color: var(--text); }
-
-  /* decision */
-  .dec { background: var(--surface); border: 1px solid var(--border-str); border-radius: 12px;
-    padding: 1.6rem; margin-bottom: 1rem; }
-  .dec .head { font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase;
-    letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.8rem; }
-  .dec .big { font-size: 1.8rem; font-weight: normal; letter-spacing: -0.02em; }
-  .splitrow { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.1rem 0; }
-  .splitrow .b { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 0.9rem 1rem; }
-  .splitrow .b .k { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 0.08em; }
-  .splitrow .b .v { font-size: 1.35rem; }
-  .dec .note { font-family: 'Courier New', monospace; font-size: 0.66rem; color: var(--muted); line-height: 1.6; }
-  .meter { font-family: 'Courier New', monospace; font-size: 0.66rem; color: var(--muted); margin: 0.4rem 0 0; }
   .alerts { font-family: 'Courier New', monospace; font-size: 0.64rem; color: var(--muted); line-height: 1.6; }
+  .alerts > div { padding: 2px 0; }
   .alerts .lvl-medio { color: var(--accent); }
-
   .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);
     font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted); line-height: 1.7; }
-  .disc { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted);
-    font-style: italic; margin-top: 0.6rem; }
+  .disc { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); font-style: italic; margin-top: 0.6rem; }
 
   @media (max-width: 600px) {
     .hero h1 { font-size: 1.7rem; }
-    .signals, .splitrow, .grid2 { grid-template-columns: 1fr; }
+    .signals, .conv, .grid2 { grid-template-columns: 1fr; }
+    .target-big { font-size: 2.4rem; }
   }
 </style>
 </head>
@@ -181,157 +231,107 @@
 
 <div class="hero">
   <h1>Alocador Tático</h1>
-  <p>Quando e quanto do caixa desplegar — em Brasil ou no exterior — conforme a barateza de cada
-     mercado, lida por dois sinais independentes. Três baldes: caixa (CDI), Brasil (Organon+Ártica)
-     e S&amp;P (SPXR11). Os números abaixo são seus; edite e clique em aplicar.</p>
+  <p>Quanto manter em caixa, em %, conforme a barateza de cada mercado. Você informa onde está
+     e onde quer chegar; a ferramenta devolve o <b>caixa-alvo</b> de hoje — e se isso significa
+     desplegar, manter ou deixar o aporte repor. Três baldes: caixa (CDI), Brasil (Organon+Ártica)
+     e S&amp;P (SPXR11).</p>
+  <div class="asof" id="asof"></div>
 </div>
 
-<!-- ── CARTEIRA ───────────────────────────────────────────────────────────── -->
+<!-- ── 1. POSIÇÃO + ALVOS (entrada em %) ───────────────────────────────────── -->
 <div class="panel">
-  <span class="tag">sua carteira (R$)</span>
-  <h2 style="margin-bottom:0.9rem">Posição atual</h2>
-  <div class="field">
-    <div><label>Caixa</label><span class="sub">munição — CDI</span></div>
-    <div class="stepper"><button onclick="bump('caixa',-1)">−</button>
-      <input id="caixa" type="text" inputmode="numeric"><button onclick="bump('caixa',1)">+</button></div>
+  <span class="tag">onde você está · onde quer chegar (% da carteira)</span>
+  <div class="grid2">
+    <div>
+      <div class="field"><div><label>Caixa hoje</label><span class="sub">munição — CDI</span></div>
+        <div class="stepper"><input id="caixa_pct" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+      <div class="field"><div><label>Brasil hoje</label><span class="sub">Organon + Ártica</span></div>
+        <div class="stepper"><input id="brasil_pct" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+      <div class="field"><div><label>S&amp;P hoje</label><span class="sub">SPXR11</span></div>
+        <div class="stepper"><input id="sp_pct" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+    </div>
+    <div>
+      <div class="field"><div><label>Alvo Brasil</label><span class="sub">do risco (Brasil+S&amp;P)</span></div>
+        <div class="stepper"><input id="alvo_brasil" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+      <div class="field"><div><label>Alvo S&amp;P</label><span class="sub">complemento do risco</span></div>
+        <div class="stepper"><input id="alvo_sp" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+      <div class="field"><div><label>Caixa mín</label><span class="sub">quando há barganha</span></div>
+        <div class="stepper"><input id="caixa_min" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+      <div class="field"><div><label>Caixa máx</label><span class="sub">quando tudo caro</span></div>
+        <div class="stepper"><input id="caixa_max" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+    </div>
   </div>
-  <div class="field">
-    <div><label>Brasil</label><span class="sub">Organon + Ártica</span></div>
-    <div class="stepper"><button onclick="bump('brasil',-1)">−</button>
-      <input id="brasil" type="text" inputmode="numeric"><button onclick="bump('brasil',1)">+</button></div>
-  </div>
-  <div class="field">
-    <div><label>S&amp;P</label><span class="sub">SPXR11</span></div>
-    <div class="stepper"><button onclick="bump('sp',-1)">−</button>
-      <input id="sp" type="text" inputmode="numeric"><button onclick="bump('sp',1)">+</button></div>
-  </div>
-  <div class="sumline">
-    <span>total = caixa + Brasil + S&amp;P</span>
-    <span id="totalReadout">—</span>
-  </div>
-  <div class="sumline" style="border:none;padding-top:2px;margin-top:0">
-    <span>distribuição atual</span><span id="distReadout">—</span>
-  </div>
-  <button class="apply" onclick="applyAll()">Aplicar</button>
+  <div class="sumline" id="sumPos"><span>soma das posições</span><span id="posReadout">—</span></div>
+  <button class="apply" onclick="applyAll()">Calcular caixa-alvo</button>
 </div>
 
-<!-- ── AJUSTES FINOS ──────────────────────────────────────────────────────── -->
-<details class="adv">
-  <summary>ajustes finos — sinais de mercado e política · cada campo mostra a fonte (edite para simular)</summary>
-  <div class="panel" style="margin-top:0.5rem">
-    <div class="srclegend">
-      <span class="src s-auto">auto</span> fetch ao vivo OK ·
-      <span class="src s-manual">manual</span> sem fetch ou fixado por você — preencha/confira ·
-      <span class="src s-revisar">revisar</span> seed/indisponível — confira
-    </div>
-    <div class="grid2">
-      <div>
-        <span class="tag">Brasil</span>
-        <div class="field"><label>P/L IBOV <span class="src" id="src_br_pl"></span></label>
-          <div class="stepper"><input id="pl_br" type="text"><span class="unit">x</span></div></div>
-        <div class="field"><label>Dividend yield <span class="src" id="src_br_dy"></span></label>
-          <div class="stepper"><input id="dy_br" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Selic <span class="src" id="src_br_selic"></span></label>
-          <div class="stepper"><input id="selic" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>IPCA 12m <span class="src" id="src_br_ipca"></span></label>
-          <div class="stepper"><input id="ipca" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>DD IBOV <span class="src" id="src_br_ibov_dd"></span></label>
-          <div class="stepper"><input id="ibov_dd" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>DD fundos <span class="src" id="src_br_fund_dd"></span></label>
-          <div class="stepper"><input id="fund_dd" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Breadth composto <span class="src" id="src_br_breadth"></span></label>
-          <div class="stepper"><input id="breadth_br" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>% &gt; MM200 <span class="src" id="src_br_mm200"></span></label>
-          <div class="stepper"><input id="mm200_br" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>F&amp;G Brasil <span class="src" id="src_br_fg"></span></label>
-          <div class="stepper"><input id="fg_br" type="text"><span class="unit">/100</span></div></div>
-      </div>
-      <div>
-        <span class="tag">S&amp;P 500</span>
-        <div class="field"><label>P/E S&amp;P <span class="src" id="src_us_pe"></span></label>
-          <div class="stepper"><input id="pe_us" type="text"><span class="unit">x</span></div></div>
-        <div class="field"><label>CAPE (Shiller) <span class="src" id="src_us_cape"></span></label>
-          <div class="stepper"><input id="cape_us" type="text"><span class="unit">x</span></div></div>
-        <div class="field"><label>Dividend yield <span class="src" id="src_us_dy"></span></label>
-          <div class="stepper"><input id="dy_us" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Juro real 10a <span class="src" id="src_us_real_us"></span></label>
-          <div class="stepper"><input id="real_us" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>Fed funds <span class="src" id="src_us_fed"></span></label>
-          <div class="stepper"><input id="fed" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>CPI 12m (EUA) <span class="src" id="src_us_cpi"></span></label>
-          <div class="stepper"><input id="us_cpi" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>DD S&amp;P <span class="src" id="src_us_sp_dd"></span></label>
-          <div class="stepper"><input id="sp_dd" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label>F&amp;G (CNN) <span class="src" id="src_us_fg"></span></label>
-          <div class="stepper"><input id="fg_us" type="text"><span class="unit">/100</span></div></div>
-      </div>
-    </div>
-    <div class="srcnote">CPI dos EUA é exibido como contexto — já está embutido no juro real 10a (TIPS), então
-      não é subtraído de novo. CAPE Brasil não é usado (sem fonte confiável; o P/L do IBOV cobre valuation BR).</div>
-    <div style="margin-top:1rem"><span class="tag">política de caixa &amp; alvos</span>
-      <div class="grid2">
-        <div>
-          <div class="field"><label><span class="tip" data-tip="alvo do risco para o Brasil; o S&P recebe o complemento">Alvo Brasil</span></label>
-            <div class="stepper"><input id="alvo_brasil" type="text"><span class="unit">%</span></div></div>
-          <div class="field"><label>Caixa mín (barato)</label>
-            <div class="stepper"><input id="caixa_min" type="text"><span class="unit">%</span></div></div>
-          <div class="field"><label>Caixa máx (caro)</label>
-            <div class="stepper"><input id="caixa_max" type="text"><span class="unit">%</span></div></div>
-        </div>
-        <div>
-          <div class="field"><label><span class="tip" data-tip="fração do gap até o piso desplegada por rodada — quanto menor, mais suave">λ deploy</span></label>
-            <div class="stepper"><input id="lambda" type="text"></div></div>
-          <div class="field"><label>Munição mínima</label>
-            <div class="stepper"><input id="municao_min" type="text"><span class="unit">%</span></div></div>
-        </div>
-      </div>
-    </div>
-    <button class="apply ghost" onclick="reloadAllocation()" data-tip="Baixa o allocation.json mais recente do servidor e repõe todos os campos com os valores do último fetch automático. Descarta qualquer edição manual que você tenha feito.">↺ repor do servidor</button>
-    <button class="apply ghost" onclick="resetDefaults()" data-tip="Repõe os campos com os valores padrão hardcoded — útil se o allocation.json não carregar ou para comparar com um cenário base.">⚙ padrões de fábrica</button>
+<!-- ── 2. VERDICT: caixa-alvo ──────────────────────────────────────────────── -->
+<div class="verdict" id="verdict"></div>
+
+<!-- ── 3. SINAIS DE MERCADO (central, editável, começa aberto) ─────────────── -->
+<details class="signals-wrap" id="sigWrap" open>
+  <summary><div class="sig-summary"><span class="chev">sinais de mercado — barateza de cada balde</span>
+    <span class="hint">edite os campos que pedem revisão · clique na fonte p/ conferir</span></div></summary>
+  <div id="needsEdit"></div>
+  <div class="signals">
+    <div class="sig" id="sigBR"></div>
+    <div class="sig" id="sigUS"></div>
   </div>
 </details>
 
-<!-- ── SINAIS ─────────────────────────────────────────────────────────────── -->
-<div class="signals">
-  <div class="sig" id="sigBR"></div>
-  <div class="sig" id="sigUS"></div>
-</div>
+<!-- ── 4. POLÍTICA (ajuste fino de verdade) ────────────────────────────────── -->
+<details class="adv">
+  <summary>política — sensibilidade do caixa-alvo (mexe raramente)</summary>
+  <div class="panel" style="margin-top:0.5rem">
+    <div class="grid2">
+      <div>
+        <div class="field"><label><span class="tip" data-tip="quanto a barateza puxa o caixa-alvo entre máx e mín. 1 = usa a banda inteira.">Sensib. barateza</span></label>
+          <div class="stepper"><input id="k_barateza" type="text"></div></div>
+        <div class="field"><label><span class="tip" data-tip="reserva extra de caixa quando um mercado-alvo está caro E você está sub-alocado nele — munição para convergir quando baratear. 0 = desliga (barateza manda sozinha). Estudo: ganho teórico modesto, não comprovado em série longa; mantenha baixo.">Reserva convergência</span></label>
+          <div class="stepper"><input id="k_reserva" type="text"></div></div>
+      </div>
+      <div>
+        <div class="field"><label>Munição mínima</label>
+          <div class="stepper"><input id="municao_min" type="text"><span class="unit">%</span></div></div>
+        <div class="field"><label><span class="tip" data-tip="acima de quanto de Brasil disparar o alerta de concentração pessoa-chave">Teto conforto Brasil</span></label>
+          <div class="stepper"><input id="teto_br" type="text"><span class="unit">%</span></div></div>
+      </div>
+    </div>
+    <button class="apply ghost" onclick="reloadAllocation()" data-tip="Baixa o allocation.json mais recente e repõe os sinais de mercado com o último fetch automático.">↺ repor sinais do servidor</button>
+    <button class="apply ghost" onclick="resetDefaults()" data-tip="Repõe tudo com os valores padrão.">⚙ padrões</button>
+  </div>
+</details>
 
-<!-- ── DECISÃO ────────────────────────────────────────────────────────────── -->
-<div class="dec" id="dec"></div>
-
-<!-- ── ALERTAS ────────────────────────────────────────────────────────────── -->
+<!-- ── 5. MONITOR ──────────────────────────────────────────────────────────── -->
 <div class="panel"><span class="tag">monitor (concentração / capacity)</span><div class="alerts" id="alerts"></div></div>
 
 <div class="footer" id="footer">
-  fontes — Brasil: breadth próprio (B3/Yahoo), Selic/IPCA BCB, DD dos fundos via sua planilha
-  de cotas diárias (cota_cvm + fallback cota_site). P/L IBOV e F&amp;G Brasil são MANUAIS — não há fonte
-  gratuita confiável (P/L exigiria login/sessão na Oceans14; não existe índice oficial de F&amp;G p/ o Brasil)
-  · S&amp;P: breadth S5TW/S5FI/S5TH (fallback cálculo próprio), P/E e DY via multpl.com (fallback SPY/Yahoo),
-  CAPE multpl, juro real e Fed FRED, F&amp;G CNN, drawdown ^GSPC
+  fontes — Brasil: breadth próprio (B3/Yahoo), Selic/IPCA BCB, DD dos fundos via planilha de cotas
+  (cota_cvm + fallback cota_site). P/L IBOV e F&amp;G Brasil são MANUAIS — sem fonte gratuita confiável.
+  S&amp;P: breadth S5TW/S5FI/S5TH (fallback cálculo próprio), P/E e DY multpl.com, CAPE multpl, juro real
+  e Fed FRED, F&amp;G CNN, drawdown ^GSPC. · O caixa-alvo é orientação de % a perseguir: se o aporte
+  fizer o caixa crescer e as condições não mudarem, a ferramenta mantém o mesmo alvo — ou seja, aporte.
 </div>
 <div class="disc">Leitura do seu próprio material, não recomendação — a decisão é sua. Não sou consultor de investimentos.</div>
 
 <button class="apply ghost" style="margin-top:1.2rem" onclick="exportConfig()">exportar config.json</button>
 
 <script>
-/* ════════════════════ tema (idêntico ao index) ════════════════════ */
+/* ════════════════════ tema ════════════════════ */
 const saved = localStorage.getItem('theme');
 if (saved === 'dark') { document.documentElement.setAttribute('data-theme','dark');
   document.getElementById('themeBtn').textContent = '◐'; }
-function toggleTheme() {
+function toggleTheme(){
   const dark = document.documentElement.getAttribute('data-theme') === 'dark';
-  if (dark) { document.documentElement.removeAttribute('data-theme'); localStorage.setItem('theme','light');
-    document.getElementById('themeBtn').textContent='◑'; }
-  else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark');
-    document.getElementById('themeBtn').textContent='◐'; }
+  if (dark){ document.documentElement.removeAttribute('data-theme'); localStorage.setItem('theme','light'); document.getElementById('themeBtn').textContent='◑'; }
+  else { document.documentElement.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); document.getElementById('themeBtn').textContent='◐'; }
   render(LAST);
 }
 
-/* ════════════════════ motor — espelha allocator.py ════════════════════ */
-const INF = 1e9;
-function tier(x, t){ for(const r of t){ if(x<r[0]) return [r[1],r[2]]; } const l=t[t.length-1]; return [l[1],l[2]]; }
-function s_erp(ey, real){ if(ey==null||real==null) return [null,'ERP n/d']; const e=ey-real;
+/* ════════════════════ scorers — espelham allocator.py (INALTERADOS) ════════════════════ */
+const INF=1e9;
+function tier(x,t){ for(const r of t){ if(x<r[0]) return [r[1],r[2]]; } const l=t[t.length-1]; return [l[1],l[2]]; }
+function s_erp(ey,real){ if(ey==null||real==null) return [null,'ERP n/d']; const e=ey-real;
   const [s,l]=tier(e,[[-6,.5,'juro real muito superior'],[-4,2,'juro real bem superior'],[-2,3.5,'juro real claram. superior'],[0,5.5,'juro real levem. superior'],[2,7,'bolsa levem. acima'],[4,8,'bolsa acima do juro real'],[6,9,'bolsa claram. acima'],[INF,10,'bolsa supera muito']]);
   return [s,'ERP real '+(e>=0?'+':'')+e.toFixed(1)+'pp — '+l]; }
 function s_pl_br(pl){ if(pl==null) return [null,'P/L n/d'];
@@ -340,7 +340,7 @@ function s_pl_br(pl){ if(pl==null) return [null,'P/L n/d'];
 function s_pe_us(pe){ if(pe==null) return [null,'P/E n/d'];
   const [s,l]=tier(pe,[[13,10,'muito barato'],[16,8.5,'barato'],[18,7,'abaixo da média'],[20,6,'razoável'],[22,5,'justo (~média)'],[25,3.5,'acima da média'],[28,2,'caro'],[32,1,'muito caro'],[INF,.5,'extremo']]);
   return [s,pe.toFixed(1)+'x — '+l]; }
-function s_erp_us(ey, real){ if(ey==null||real==null) return [null,'ERP n/d']; const e=ey-real;
+function s_erp_us(ey,real){ if(ey==null||real==null) return [null,'ERP n/d']; const e=ey-real;
   const [s,l]=tier(e,[[-1,1.5,'caríssima vs juros (tipo 1999-00)'],[1,3,'cara vs juros'],[2.5,4.5,'abaixo da média (richish)'],[4,6,'~média histórica'],[5.5,7.5,'atrativa'],[7,9,'barata'],[INF,10,'muito barata (tipo 2009)']]);
   return [s,'ERP real '+(e>=0?'+':'')+e.toFixed(1)+'pp — '+l]; }
 function s_cape_us(cape){ if(cape==null) return [null,'CAPE n/d'];
@@ -373,222 +373,316 @@ const WU={erp:.22,pe:.14,cape:.16,sp_dd:.22,fg:.26};
 const GB={Valuation:['erp','pl','dy'],Drawdown:['ibov_dd','fund_dd'],Breadth:['breadth','mm200'],Sentimento:['fg']};
 const GU={Valuation:['erp','pe','cape'],Drawdown:['sp_dd'],Sentimento:['fg']};
 const NAMES={erp:'ERP',pl:'P/L',pe:'P/E',cape:'CAPE',dy:'DY',ibov_dd:'DD IBOV',sp_dd:'DD S&P',fund_dd:'DD fundos',breadth:'Breadth',mm200:'MM200',fg:'F&G'};
+/* qual input edita cada fator (id do campo) + unidade */
+const FAC_INPUT={pl:['pl_br','x'],dy:['dy_br','%'],ibov_dd:['ibov_dd','%'],fund_dd:['fund_dd','%'],
+  breadth:['breadth_br','%'],mm200:['mm200_br','%'],fg:['fg_br','/100'],
+  pe:['pe_us','x'],cape:['cape_us','x'],sp_dd:['sp_dd','%'],fg_us:['fg_us','/100']};
+const US_FG_INPUT='fg_us';
 
-function composite(scores, W){ let num=0,den=0; for(const k in W){ const s=scores[k][0];
-  if(s==null) continue; num+=s*W[k]; den+=W[k]; }
-  if(den===0) return [null,'BAIXA'];
-  const conf = den>=.75?'ALTA':den>=.5?'MÉDIA':'BAIXA'; return [Math.round(num/den*100)/100, conf]; }
-
-function cheap_gate(s){ if(s==null) return 0; return Math.max(0,Math.min(1,(s-4.5)/5.5)); }
+function composite(scores,W){ let num=0,den=0; for(const k in W){ const s=scores[k][0]; if(s==null) continue; num+=s*W[k]; den+=W[k]; }
+  if(den===0) return [null,'BAIXA']; const conf=den>=.75?'ALTA':den>=.5?'MÉDIA':'BAIXA'; return [Math.round(num/den*100)/100,conf]; }
 
 function signalLabel(score){
-  if(score==null) return ['INCOMPLETO','#7a7870'];
-  if(score<3.5) return ['HOLD','#b4322a']; if(score<5.5) return ['CAUTELOSO','#c2541f'];
-  if(score<6.5) return ['NEUTRO','#b07d0a']; if(score<7.5) return ['BOM','#1a7a52'];
-  if(score<8.5) return ['ATRATIVO','#15803d']; if(score<9.5) return ['EXCELENTE','#1d4ed8'];
+  if(score==null) return ['INCOMPLETO','var(--muted)'];
+  if(score<3.5) return ['CARO','#b4322a']; if(score<5.5) return ['POUCO ATRATIVO','#c2541f'];
+  if(score<6.5) return ['NEUTRO','#b07d0a']; if(score<7.5) return ['ATRATIVO','#1a7a52'];
+  if(score<8.5) return ['BARATO','#15803d']; if(score<9.5) return ['MUITO BARATO','#1d4ed8'];
   return ['CRISE/RARO','#6d28d9'];
 }
+function scoreColor(s){ if(s==null) return 'var(--muted)';
+  if(s<3.5) return '#b4322a'; if(s<5.5) return '#c2541f'; if(s<6.5) return '#b07d0a';
+  if(s<7.5) return '#1a7a52'; if(s<8.5) return '#15803d'; if(s<9.5) return '#1d4ed8'; return '#6d28d9'; }
 
-function decide(cfg, sBR, sUS){
-  const T=Math.max(1,cfg.total), C=cfg.caixa, B=cfg.brasil, S=cfg.sp, cashpct=C/T;
-  const chBest=Math.max(sBR||0,sUS||0)/10;
-  let piso=cfg.caixa_max-(cfg.caixa_max-cfg.caixa_min)*chBest; piso=Math.max(cfg.municao_min,piso);
-  const gap=cashpct-piso;
-  let want=Math.max(0,cfg.lambda*gap*T); want=Math.min(want,Math.max(0,C-cfg.municao_min*T));
-  const riskAt=T*(1-piso), tgtB=cfg.alvo_brasil*riskAt, tgtS=(1-cfg.alvo_brasil)*riskAt;
-  const underB=Math.max(0,tgtB-B), underS=Math.max(0,tgtS-S);
-  const attrB=underB*cheap_gate(sBR), attrS=underS*cheap_gate(sUS), tot=attrB+attrS;
-  let aB=0,aS=0;
-  if(want>0 && tot>0){ aB=Math.min(want*attrB/tot,underB); aS=Math.min(want*attrS/tot,underS);
-    aB=Math.round(aB/100)*100; aS=Math.round(aS/100)*100; }
-  const tranche=aB+aS;
-  let desc;
-  if(tranche===0 && want>0) desc='caixa acima do piso, mas nada barato E abaixo do alvo agora — segura munição';
-  else desc='piso-alvo de caixa '+Math.round(piso*100)+'% · deploy roteado pro mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)';
-  return {tranche:Math.round(tranche/100)*100, piso, cashpct, want:Math.round(want/100)*100, aB, aS,
-    tgtB:tgtB/T, tgtS:tgtS/T, curB:B/T, curS:S/T, rodadas:cfg.lambda>0?Math.round(1/cfg.lambda):null, desc};
+/* ════════════════════ CAIXA-ALVO (nova lógica, % puro) ════════════════════
+   alvo = barateza  +  reserva-de-convergência
+   barateza : melhor score dos dois → interpola caixa_max(tudo caro)..caixa_min(barato)
+   reserva  : se um mercado-alvo está CARO e você está SUB-alocado nele, segura
+              caixa extra = k_reserva * gap_até_o_alvo * carestia  (dry powder com destino)
+   ação     : compara caixa atual vs alvo → desplegar / manter / deixar aporte repor */
+function cashTarget(cfg, sBR, sUS){
+  const cMin=cfg.caixa_min, cMax=cfg.caixa_max, k=cfg.k_barateza;
+  const best=Math.max(sBR==null?0:sBR, sUS==null?0:sUS)/10;        // 0..1 (1 = barato)
+  let base=cMax-(cMax-cMin)*Math.min(1,best*k);
+  // reserva por mercado: gap (alvo-atual, em pts da carteira) × carestia (1 quando muito caro)
+  function reserva(score, cur, tgt){
+    if(score==null) return 0;
+    const gap=Math.max(0, tgt-cur);                 // sub-alocado neste mercado
+    const caro=Math.max(0,(4.5-score)/4.5);         // 0 se score>=4.5; →1 se caríssimo
+    return cfg.k_reserva*gap*caro;
+  }
+  const resB=reserva(sBR, cfg.cur_brasil, cfg.tgt_brasil);
+  const resS=reserva(sUS, cfg.cur_sp,     cfg.tgt_sp);
+  let alvo=base+resB+resS;
+  // nunca abaixo da munição mínima; teto de segurança um pouco acima da banda
+  alvo=Math.max(cfg.municao_min, Math.min(cMax+0.15, alvo));
+  return {alvo, base, resB, resS, best};
 }
 
-/* ════════════════════ I/O de inputs ════════════════════ */
-const FIELDS=['caixa','brasil','sp','pl_br','dy_br','selic','ipca','ibov_dd','fund_dd','breadth_br','mm200_br','fg_br',
-  'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','fg_us','alvo_brasil','caixa_min','caixa_max','lambda','municao_min'];
-const MONEY=['caixa','brasil','sp'];
-function gv(id){ const el=document.getElementById(id); if(!el) return null;
-  let raw=el.value.replace('%','').replace(/\s/g,'').trim();
-  if(raw==='') return null;
-  if(MONEY.includes(id)){               // monetário: ponto = milhar
-    raw=raw.replace(/\./g,'').replace(',','.');
-  } else if(raw.indexOf('.')>=0 && raw.indexOf(',')>=0){  // pt-BR "1.234,56"
-    raw=raw.replace(/\./g,'').replace(',','.');
-  } else {                              // decimal com ponto OU vírgula
-    raw=raw.replace(',','.');
-  }
-  const n=parseFloat(raw); return isNaN(n)?null:n; }
-function fmtMoney(n){ return n==null?'—':'R$ '+Math.round(n).toLocaleString('pt-BR'); }
-function bump(id,dir){ const el=document.getElementById(id);
-  let v=gv(id)||0; v+=dir*(MONEY.includes(id)?1000:0.1);
-  el.value = MONEY.includes(id)?Math.round(v).toLocaleString('pt-BR'):v.toFixed(1); liveSum(); }
-function liveSum(){ const c=gv('caixa')||0,b=gv('brasil')||0,s=gv('sp')||0,T=c+b+s;
-  document.getElementById('totalReadout').textContent=fmtMoney(T);
-  document.getElementById('distReadout').textContent = T>0 ?
-    ('caixa '+Math.round(c/T*100)+'% · Brasil '+Math.round(b/T*100)+'% · S&P '+Math.round(s/T*100)+'%') : '—'; }
-['caixa','brasil','sp'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input',liveSum); });
+/* ════════════════════ I/O ════════════════════ */
+const PCT_FIELDS=['caixa_pct','brasil_pct','sp_pct','alvo_brasil','alvo_sp','caixa_min','caixa_max','municao_min','teto_br'];
+const SIG_FIELDS=['pl_br','dy_br','selic','ipca','ibov_dd','fund_dd','breadth_br','mm200_br','fg_br',
+  'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','fg_us'];
+const POL_FIELDS=['k_barateza','k_reserva'];
+const ALL=[...PCT_FIELDS,...SIG_FIELDS,...POL_FIELDS];
 
-function readCfg(){ const c=gv('caixa')||0,b=gv('brasil')||0,s=gv('sp')||0;
-  return { caixa:c, brasil:b, sp:s, total:c+b+s,
-    alvo_brasil:(gv('alvo_brasil')!=null?gv('alvo_brasil'):75)/100,
+function gv(id){ const el=document.getElementById(id); if(!el) return null;
+  let raw=el.value.replace('%','').replace(/\s/g,'').trim(); if(raw==='') return null;
+  if(raw.indexOf('.')>=0 && raw.indexOf(',')>=0) raw=raw.replace(/\./g,'').replace(',','.'); else raw=raw.replace(',','.');
+  const n=parseFloat(raw); return isNaN(n)?null:n; }
+function bump(id,dir){ const el=document.getElementById(id); let v=gv(id)||0;
+  const step = ['caixa_min','caixa_max','municao_min'].includes(id)?1:1; v+=dir*step;
+  el.value=(Math.round(v*10)/10); syncAlvoSp(); liveSum(); }
+/* alvos são complementares (somam 100% do risco): editar um ajusta o outro */
+function mirrorAlvo(src){ const from=src==='sp'?'alvo_sp':'alvo_brasil', to=src==='sp'?'alvo_brasil':'alvo_sp';
+  const v=gv(from); const el=document.getElementById(to);
+  if(el && v!=null) el.value=(Math.round((100-v)*10)/10); }
+function syncAlvoSp(){ mirrorAlvo('brasil'); }   // mantido p/ chamadas existentes (bump etc.)
+function liveSum(){ const c=gv('caixa_pct')||0,b=gv('brasil_pct')||0,s=gv('sp_pct')||0,T=c+b+s;
+  const el=document.getElementById('posReadout'), row=document.getElementById('sumPos');
+  el.textContent=Math.round(T*10)/10+'%';
+  if(Math.abs(T-100)>0.5){ row.classList.add('warn'); el.textContent=Math.round(T*10)/10+'% — normalizo p/ 100%'; }
+  else row.classList.remove('warn'); }
+['caixa_pct','brasil_pct','sp_pct'].forEach(id=>{const el=document.getElementById(id); if(el) el.addEventListener('input',liveSum);});
+const ae=document.getElementById('alvo_brasil'); if(ae) ae.addEventListener('input',()=>mirrorAlvo('brasil'));
+const as=document.getElementById('alvo_sp'); if(as) as.addEventListener('input',()=>mirrorAlvo('sp'));
+
+function readCfg(){
+  let c=gv('caixa_pct')||0,b=gv('brasil_pct')||0,s=gv('sp_pct')||0; const T=(c+b+s)||1;
+  c/=T; b/=T; s/=T;                                  // normaliza p/ frações que somam 1
+  const ab=(gv('alvo_brasil')!=null?gv('alvo_brasil'):75)/100;
+  const risk=1-c;                                    // fração em risco hoje
+  return { cur_caixa:c, cur_brasil:b, cur_sp:s,
+    alvo_brasil_risco:ab,
+    tgt_brasil_full:0, tgt_sp_full:0,                // preenchidos após saber o caixa-alvo
+    cur_brasil:b, cur_sp:s,
     caixa_min:(gv('caixa_min')!=null?gv('caixa_min'):5)/100,
     caixa_max:(gv('caixa_max')!=null?gv('caixa_max'):20)/100,
-    lambda:gv('lambda')!=null?gv('lambda'):0.22, municao_min:(gv('municao_min')!=null?gv('municao_min'):5)/100,
-    pl:gv('pl_br'), dy_br:gv('dy_br'), selic:gv('selic'), ipca:gv('ipca'), ibov_dd:gv('ibov_dd'),
-    fund_dd:gv('fund_dd'), breadth_br:gv('breadth_br'), mm200_br:gv('mm200_br'), fg_br:gv('fg_br'),
-    pe:gv('pe_us'), cape:gv('cape_us'), dy_us:gv('dy_us'), real_us:gv('real_us'), fed:gv('fed'),
-    us_cpi:gv('us_cpi'), sp_dd:gv('sp_dd'),
-    fg_us:gv('fg_us') }; }
+    municao_min:(gv('municao_min')!=null?gv('municao_min'):5)/100,
+    teto_br:(gv('teto_br')!=null?gv('teto_br'):55)/100,
+    k_barateza:gv('k_barateza')!=null?gv('k_barateza'):1.0,
+    k_reserva:gv('k_reserva')!=null?gv('k_reserva'):0.4,
+    pl:gv('pl_br'),dy_br:gv('dy_br'),selic:gv('selic'),ipca:gv('ipca'),ibov_dd:gv('ibov_dd'),
+    fund_dd:gv('fund_dd'),breadth_br:gv('breadth_br'),mm200_br:gv('mm200_br'),fg_br:gv('fg_br'),
+    pe:gv('pe_us'),cape:gv('cape_us'),dy_us:gv('dy_us'),real_us:gv('real_us'),fed:gv('fed'),
+    us_cpi:gv('us_cpi'),sp_dd:gv('sp_dd'),fg_us:gv('fg_us') };
+}
 
 function compute(cfg){
-  const ey_br = cfg.pl? 100/cfg.pl : null;
-  const real_cdi = (cfg.selic!=null && cfg.ipca!=null)? cfg.selic*0.98-cfg.ipca : null;
-  const scBR={ erp:s_erp(ey_br,real_cdi), pl:s_pl_br(cfg.pl), dy:s_dy(cfg.dy_br),
-    ibov_dd:s_dd(cfg.ibov_dd), fund_dd:s_fund_dd(cfg.fund_dd),
-    breadth:s_breadth(cfg.breadth_br), mm200:s_mm200(cfg.mm200_br), fg:s_fg(cfg.fg_br) };
-  const ey_us = cfg.pe? 100/cfg.pe : null;
-  const scUS={ erp:s_erp_us(ey_us,cfg.real_us), pe:s_pe_us(cfg.pe), cape:s_cape_us(cfg.cape),
-    sp_dd:s_dd_us(cfg.sp_dd), fg:s_fg(cfg.fg_us) };
-  const [scoreBR,confBR]=composite(scBR,WB); const [scoreUS,confUS]=composite(scUS,WU);
-  return {scBR,scUS,scoreBR,scoreUS,confBR,confUS, dec:decide(cfg,scoreBR,scoreUS)};
+  const ey_br=cfg.pl?100/cfg.pl:null;
+  const real_cdi=(cfg.selic!=null&&cfg.ipca!=null)?cfg.selic*0.98-cfg.ipca:null;
+  const scBR={erp:s_erp(ey_br,real_cdi),pl:s_pl_br(cfg.pl),dy:s_dy(cfg.dy_br),
+    ibov_dd:s_dd(cfg.ibov_dd),fund_dd:s_fund_dd(cfg.fund_dd),
+    breadth:s_breadth(cfg.breadth_br),mm200:s_mm200(cfg.mm200_br),fg:s_fg(cfg.fg_br)};
+  const ey_us=cfg.pe?100/cfg.pe:null;
+  const scUS={erp:s_erp_us(ey_us,cfg.real_us),pe:s_pe_us(cfg.pe),cape:s_cape_us(cfg.cape),
+    sp_dd:s_dd_us(cfg.sp_dd),fg:s_fg(cfg.fg_us)};
+  const [scoreBR,confBR]=composite(scBR,WB), [scoreUS,confUS]=composite(scUS,WU);
+  // alvos de risco em fração da carteira: dependem do caixa-alvo, mas a reserva usa o alvo
+  // "no risco pleno" como referência de convergência (1 - caixa_min): assim o gap reflete
+  // o quanto falta para o destino final, não o transitório.
+  const riskFull=1-cfg.caixa_min;
+  cfg.tgt_brasil=cfg.alvo_brasil_risco*riskFull;
+  cfg.tgt_sp=(1-cfg.alvo_brasil_risco)*riskFull;
+  const ct=cashTarget(cfg, scoreBR, scoreUS);
+  return {scBR,scUS,scoreBR,scoreUS,confBR,confUS,cfg,ct};
 }
 
 /* ════════════════════ render ════════════════════ */
 let LAST=null;
-function renderSig(elId, market, score, conf, scores, groups){
+
+function facHTML(side,k,scoreArr,editId,unit){
+  const [s,read]=scoreArr; const na=s==null;
+  const w=na?0:Math.max(2,s*10);
+  let editor='';
+  if(editId){
+    editor='<span class="finput"><input id="'+editId+'" type="text" inputmode="decimal" oninput="onSigEdit()">'+
+           '<span class="u">'+unit+'</span></span>';
+  }
+  return '<div class="fac'+(na?' na':'')+'">'+
+    '<div class="fhead"><span class="fn">'+NAMES[k]+' <span class="src" id="src_'+side+'_'+srcKey(side,k)+'"></span></span>'+
+      (editor||('<span>'+(na?'n/d':s)+'</span>'))+'</div>'+
+    '<div class="fbar"><i style="width:'+w+'%;background:'+(na?'var(--muted)':scoreColor(s))+'"></i></div>'+
+    '<div class="fread">'+read+(na?' — preencha p/ entrar no score':'')+'</div>'+
+    '</div>';
+}
+/* mapeia fator → chave de fonte do allocation.json */
+function srcKey(side,k){
+  if(side==='br'){ return {erp:'selic',pl:'pl',dy:'dy',ibov_dd:'ibov_dd',fund_dd:'fund_dd',breadth:'breadth',mm200:'mm200',fg:'fg'}[k]||k; }
+  return {erp:'real_us',pe:'pe',cape:'cape',sp_dd:'sp_dd',fg:'fg'}[k]||k;
+}
+
+function renderSig(elId, market, score, conf, scores, groups, weights, side){
   const [lab,cor]=signalLabel(score); const pct=score==null?0:score*10;
-  let f=''; for(const g in groups){ f+='<div class="g">'+g+'</div>';
-    for(const k of groups[g]){ const [s,read]=scores[k]; f+='<div class="row"><span>'+NAMES[k]+' · '+read+'</span><b>'+(s==null?'—':s)+'</b></div>'; } }
-  document.getElementById(elId).innerHTML =
+  let body='';
+  for(const g in groups){
+    const gw=groups[g].reduce((a,k)=>a+(weights[k]||0),0);
+    body+='<div class="grp"><div class="gname"><span>'+g+'</span><span>peso '+Math.round(gw*100)+'%</span></div>';
+    for(const k of groups[g]){
+      // qual input edita: alguns fatores (ERP) derivam de Selic/IPCA/juro real, sem input direto aqui
+      let editId=null,unit='';
+      const map = side==='br'
+        ? {pl:['pl_br','x'],dy:['dy_br','%'],ibov_dd:['ibov_dd','%'],fund_dd:['fund_dd','%'],breadth:['breadth_br','%'],mm200:['mm200_br','%'],fg:['fg_br','/100']}
+        : {pe:['pe_us','x'],cape:['cape_us','x'],sp_dd:['sp_dd','%'],fg:['fg_us','/100']};
+      if(map[k]){ editId=map[k][0]; unit=map[k][1]; }
+      body+=facHTML(side,k,scores[k],editId,unit);
+    }
+    body+='</div>';
+  }
+  document.getElementById(elId).innerHTML=
     '<div class="market">'+market+'</div>'+
-    '<div class="score">'+(score==null?'—':score.toFixed(2))+'<small>/10</small></div>'+
-    '<div class="label" style="color:'+cor+'">'+lab+'</div>'+
-    '<div class="regime">confiança '+conf+'</div>'+
-    '<div class="bar"><span style="width:'+pct+'%;background:'+cor+'"></span></div>'+
-    '<div class="factors">'+f+'</div>';
+    '<div class="scorerow"><div class="score">'+(score==null?'—':score.toFixed(2))+'<small>/10</small></div>'+
+      '<div style="text-align:right"><div class="label" style="color:'+cor+'">'+lab+'</div>'+
+      '<div class="conf">confiança '+conf+'</div></div></div>'+
+    '<div class="bar"><span style="width:'+pct+'%;background:'+cor+'"></span></div>'+body;
 }
-function render(R){ if(!R) return; LAST=R; const d=R.dec;
-  renderSig('sigBR','Brasil · Organon+Ártica',R.scoreBR,R.confBR,R.scBR,GB);
-  renderSig('sigUS','S&P 500 · SPXR11',R.scoreUS,R.confUS,R.scUS,GU);
-  document.getElementById('dec').innerHTML =
-    '<div class="head">decisão de deploy</div>'+
-    '<div class="big">'+fmtMoney(d.tranche)+' <span style="font-size:0.9rem;color:var(--muted)">desplegar agora</span></div>'+
-    '<div class="meter">caixa atual '+Math.round(d.cashpct*100)+'% → piso-alvo '+Math.round(d.piso*100)+'%'+
-       (d.want>d.tranche?(' · o caixa comporta R$'+Math.round(d.want).toLocaleString('pt-BR')+', mas só R$'+Math.round(d.tranche).toLocaleString('pt-BR')+' tem destino barato'):'')+'</div>'+
-    '<div class="splitrow">'+
-      '<div class="b"><div class="k">→ Brasil</div><div class="v">'+fmtMoney(d.aB)+'</div>'+
-        '<div class="meter">alvo '+Math.round(d.tgtB*100)+'% · atual '+Math.round(d.curB*100)+'%</div></div>'+
-      '<div class="b"><div class="k">→ S&P</div><div class="v">'+fmtMoney(d.aS)+'</div>'+
-        '<div class="meter">alvo '+Math.round(d.tgtS*100)+'% · atual '+Math.round(d.curS*100)+'%</div></div>'+
+
+function render(R){ if(!R) return; LAST=R; const cfg=R.cfg, ct=R.ct;
+  const alvo=ct.alvo, cur=cfg.cur_caixa;
+  // ação derivada
+  const diff=cur-alvo; let act,actCls,actTxt;
+  if(diff>0.015){ act='DESPLEGAR'; actCls='act-deploy'; actTxt='Você tem <b>'+(diff*100).toFixed(0)+'pp</b> de caixa acima do alvo — desloque para o risco.'; }
+  else if(diff<-0.015){ act='DEIXAR APORTAR'; actCls='act-build'; actTxt='Você está <b>'+(-diff*100).toFixed(0)+'pp</b> abaixo do alvo — deixe o aporte repor o caixa; não venda risco.'; }
+  else { act='MANTER'; actCls='act-hold'; actTxt='Caixa no alvo — aporte para manter este nível enquanto as condições não mudam.'; }
+
+  // gauge: escala de 0 a (caixa_max+0.15) — banda min..max destacada
+  const scaleMax=cfg.caixa_max+0.15;
+  const px=v=>Math.max(0,Math.min(100, v/scaleMax*100));
+  // diagnóstico em camadas
+  let layers='';
+  layers+='<div class="layer"><span class="ic">·</span><span>Barateza: melhor oportunidade entre os baldes em <b>'+(ct.best*10).toFixed(1)+'/10</b> → caixa-base de <b>'+(ct.base*100).toFixed(0)+'%</b> '+(ct.best>0.6?'(há barganha → mira o piso)':ct.best<0.45?'(tudo caro → mira o teto)':'(intermediário)')+'.</span></div>';
+  if(ct.resB>0.002||ct.resS>0.002){
+    const parts=[]; if(ct.resB>0.002) parts.push('Brasil +'+(ct.resB*100).toFixed(0)+'pp'); if(ct.resS>0.002) parts.push('S&P +'+(ct.resS*100).toFixed(0)+'pp');
+    layers+='<div class="layer"><span class="ic">·</span><span>Reserva de convergência ('+parts.join(' · ')+'): mercado-alvo caro e você sub-alocado — segura munição para convergir quando baratear.</span></div>';
+  }
+
+  let conv='';
+  function convCard(name,score,cur_,tgt_){
+    const [lab]=signalLabel(score); const cheap=score!=null&&score>=6.5, rich=score!=null&&score<4.5;
+    const st = score==null?'n/d':(cheap?'barato':rich?'caro':'neutro');
+    const cls = cheap?'cheap':rich?'rich':'';
+    return '<div class="c"><div class="ck"><span>'+name+'</span><span class="cstate '+cls+'">'+st+'</span></div>'+
+      '<div class="pbar"><i style="width:'+Math.min(100,cur_*100)+'%"></i><span class="t" style="left:'+Math.min(100,tgt_*100)+'%" data-tip="alvo no risco pleno"></span></div>'+
+      '<div class="cap"><span>atual '+(cur_*100).toFixed(0)+'%</span><span>alvo '+(tgt_*100).toFixed(0)+'%</span></div></div>';
+  }
+  conv=convCard('Brasil',R.scoreBR,cfg.cur_brasil,cfg.tgt_brasil)+convCard('S&P',R.scoreUS,cfg.cur_sp,cfg.tgt_sp);
+
+  let v='<div class="head"><span class="lbl">caixa-alvo para o cenário atual</span><span class="when" id="vwhen"></span></div>'+
+    '<div class="target-row"><div class="target-big">'+(alvo*100).toFixed(0)+'<small>% em caixa</small></div>'+
+      '<span class="action-pill '+actCls+'">'+act+'</span></div>'+
+    '<div class="gauge"><div class="track">'+
+      '<div class="fill" style="width:'+px(alvo)+'%"></div>'+
+      '<div class="band" style="left:'+px(cfg.caixa_min)+'%"></div>'+
+      '<div class="band" style="left:'+px(cfg.caixa_max)+'%"></div>'+
+      '<div class="cur" style="left:'+px(cur)+'%" data-tip="seu caixa hoje: '+(cur*100).toFixed(0)+'%"></div>'+
+      '<div class="tgt" style="left:'+px(alvo)+'%" data-tip="caixa-alvo: '+(alvo*100).toFixed(0)+'%"></div></div>'+
+      '<div class="scale"><span>0%</span><span>banda '+(cfg.caixa_min*100).toFixed(0)+'–'+(cfg.caixa_max*100).toFixed(0)+'%</span><span>'+(scaleMax*100).toFixed(0)+'%</span></div>'+
+      '<div class="gauge-legend"><span>▎ <b>caixa hoje '+(cur*100).toFixed(0)+'%</b></span><span style="color:var(--accent)">▲ <b>alvo '+(alvo*100).toFixed(0)+'%</b></span></div>'+
     '</div>'+
-    '<div class="note">'+d.desc+'. Gap geométrico: desplega só uma fração do excesso de caixa por rodada — nunca zera a munição.</div>'+
-    (function(){ const cf=readCfg(); if(cf.selic==null||cf.fed==null) return '';
-      const cy=cf.selic-cf.fed;
-      return '<div class="carrybox">Carry do hedge SPXR11 — Selic <b>'+cf.selic.toFixed(2)+'%</b> − Fed <b>'+cf.fed.toFixed(2)+
-      '%</b> = <b>'+(cy>=0?'+':'')+cy.toFixed(1)+'pp</b>/ano. Em BRL, SPXR11 ≈ S&P (USD) + carry; vs CDI o carry quase '+
-      'se anula (excesso ≈ S&P USD − Fed), por isso é contexto, não entra no score.</div>'; })();
-  const cfg=readCfg(); const nucleo=cfg.total>0?cfg.brasil/cfg.total:0; let al=[];
-  if(nucleo>0.55) al.push('<div class="lvl-medio">Brasil em '+Math.round(nucleo*100)+'% — concentração pessoa-chave; considere direcionar aportes ao S&P/caixa.</div>');
+    '<div class="why">'+actTxt+layers+'</div>'+
+    '<div class="conv">'+conv+'</div>';
+  // carry
+  if(cfg.selic!=null && cfg.fed!=null){ const cy=cfg.selic-cfg.fed;
+    v+='<div class="carrybox">Carry do hedge SPXR11 — Selic <b>'+cfg.selic.toFixed(2)+'%</b> − Fed <b>'+cfg.fed.toFixed(2)+
+      '%</b> = <b>'+(cy>=0?'+':'')+cy.toFixed(1)+'pp</b>/ano. Em BRL, SPXR11 ≈ S&P (USD) + carry; vs CDI o carry quase se anula. Contexto, não entra no score.</div>'; }
+  document.getElementById('verdict').innerHTML=v;
+  if(ALLOCATION&&ALLOCATION.generatedAt){ const dt=new Date(ALLOCATION.generatedAt);
+    const w=document.getElementById('vwhen'); if(w) w.textContent='dados de '+dt.toLocaleDateString('pt-BR'); }
+
+  renderSig('sigBR','Brasil · Organon+Ártica',R.scoreBR,R.confBR,R.scBR,GB,WB,'br');
+  renderSig('sigUS','S&P 500 · SPXR11',R.scoreUS,R.confUS,R.scUS,GU,WU,'us');
+  // repõe valores nos inputs inline + fontes (renderSig recriou os campos)
+  restoreSigInputs(); fillSources(ALLOCATION); flagNeedsEdit(R);
+
+  // monitor
+  const nucleo=cfg.cur_brasil; let al=[];
+  if(nucleo>cfg.teto_br) al.push('<div class="lvl-medio">Brasil em '+(nucleo*100).toFixed(0)+'% — concentração pessoa-chave (acima do seu teto de conforto '+(cfg.teto_br*100).toFixed(0)+'%); considere direcionar aportes ao S&P/caixa.</div>');
   al.push('<div>Single-names (Nu, ALOS) e cripto ficam fora desta ferramenta — discricionários.</div>');
-  document.getElementById('alerts').innerHTML = al.join('');
+  document.getElementById('alerts').innerHTML=al.join('');
 }
 
-function applyAll(){ liveSum(); persist(); render(compute(readCfg())); }
-
-/* ════════════════════ persistência + carga ════════════════════ */
-function persist(){ const o={}; FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) o[id]=el.value;});
-  localStorage.setItem('alocador_inputs', JSON.stringify(o)); }
-function setF(id,val){ const el=document.getElementById(id); if(el&&val!=null&&!isNaN(val))
-  el.value = MONEY.includes(id)?Math.round(val).toLocaleString('pt-BR'):(''+(Math.round(val*100)/100)); }
-
-function fillFromAllocation(a){
-  if(!a) return;
-  setF('caixa',a.caixa); setF('brasil',a.brasil); setF('sp',a.sp);
-  const b=(a.inputs&&a.inputs.br)||{}, u=(a.inputs&&a.inputs.us)||{}, bd=a.banda||{};
-  setF('pl_br',b.pl); setF('dy_br',b.dy); setF('selic',b.selic); setF('ipca',b.ipca);
-  setF('ibov_dd',b.ibov_dd); setF('fund_dd',b.fund_dd); setF('breadth_br',b.breadth_pct);
-  setF('mm200_br',b.mm200_pct); setF('fg_br',b.fg);
-  setF('pe_us',u.pe); setF('cape_us',u.cape); setF('dy_us',u.dy); setF('real_us',u.real_us);
-  setF('fed',u.fed); setF('us_cpi',u.us_cpi); setF('sp_dd',u.sp_dd); setF('fg_us',u.fg);
-  setF('alvo_brasil',(bd.alvo_brasil!=null?bd.alvo_brasil*100:75));
-  setF('caixa_min',(bd.caixa_min!=null?bd.caixa_min*100:5));
-  setF('caixa_max',(bd.caixa_max!=null?bd.caixa_max*100:20));
-  setF('lambda',bd.lambda!=null?bd.lambda:0.22);
-  setF('municao_min',(bd.municao_minima!=null?bd.municao_minima*100:5));
+/* sinaliza os campos que EXIGEM edição manual (sem fetch) */
+function flagNeedsEdit(R){
+  const box=document.getElementById('needsEdit'); if(!box) return;
+  const need=[];
+  const srcs={...((ALLOCATION&&ALLOCATION.inputs&&ALLOCATION.inputs.br_src)||{}),};
+  // P/L e F&G BR são sempre manuais; sinaliza se vazios ou marcados manual
+  const checks=[['pl_br','P/L IBOV'],['fg_br','F&G Brasil'],['dy_br','DY IBOV']];
+  checks.forEach(([id,nm])=>{ const el=document.getElementById(id); if(el && (el.value.trim()===''||el.value==='null')) need.push(nm); });
+  if(need.length) box.innerHTML='<div class="needs-edit">Estes sinais não têm fetch automático e estão vazios — preencha para entrarem no score: <b>'+need.join(', ')+'</b>. Sem eles, a barateza do Brasil fica subestimada.</div>';
+  else box.innerHTML='';
 }
-const DEFAULTS={caixa:90000,brasil:300000,sp:60000,pl_br:10.9,dy_br:5.7,selic:14.5,ipca:5.3,
-  ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,pe_us:27,cape_us:37,dy_us:1.3,real_us:1.9,
-  fed:4.5,us_cpi:2.8,sp_dd:-4,fg_us:55,
-  alvo_brasil:75,caixa_min:5,caixa_max:20,lambda:0.22,municao_min:5};
 
+let _sigCache={};
+function onSigEdit(){ SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); render(compute(readCfg())); }
+function restoreSigInputs(){ for(const id in _sigCache){ const el=document.getElementById(id); if(el && _sigCache[id]!=null) el.value=_sigCache[id]; } }
+
+function applyAll(){ syncAlvoSp(); liveSum(); SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); render(compute(readCfg())); }
+
+/* ════════════════════ fontes + persistência + carga ════════════════════ */
 function classifySrc(s){ s=(s||'').toLowerCase();
   if(s.indexOf('manual')>=0||s.indexOf('override')>=0) return ['s-manual','manual'];
   if(s.indexOf('seed')>=0||s.indexOf('revisar')>=0||s.indexOf('indispon')>=0) return ['s-revisar','revisar'];
-  if(!s) return ['s-revisar','?'];
-  return ['s-auto','auto']; }
-const SRC_LINKS={
-  br_pl:    'https://www.oceans14.com.br/acoes/historico-pl-bovespa',
-  br_dy:    'https://statusinvest.com.br/indices/ibovespa',
-  br_selic: 'https://investidor10.com.br/indices/selic/',
-  br_ipca:  'https://investidor10.com.br/indices/ipca/',
-  br_ibov_dd: 'https://www.b3.com.br/pt_br/para-voce',
-  br_fund_dd: null,
-  br_breadth: 'https://theotheo10.github.io/Ferramentas-Financeiras/breadth.html',
-  br_mm200:   'https://theotheo10.github.io/Ferramentas-Financeiras/breadth.html',
-  br_fg:    'https://en.macromicro.me/charts/128837/brazil-mm-fear-and-greed-index-vs-bovespa-index',
-  us_pe:    'https://www.multpl.com/s-p-500-pe-ratio',
-  us_cape:  'https://www.multpl.com/shiller-pe',
-  us_dy:    'https://www.multpl.com/s-p-500-dividend-yield',
-  us_real_us: 'https://www.multpl.com/10-year-real-interest-rate',
-  us_fed:   'https://fred.stlouisfed.org/series/DFF',
-  us_cpi:   'https://www.multpl.com/inflation',
-  us_sp_dd: 'https://finance.yahoo.com/quote/%5EGSPC/',
-  us_fg:    'https://edition.cnn.com/markets/fear-and-greed',
-};
-function fillSources(a){
-  const map={br:(a&&a.inputs&&a.inputs.br_src)||{}, us:(a&&a.inputs&&a.inputs.us_src)||{}};
-  for(const side of ['br','us']) for(const k in map[side]){
-    const el=document.getElementById('src_'+side+'_'+k); if(!el) continue;
-    const [cls,lab]=classifySrc(map[side][k]);
-    const href=SRC_LINKS[side+'_'+k]||null;
-    el.className='src '+cls+(href?' src-link':'');
-    el.textContent=lab; el.setAttribute('data-tip', map[side][k]);
-    if(href){ el.style.cursor='pointer'; el.onclick=()=>window.open(href,'_blank'); }
-    else { el.style.cursor=''; el.onclick=null; }
-  }
+  if(!s) return ['s-revisar','?']; return ['s-auto','auto']; }
+const SRC_LINKS={br_pl:'https://www.oceans14.com.br/acoes/historico-pl-bovespa',br_dy:'https://statusinvest.com.br/indices/ibovespa',
+  br_selic:'https://investidor10.com.br/indices/selic/',br_ipca:'https://investidor10.com.br/indices/ipca/',
+  br_ibov_dd:'https://www.b3.com.br/pt_br/para-voce',br_fund_dd:null,
+  br_breadth:'https://theotheo10.github.io/Ferramentas-Financeiras/breadth.html',br_mm200:'https://theotheo10.github.io/Ferramentas-Financeiras/breadth.html',
+  br_fg:'https://en.macromicro.me/charts/128837/brazil-mm-fear-and-greed-index-vs-bovespa-index',
+  us_pe:'https://www.multpl.com/s-p-500-pe-ratio',us_cape:'https://www.multpl.com/shiller-pe',us_dy:'https://www.multpl.com/s-p-500-dividend-yield',
+  us_real_us:'https://www.multpl.com/10-year-real-interest-rate',us_sp_dd:'https://finance.yahoo.com/quote/%5EGSPC/',us_fg:'https://edition.cnn.com/markets/fear-and-greed'};
+function fillSources(a){ const map={br:(a&&a.inputs&&a.inputs.br_src)||{}, us:(a&&a.inputs&&a.inputs.us_src)||{}};
+  for(const side of ['br','us']) for(const k in map[side]){ const el=document.getElementById('src_'+side+'_'+k); if(!el) continue;
+    const [cls,lab]=classifySrc(map[side][k]); const href=SRC_LINKS[side+'_'+k]||null;
+    el.className='src '+cls+(href?' src-link':''); el.textContent=lab; el.setAttribute('data-tip',map[side][k]);
+    if(href){ el.style.cursor='pointer'; el.onclick=(e)=>{e.preventDefault();window.open(href,'_blank');}; } } }
+
+function persist(){ const o={}; ALL.forEach(id=>{const el=document.getElementById(id); if(el) o[id]=el.value;}); localStorage.setItem('alocador_inputs2',JSON.stringify(o)); }
+function setF(id,val){ const el=document.getElementById(id); if(el&&val!=null&&!isNaN(val)) el.value=(''+(Math.round(val*100)/100)); }
+
+function fillFromAllocation(a){ if(!a) return;
+  const T=(a.carteira_total||1);
+  setF('caixa_pct',(a.caixa||0)/T*100); setF('brasil_pct',(a.brasil||0)/T*100); setF('sp_pct',(a.sp||0)/T*100);
+  const b=(a.inputs&&a.inputs.br)||{}, u=(a.inputs&&a.inputs.us)||{}, bd=a.banda||{};
+  setF('pl_br',b.pl); setF('dy_br',b.dy); setF('selic',b.selic); setF('ipca',b.ipca);
+  setF('ibov_dd',b.ibov_dd); setF('fund_dd',b.fund_dd); setF('breadth_br',b.breadth_pct); setF('mm200_br',b.mm200_pct); setF('fg_br',b.fg);
+  setF('pe_us',u.pe); setF('cape_us',u.cape); setF('dy_us',u.dy); setF('real_us',u.real_us); setF('fed',u.fed); setF('us_cpi',u.us_cpi); setF('sp_dd',u.sp_dd); setF('fg_us',u.fg);
+  setF('alvo_brasil',(bd.alvo_brasil!=null?bd.alvo_brasil*100:75));
+  setF('caixa_min',(bd.caixa_min!=null?bd.caixa_min*100:5)); setF('caixa_max',(bd.caixa_max!=null?bd.caixa_max*100:20));
+  setF('municao_min',(bd.municao_minima!=null?bd.municao_minima*100:5));
+  const af=document.getElementById('asof'); if(af&&a.asof) af.textContent='sinais de '+a.asof+' · recalcula no navegador a partir dos seus números';
 }
+const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,alvo_brasil:75,caixa_min:5,caixa_max:20,municao_min:5,teto_br:55,
+  k_barateza:1.0,k_reserva:0.4,
+  pl_br:10.9,dy_br:5.7,selic:14.5,ipca:5.3,ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,
+  pe_us:27,cape_us:37,dy_us:1.3,real_us:1.9,fed:4.5,us_cpi:2.8,sp_dd:-4,fg_us:55};
 
 let ALLOCATION=null;
 async function boot(){
   try{ const r=await fetch('allocation.json',{cache:'no-store'}); if(r.ok) ALLOCATION=await r.json(); }catch(e){}
-  if(ALLOCATION) fillFromAllocation(ALLOCATION); else Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k]));
-  const stored=localStorage.getItem('alocador_inputs');
+  // 1) renderiza uma vez p/ criar os inputs inline dos sinais
+  Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k]));
+  syncAlvoSp(); render(compute(readCfg()));
+  // 2) agora popula com allocation + localStorage
+  if(ALLOCATION) fillFromAllocation(ALLOCATION);
+  const stored=localStorage.getItem('alocador_inputs2');
   if(stored){ try{ const o=JSON.parse(stored); for(const id in o){ const el=document.getElementById(id); if(el) el.value=o[id]; } }catch(e){} }
-  Object.keys(DEFAULTS).forEach(k=>{ const el=document.getElementById(k); if(el && el.value.trim()==='') setF(k,DEFAULTS[k]); });
-  fillSources(ALLOCATION); liveSum(); render(compute(readCfg()));
+  Object.keys(DEFAULTS).forEach(k=>{ const el=document.getElementById(k); if(el&&el.value.trim()==='') setF(k,DEFAULTS[k]); });
+  SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
+  syncAlvoSp(); liveSum(); render(compute(readCfg()));
 }
-function resetDefaults(){ if(ALLOCATION) fillFromAllocation(ALLOCATION); else Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k]));
-  localStorage.removeItem('alocador_inputs'); liveSum(); render(compute(readCfg())); }
-async function reloadAllocation(){
-  try{
-    const r = await fetch('allocation.json?t='+Date.now(), {cache:'no-store'});
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    ALLOCATION = await r.json();
-    localStorage.removeItem('alocador_inputs');
-    fillFromAllocation(ALLOCATION);
-    liveSum(); render(compute(readCfg()));
-  } catch(e){ alert('Não foi possível baixar o allocation.json: '+e.message); }
-}
+function resetDefaults(){ Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k])); _sigCache={};
+  if(ALLOCATION) fillFromAllocation(ALLOCATION); localStorage.removeItem('alocador_inputs2');
+  SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
+  syncAlvoSp(); liveSum(); render(compute(readCfg())); }
+async function reloadAllocation(){ try{ const r=await fetch('allocation.json?t='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
+  ALLOCATION=await r.json(); localStorage.removeItem('alocador_inputs2'); _sigCache={};
+  fillFromAllocation(ALLOCATION); SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
+  syncAlvoSp(); liveSum(); render(compute(readCfg())); }catch(e){ alert('Não foi possível baixar o allocation.json: '+e.message); } }
 
 function exportConfig(){ const c=readCfg();
-  const cfg={caixa:c.caixa,brasil:c.brasil,sp:c.sp,alvo_brasil:c.alvo_brasil,alvo_sp:Math.round((1-c.alvo_brasil)*100)/100,
-    caixa_min:c.caixa_min,caixa_max:c.caixa_max,lambda_deploy:c.lambda,municao_minima:c.municao_min,
+  const cfg={alvo_brasil:c.alvo_brasil_risco,alvo_sp:Math.round((1-c.alvo_brasil_risco)*100)/100,
+    caixa_min:c.caixa_min,caixa_max:c.caixa_max,municao_minima:c.municao_min,
+    k_barateza:c.k_barateza,k_reserva:c.k_reserva,
     pl_br_override:c.pl,dy_br_override:c.dy_br,selic_override:c.selic,ipca_override:c.ipca,fg_br:c.fg_br,
     pe_us_override:c.pe,cape_us_override:c.cape,dy_us_override:c.dy_us,real_us_override:c.real_us,
     fed_override:c.fed,us_cpi_override:c.us_cpi,fg_us_override:c.fg_us};
@@ -597,42 +691,15 @@ function exportConfig(){ const c=readCfg();
 
 boot();
 
-// ── GLOBAL CUSTOM TOOLTIP — idêntico ao fundos.html ──────────────────────────
-(function(){
-  const tip = document.getElementById('g-tip');
-  if (!tip) return;
-  let activeEl = null;
-  function show(el, e) {
-    const text = el.getAttribute('data-tip');
-    if (!text || !text.trim()) return;
-    tip.textContent = text;
-    tip.classList.add('visible');
-    move(e); activeEl = el;
-  }
-  function hide() { tip.classList.remove('visible'); activeEl = null; }
-  function move(e) {
-    if (!tip.classList.contains('visible')) return;
-    const rect = tip.getBoundingClientRect();
-    const tw = rect.width || 200, th = rect.height || 60, mg = 14;
-    let x = e.clientX + mg, y = e.clientY + mg;
-    if (x + tw > window.innerWidth  - mg) x = e.clientX - tw - mg;
-    if (x < mg) x = mg;
-    if (y + th > window.innerHeight - mg) y = e.clientY - th - mg;
-    if (y < mg) y = mg;
-    tip.style.left = x + 'px'; tip.style.top = y + 'px';
-  }
-  document.addEventListener('mouseover', function(e) {
-    const el = e.target.closest('[data-tip]');
-    if (el && el !== activeEl) show(el, e);
-    else if (!el && activeEl) hide();
-  });
-  document.addEventListener('mouseout', function(e) {
-    const el = e.target.closest('[data-tip]');
-    if (el && !el.contains(e.relatedTarget)) hide();
-  });
-  document.addEventListener('mousemove', move);
-  document.addEventListener('scroll', hide, true);
-  document.addEventListener('click', hide);
+// ── GLOBAL TOOLTIP ───────────────────────────────────────────────────────────
+(function(){ const tip=document.getElementById('g-tip'); if(!tip) return; let activeEl=null;
+  function show(el,e){ const t=el.getAttribute('data-tip'); if(!t||!t.trim()) return; tip.textContent=t; tip.classList.add('visible'); move(e); activeEl=el; }
+  function hide(){ tip.classList.remove('visible'); activeEl=null; }
+  function move(e){ if(!tip.classList.contains('visible')) return; const r=tip.getBoundingClientRect(); const tw=r.width||200,th=r.height||60,mg=14;
+    let x=e.clientX+mg,y=e.clientY+mg; if(x+tw>window.innerWidth-mg) x=e.clientX-tw-mg; if(x<mg) x=mg; if(y+th>window.innerHeight-mg) y=e.clientY-th-mg; if(y<mg) y=mg; tip.style.left=x+'px'; tip.style.top=y+'px'; }
+  document.addEventListener('mouseover',e=>{ const el=e.target.closest('[data-tip]'); if(el&&el!==activeEl) show(el,e); else if(!el&&activeEl) hide(); });
+  document.addEventListener('mouseout',e=>{ const el=e.target.closest('[data-tip]'); if(el&&!el.contains(e.relatedTarget)) hide(); });
+  document.addEventListener('mousemove',move); document.addEventListener('scroll',hide,true);
 })();
 </script>
 </body>
