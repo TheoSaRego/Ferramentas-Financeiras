@@ -213,12 +213,11 @@
   [data-tip] { cursor: help; }
   .tip { border-bottom: 1px dotted var(--muted); }
 
-  .alerts { font-family: 'Courier New', monospace; font-size: 0.64rem; color: var(--muted); line-height: 1.6; }
-  .alerts > div { padding: 2px 0; }
-  .alerts .lvl-medio { color: var(--accent); }
-  .footer { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border);
-    font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted); line-height: 1.7; }
-  .disc { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); font-style: italic; margin-top: 0.6rem; }
+
+  .reload-row { display: flex; justify-content: flex-end; margin-top: 0.7rem; }
+  .reload-link { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted);
+    cursor: pointer; letter-spacing: 0.03em; text-decoration: none; transition: color 0.13s; }
+  .reload-link:hover { color: var(--accent); }
 
   @media (max-width: 600px) {
     .hero h1 { font-size: 1.7rem; }
@@ -242,7 +241,7 @@
   <h1>Alocador Tático</h1>
   <p>Quanto manter em caixa, em %, conforme a barateza de cada mercado. Você informa onde está
      e onde quer chegar; a ferramenta devolve o <b>caixa-alvo</b> de hoje — e se isso significa
-     desplegar, manter ou deixar o aporte repor. Três baldes: caixa (CDI), Brasil (Organon+Ártica)
+     aportar em equity, manter ou reforçar o caixa. Três baldes: caixa (CDI), Brasil (Organon+Ártica)
      e S&amp;P (SPXR11).</p>
   <div class="asof" id="asof"></div>
 </div>
@@ -286,6 +285,7 @@
     <div class="sig" id="sigBR"></div>
     <div class="sig" id="sigUS"></div>
   </div>
+  <div class="reload-row"><a class="reload-link" onclick="reloadAllocation()" data-tip="Baixa o allocation.json mais recente e repõe os sinais de mercado com o último fetch automático. Descarta edições manuais.">↺ repor sinais do servidor</a></div>
 </details>
 
 <!-- ── 4. POLÍTICA (ajuste fino de verdade) ────────────────────────────────── -->
@@ -302,26 +302,10 @@
       <div>
         <div class="field"><label>Munição mínima</label>
           <div class="stepper"><input id="municao_min" type="text"><span class="unit">%</span></div></div>
-        <div class="field"><label><span class="tip" data-tip="acima de quanto de Brasil disparar o alerta de concentração pessoa-chave">Teto conforto Brasil</span></label>
-          <div class="stepper"><input id="teto_br" type="text"><span class="unit">%</span></div></div>
       </div>
     </div>
-    <button class="apply ghost" onclick="reloadAllocation()" data-tip="Baixa o allocation.json mais recente e repõe os sinais de mercado com o último fetch automático.">↺ repor sinais do servidor</button>
-    <button class="apply ghost" onclick="resetDefaults()" data-tip="Repõe tudo com os valores padrão.">⚙ padrões</button>
   </div>
 </details>
-
-<!-- ── 5. MONITOR ──────────────────────────────────────────────────────────── -->
-<div class="panel"><span class="tag">monitor (concentração / capacity)</span><div class="alerts" id="alerts"></div></div>
-
-<div class="footer" id="footer">
-  fontes — Brasil: breadth próprio (B3/Yahoo), Selic/IPCA BCB, DD dos fundos via planilha de cotas
-  (cota_cvm + fallback cota_site). P/L IBOV e F&amp;G Brasil são MANUAIS — sem fonte gratuita confiável.
-  S&amp;P: breadth S5TW/S5FI/S5TH (fallback cálculo próprio), P/E e DY multpl.com, CAPE multpl, juro real
-  e Fed FRED, F&amp;G CNN, drawdown ^GSPC. · O caixa-alvo é orientação de % a perseguir: se o aporte
-  fizer o caixa crescer e as condições não mudarem, a ferramenta mantém o mesmo alvo — ou seja, aporte.
-</div>
-<div class="disc">Leitura do seu próprio material, não recomendação — a decisão é sua. Não sou consultor de investimentos.</div>
 
 <button class="apply ghost" style="margin-top:1.2rem" onclick="exportConfig()">exportar config.json</button>
 
@@ -428,7 +412,7 @@ function cashTarget(cfg, sBR, sUS){
 }
 
 /* ════════════════════ I/O ════════════════════ */
-const PCT_FIELDS=['caixa_pct','brasil_pct','sp_pct','alvo_brasil','alvo_sp','caixa_min','caixa_max','municao_min','teto_br'];
+const PCT_FIELDS=['caixa_pct','brasil_pct','sp_pct','alvo_brasil','alvo_sp','caixa_min','caixa_max','municao_min'];
 const SIG_FIELDS=['pl_br','dy_br','selic','ipca','ibov_dd','fund_dd','breadth_br','mm200_br','fg_br',
   'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','fg_us'];
 const POL_FIELDS=['k_barateza','k_reserva'];
@@ -467,7 +451,6 @@ function readCfg(){
     caixa_min:(gv('caixa_min')!=null?gv('caixa_min'):5)/100,
     caixa_max:(gv('caixa_max')!=null?gv('caixa_max'):20)/100,
     municao_min:(gv('municao_min')!=null?gv('municao_min'):5)/100,
-    teto_br:(gv('teto_br')!=null?gv('teto_br'):55)/100,
     k_barateza:gv('k_barateza')!=null?gv('k_barateza'):1.0,
     k_reserva:gv('k_reserva')!=null?gv('k_reserva'):0.4,
     pl:gv('pl_br'),dy_br:gv('dy_br'),selic:gv('selic'),ipca:gv('ipca'),ibov_dd:gv('ibov_dd'),
@@ -561,9 +544,9 @@ function render(R){ if(!R) return; LAST=R; const cfg=R.cfg, ct=R.ct;
   const alvo=ct.alvo, cur=cfg.cur_caixa;
   // ação derivada
   const diff=cur-alvo; let act,actCls,actTxt;
-  if(diff>0.015){ act='DESPLEGAR'; actCls='act-deploy'; actTxt='Você tem <b>'+(diff*100).toFixed(0)+'pp</b> de caixa acima do alvo — desloque para o risco.'; }
-  else if(diff<-0.015){ act='DEIXAR APORTAR'; actCls='act-build'; actTxt='Você está <b>'+(-diff*100).toFixed(0)+'pp</b> abaixo do alvo — deixe o aporte repor o caixa; não venda risco.'; }
-  else { act='MANTER'; actCls='act-hold'; actTxt='Caixa no alvo — aporte para manter este nível enquanto as condições não mudam.'; }
+  if(diff>0.015){ act='APORTAR'; actCls='act-deploy'; actTxt='Você tem <b>'+(diff*100).toFixed(0)+'pp</b> de caixa acima do alvo — aporte esse excedente em equity.'; }
+  else if(diff<-0.015){ act='REFORÇAR CAIXA'; actCls='act-build'; actTxt='Você está <b>'+(-diff*100).toFixed(0)+'pp</b> abaixo do alvo — deixe o aporte reforçar o caixa; não venda equity.'; }
+  else { act='NO ALVO'; actCls='act-hold'; actTxt='Caixa no alvo — direcione aportes para equity e mantenha este nível enquanto as condições não mudam.'; }
 
   // gauge: escala de 0 a (caixa_max+0.15) — banda min..max destacada
   const scaleMax=cfg.caixa_max+0.15;
@@ -613,12 +596,6 @@ function render(R){ if(!R) return; LAST=R; const cfg=R.cfg, ct=R.ct;
   renderSig('sigUS','S&P 500 · SPXR11',R.scoreUS,R.confUS,R.scUS,GU,WU,'us');
   // repõe valores nos inputs inline + fontes (renderSig recriou os campos)
   restoreSigInputs(); fillSources(ALLOCATION); flagNeedsEdit(R);
-
-  // monitor
-  const nucleo=cfg.cur_brasil; let al=[];
-  if(nucleo>cfg.teto_br) al.push('<div class="lvl-medio">Brasil em '+(nucleo*100).toFixed(0)+'% — concentração pessoa-chave (acima do seu teto de conforto '+(cfg.teto_br*100).toFixed(0)+'%); considere direcionar aportes ao S&P/caixa.</div>');
-  al.push('<div>Single-names (Nu, ALOS) e cripto ficam fora desta ferramenta — discricionários.</div>');
-  document.getElementById('alerts').innerHTML=al.join('');
 }
 
 /* sinaliza os campos que EXIGEM edição manual (sem fetch) */
@@ -673,7 +650,7 @@ function fillFromAllocation(a){ if(!a) return;
   setF('municao_min',(bd.municao_minima!=null?bd.municao_minima*100:5));
   const af=document.getElementById('asof'); if(af&&a.asof) af.textContent='sinais de '+a.asof+' · recalcula no navegador a partir dos seus números';
 }
-const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,alvo_brasil:75,caixa_min:5,caixa_max:20,municao_min:5,teto_br:55,
+const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,alvo_brasil:75,caixa_min:5,caixa_max:20,municao_min:5,
   k_barateza:1.0,k_reserva:0.4,
   pl_br:10.9,dy_br:5.7,selic:14.5,ipca:5.3,ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,
   pe_us:27,cape_us:37,dy_us:1.3,real_us:1.9,fed:4.5,us_cpi:2.8,sp_dd:-4,fg_us:55};
@@ -692,10 +669,6 @@ async function boot(){
   SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
   syncAlvoSp(); liveSum(); render(compute(readCfg()));
 }
-function resetDefaults(){ Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k])); _sigCache={};
-  if(ALLOCATION) fillFromAllocation(ALLOCATION); localStorage.removeItem('alocador_inputs2');
-  SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
-  syncAlvoSp(); liveSum(); render(compute(readCfg())); }
 async function reloadAllocation(){ try{ const r=await fetch('allocation.json?t='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
   ALLOCATION=await r.json(); localStorage.removeItem('alocador_inputs2'); _sigCache={};
   fillFromAllocation(ALLOCATION); SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
