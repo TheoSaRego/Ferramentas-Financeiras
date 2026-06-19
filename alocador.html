@@ -161,6 +161,15 @@
   .needs-edit { font-family: 'Courier New', monospace; font-size: 0.58rem; color: var(--accent);
     line-height: 1.6; margin: 0.4rem 0 0.9rem; padding: 0.5rem 0.7rem; border: 1px dashed var(--accent); border-radius: 8px; }
 
+  /* insumos macro compartilhados (alimentam ERP/carry, não são fatores) */
+  .macro { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--border); }
+  .macro .mhd { font-family: 'Courier New', monospace; font-size: 0.55rem; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--muted); margin-bottom: 0.5rem; }
+  .macro .mrow { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; }
+  .macro .mitem { display: flex; align-items: center; gap: 6px; font-family: 'Courier New', monospace;
+    font-size: 0.6rem; color: var(--text); }
+  .macro .mitem .src { margin-left: 2px; }
+
   /* ── POSIÇÃO em % ─────────────────────────────────────────────────────── */
   .field { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
     padding: 0.55rem 0; border-bottom: 1px solid var(--border); }
@@ -507,8 +516,9 @@ function facHTML(side,k,scoreArr,editId,unit){
 }
 /* mapeia fator → chave de fonte do allocation.json */
 function srcKey(side,k){
-  if(side==='br'){ return {erp:'selic',pl:'pl',dy:'dy',ibov_dd:'ibov_dd',fund_dd:'fund_dd',breadth:'breadth',mm200:'mm200',fg:'fg'}[k]||k; }
-  return {erp:'real_us',pe:'pe',cape:'cape',sp_dd:'sp_dd',fg:'fg'}[k]||k;
+  if(k==='erp') return 'erp';   // ERP é derivado; src próprio p/ não colidir com o insumo macro
+  if(side==='br'){ return {pl:'pl',dy:'dy',ibov_dd:'ibov_dd',fund_dd:'fund_dd',breadth:'breadth',mm200:'mm200',fg:'fg'}[k]||k; }
+  return {pe:'pe',cape:'cape',sp_dd:'sp_dd',fg:'fg'}[k]||k;
 }
 
 function renderSig(elId, market, score, conf, scores, groups, weights, side){
@@ -528,12 +538,23 @@ function renderSig(elId, market, score, conf, scores, groups, weights, side){
     }
     body+='</div>';
   }
+  // insumos macro compartilhados (alimentam ERP e o carry; não têm score próprio)
+  const macro = side==='br'
+    ? [['selic','Selic','%'],['ipca','IPCA 12m','%']]
+    : [['real_us','juro real 10a','%'],['fed','Fed funds','%'],['us_cpi','CPI 12m','%']];
+  let macroHTML='<div class="macro"><div class="mhd">insumos macro — entram no ERP'+(side==='us'?' / carry':'')+'</div><div class="mrow">';
+  for(const [id,nm,u] of macro){
+    macroHTML+='<span class="mitem">'+nm+' <span class="finput"><input id="'+id+'" type="text" inputmode="decimal" oninput="onSigEdit()">'+
+      '<span class="u">'+u+'</span></span><span class="src" id="src_'+side+'_'+id+'"></span></span>';
+  }
+  macroHTML+='</div></div>';
+
   document.getElementById(elId).innerHTML=
     '<div class="market">'+market+'</div>'+
     '<div class="scorerow"><div class="score">'+(score==null?'—':score.toFixed(2))+'<small>/10</small></div>'+
       '<div style="text-align:right"><div class="label" style="color:'+cor+'">'+lab+'</div>'+
       '<div class="conf">confiança '+conf+'</div></div></div>'+
-    '<div class="bar"><span style="width:'+pct+'%;background:'+cor+'"></span></div>'+body;
+    '<div class="bar"><span style="width:'+pct+'%;background:'+cor+'"></span></div>'+body+macroHTML;
 }
 
 function render(R){ if(!R) return; LAST=R; const cfg=R.cfg, ct=R.ct;
