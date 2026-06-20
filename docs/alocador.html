@@ -176,6 +176,39 @@
   .field:last-child { border-bottom: none; }
   .field label { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--text); }
   .field .sub { font-family: 'Courier New', monospace; font-size: 0.6rem; color: var(--muted); display: block; margin-top: 2px; }
+  .solver { border:1px solid var(--border-str); border-radius:12px; padding:1.1rem 1.1rem 1rem; margin-bottom:1.1rem; background:linear-gradient(180deg, rgba(0,0,0,.012), rgba(0,0,0,.028)); }
+  .solver-h { margin-bottom:.9rem; }
+  .solver-h .tag { display:block; margin-bottom:.15rem; }
+  .solver-sub { font-size:.72rem; color:var(--muted); font-style:italic; }
+  .alfa-lbl { font-size:.66rem; letter-spacing:.05em; text-transform:uppercase; color:var(--muted); margin-bottom:.4rem; }
+  .alfa-btns { display:flex; gap:.45rem; margin-bottom:1rem; }
+  .alfa-btn { flex:1; display:flex; flex-direction:column; gap:.2rem; padding:.55rem .35rem; border:1px solid var(--border-str); border-radius:9px; background:var(--paper,#fff); cursor:pointer; font-family:inherit; font-size:.82rem; color:var(--ink); transition:all .15s; text-align:center; }
+  .alfa-btn small { font-size:.62rem; color:var(--muted); font-weight:normal; line-height:1.25; }
+  .alfa-btn:hover { border-color:var(--accent); transform:translateY(-1px); }
+  .alfa-btn.active { border-color:var(--accent); background:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.12); }
+  .alfa-btn.active small { color:rgba(255,255,255,.82); }
+  .solver-inputs { display:flex; gap:.7rem; margin-bottom:1rem; }
+  .solver-inputs .field { flex:1; }
+  .slider-wrap { margin-bottom:.4rem; }
+  .slider-lbl { display:flex; justify-content:space-between; font-size:.66rem; color:var(--muted); margin-bottom:.35rem; }
+  .slider-foot { text-align:center; font-size:.7rem; color:var(--accent); margin-top:.35rem; font-style:italic; letter-spacing:.02em; }
+  #sonoRet { width:100%; accent-color:var(--accent); height:4px; }
+  /* resultado — o herói */
+  .solver-out { margin-top:1.05rem; padding-top:1rem; border-top:1px solid var(--border-str); }
+  .split-bar { display:flex; height:30px; border-radius:7px; overflow:hidden; margin-bottom:.55rem; box-shadow:inset 0 0 0 1px rgba(0,0,0,.05); }
+  .split-bar .seg-br { background:var(--accent); display:flex; align-items:center; justify-content:flex-start; padding-left:.6rem; color:#fff; font-weight:bold; font-size:.92rem; transition:flex-basis .3s ease; }
+  .split-bar .seg-sp { background:var(--ink); opacity:.78; display:flex; align-items:center; justify-content:flex-end; padding-right:.6rem; color:var(--paper,#fff); font-weight:bold; font-size:.92rem; transition:flex-basis .3s ease; }
+  .split-legend { display:flex; justify-content:space-between; font-size:.72rem; color:var(--muted); margin-bottom:.85rem; }
+  .split-legend b { color:var(--ink); font-weight:600; }
+  /* trilha de cálculo */
+  .calc-trail { display:flex; gap:.5rem; margin-bottom:.7rem; }
+  .calc-cell { flex:1; text-align:center; padding:.5rem .3rem; border-radius:8px; background:rgba(0,0,0,.03); }
+  .calc-cell .cc-num { font-size:1.05rem; font-weight:bold; color:var(--ink); font-family:Georgia,serif; }
+  .calc-cell.win { background:rgba(192,90,53,.08); box-shadow:inset 0 0 0 1px rgba(192,90,53,.25); }
+  .calc-cell.win .cc-num { color:var(--accent); }
+  .calc-cell .cc-lbl { font-size:.6rem; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; margin-top:.1rem; }
+  .calc-cell .cc-sub { font-size:.58rem; color:var(--muted); margin-top:.15rem; line-height:1.2; }
+  .solver-verdict { font-size:.74rem; color:var(--muted); line-height:1.4; font-style:italic; padding:.5rem .6rem; border-left:2px solid var(--accent); background:rgba(0,0,0,.015); border-radius:0 6px 6px 0; }
   .stepper { display: inline-flex; align-items: center; border: 1px solid var(--border-str); border-radius: 8px; overflow: hidden; }
   .stepper button { font-family: 'Courier New', monospace; font-size: 0.9rem; width: 26px; height: 30px;
     border: none; background: transparent; color: var(--muted); cursor: pointer; transition: all 0.12s; }
@@ -201,7 +234,10 @@
   details.adv > summary::before { content: '▸ '; }
   details.adv[open] > summary::before { content: '▾ '; }
   details.adv > summary:hover { color: var(--text); }
-  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; align-items: start; }
+  .col-lbl { font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 .7rem; padding-bottom:.35rem; border-bottom:1px solid var(--border-str); }
+  .col-hint { font-size:.74rem; color:var(--muted); line-height:1.5; margin:1.1rem 0 0; font-style:italic; }
+  .col-hint em { font-style:normal; font-weight:600; color:var(--ink); }
 
   #g-tip { position: fixed; background: var(--text); color: var(--bg);
     font-family: 'Courier New', monospace; font-size: 0.60rem; padding: 9px 13px; border-radius: 6px;
@@ -251,25 +287,46 @@
   <span class="tag">onde você está · onde quer chegar (% da carteira)</span>
   <div class="grid2">
     <div>
+      <div class="col-lbl">posição hoje</div>
       <div class="field"><div><label>Caixa hoje</label><span class="sub">munição — CDI</span></div>
         <div class="stepper"><input id="caixa_pct" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
       <div class="field"><div><label>Brasil hoje</label><span class="sub">Organon + Ártica</span></div>
         <div class="stepper"><input id="brasil_pct" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
       <div class="field"><div><label>S&amp;P hoje</label><span class="sub">SPXR11</span></div>
         <div class="stepper"><input id="sp_pct" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
-    </div>
-    <div>
-      <div class="field"><div><label>Alvo Brasil</label><span class="sub">do risco (Brasil+S&amp;P)</span></div>
-        <div class="stepper"><input id="alvo_brasil" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
-      <div class="field"><div><label>Alvo S&amp;P</label><span class="sub">complemento do risco</span></div>
-        <div class="stepper"><input id="alvo_sp" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+      <div class="sumline" id="sumPos" style="margin:.4rem 0 1.4rem"><span>soma das posições</span><span id="posReadout">—</span></div>
+
+      <div class="col-lbl">banda de caixa</div>
       <div class="field"><div><label>Caixa mín</label><span class="sub">quando há barganha</span></div>
         <div class="stepper"><input id="caixa_min" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
       <div class="field"><div><label>Caixa máx</label><span class="sub">quando tudo caro</span></div>
         <div class="stepper"><input id="caixa_max" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+      <p class="col-hint">O caixa-alvo de hoje sai dentro desta banda, conforme a barateza dos mercados. O split à direita decide como dividir o que <em>não</em> está em caixa.</p>
+    </div>
+    <div>
+      <div class="solver" id="solver">
+        <div class="solver-h"><span class="tag">split sugerido</span><span class="solver-sub">calculado dos preços de hoje + sua convicção sobre o alfa dos fundos</span></div>
+        <div class="alfa-lbl">convicção de alfa (Organon + Ártica sobre o IBOV)</div>
+        <div class="alfa-btns" id="alfaBtns">
+          <button type="button" class="alfa-btn" data-alfa="5">conservador<small>reversão forte<br>+5pp</small></button>
+          <button type="button" class="alfa-btn active" data-alfa="10">base<small>reversão parcial<br>+10pp</small></button>
+          <button type="button" class="alfa-btn" data-alfa="18.5">otimista<small>alfa histórico<br>+18,5pp</small></button>
+        </div>
+        <div class="solver-inputs">
+          <div class="field"><div><label><span class="tip" data-tip="retorno esperado do S&P nos próximos ~10 anos. O programa calcula do CAPE atual pela relação histórica de 145 anos (ret ≈ 3,4% + 0,85/CAPE). Sobrescreva se discordar.">S&amp;P fwd</span></label><span class="sub">do CAPE atual</span></div>
+            <div class="stepper"><input id="sp_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+          <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV puro (sem alfa) nos próximos ~10 anos. O programa calcula do P/L atual via earnings yield (100/PL) — ex: PL 11 → ~9%. Conservador (assume zero crescimento real e múltiplo estável). Sobrescreva se discordar. O alfa dos botões é somado a isto.">IBOV fwd</span></label><span class="sub">do P/L atual</span></div>
+            <div class="stepper"><input id="ibov_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
+        </div>
+        <div class="slider-wrap">
+          <div class="slider-lbl"><span>↤ menos drawdown</span><span>mais retorno ↦</span></div>
+          <input type="range" id="sonoRet" min="0" max="100" value="80">
+          <div class="slider-foot"><span id="sliderMode">CAGR-priorizado</span></div>
+        </div>
+        <div class="solver-out" id="solverOut"></div>
+      </div>
     </div>
   </div>
-  <div class="sumline" id="sumPos"><span>soma das posições</span><span id="posReadout">—</span></div>
   <button class="apply" onclick="applyAll()">Calcular caixa-alvo</button>
 </div>
 
@@ -412,37 +469,113 @@ function cashTarget(cfg, sBR, sUS){
 }
 
 /* ════════════════════ I/O ════════════════════ */
-const PCT_FIELDS=['caixa_pct','brasil_pct','sp_pct','alvo_brasil','alvo_sp','caixa_min','caixa_max','municao_min'];
+const PCT_FIELDS=['caixa_pct','brasil_pct','sp_pct','caixa_min','caixa_max','municao_min'];
 const SIG_FIELDS=['pl_br','dy_br','selic','ipca','ibov_dd','fund_dd','breadth_br','mm200_br','fg_br',
   'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','fg_us'];
 const POL_FIELDS=['k_barateza','k_reserva'];
-const ALL=[...PCT_FIELDS,...SIG_FIELDS,...POL_FIELDS];
+const SOLVER_FIELDS=['sp_fwd','ibov_fwd'];
+const ALL=[...PCT_FIELDS,...SIG_FIELDS,...POL_FIELDS,...SOLVER_FIELDS];
 
 function gv(id){ const el=document.getElementById(id); if(!el) return null;
   let raw=el.value.replace('%','').replace(/\s/g,'').trim(); if(raw==='') return null;
   if(raw.indexOf('.')>=0 && raw.indexOf(',')>=0) raw=raw.replace(/\./g,'').replace(',','.'); else raw=raw.replace(',','.');
   const n=parseFloat(raw); return isNaN(n)?null:n; }
 function bump(id,dir){ const el=document.getElementById(id); let v=gv(id)||0;
-  const step = ['caixa_min','caixa_max','municao_min'].includes(id)?1:1; v+=dir*step;
-  el.value=(Math.round(v*10)/10); syncAlvoSp(); liveSum(); }
-/* alvos são complementares (somam 100% do risco): editar um ajusta o outro */
-function mirrorAlvo(src){ const from=src==='sp'?'alvo_sp':'alvo_brasil', to=src==='sp'?'alvo_brasil':'alvo_sp';
-  const v=gv(from); const el=document.getElementById(to);
-  if(el && v!=null) el.value=(Math.round((100-v)*10)/10); }
-function syncAlvoSp(){ mirrorAlvo('brasil'); }   // mantido p/ chamadas existentes (bump etc.)
+  const step = 1; v+=dir*step;
+  el.value=(Math.round(v*10)/10); liveSum(); }
+
+/* ════════════════════ SOLVER DE SPLIT ════════════════════
+   Calcula o split BR/S&P recomendado dos PREÇOS DE HOJE + convicção de alfa.
+   Premissas isoladas e visíveis: alfa (botão), IBOV fwd e S&P fwd (editáveis).
+   Tudo o mais — carry, vols, correlação — é medido/dado, não suposto.
+   Parâmetros de risco medidos nos dados reais 2014-26:                        */
+const SOLV={ corr:0.33, vBR:0.22, vSP:0.12, cdi:0.115 };  // correlação, vols anuais, CDI nominal
+let SOLVER_ALFA=10;   // pp; default = botão 'base'
+let SOLVER_SLIDER=80; // 0=Sharpe-ótimo .. 100=CAGR-ótimo
+let _fwdDirty={};     // marca se o usuário sobrescreveu sp_fwd/ibov_fwd manualmente
+
+/* S&P forward implícito do CAPE: relação histórica 145 anos (ret ≈ 3,4% + 0,85/CAPE) */
+function spFwdFromCape(cape){ if(!cape||cape<=0) return null; return 3.4 + 0.85*100/cape; }
+
+/* tangência long-only de 2 ativos (Sharpe-ótimo) */
+function sharpeOptBR(muBR,muSP){
+  const {corr,vBR,vSP,cdi}=SOLV;
+  const eBR=muBR-cdi, eSP=muSP-cdi;
+  const det=vBR*vBR*vSP*vSP*(1-corr*corr);
+  // w = Σ⁻¹ e, normalizado
+  const wBR=( eBR*vSP*vSP - eSP*corr*vBR*vSP )/det;
+  const wSP=( eSP*vBR*vBR - eBR*corr*vBR*vSP )/det;
+  const s=wBR+wSP; if(s===0) return 0.5;
+  let w=wBR/s; return Math.max(0,Math.min(1,w));
+}
+function solveSplit(){
+  let cape=gv('cape_us'); if(cape==null) cape=41.7;   // fallback ao real atual
+  const selic=gv('selic'), fed=gv('fed'), plBr=gv('pl_br');
+  // auto-preenche S&P fwd do CAPE, exceto se o usuário sobrescreveu
+  const spEl=document.getElementById('sp_fwd');
+  if(spEl && !_fwdDirty['sp_fwd'] && cape){ spEl.value=(Math.round(spFwdFromCape(cape)*10)/10).toString().replace('.',','); }
+  let spFwd=gv('sp_fwd'); if(spFwd==null) spFwd=spFwdFromCape(cape);
+  // auto-preenche IBOV fwd do earnings yield (100/PL), exceto se sobrescreveu — paralelo ao S&P
+  const ibEl=document.getElementById('ibov_fwd');
+  if(ibEl && !_fwdDirty['ibov_fwd'] && plBr){ ibEl.value=(Math.round(100/plBr*10)/10).toString().replace('.',','); }
+  let ibovFwd=gv('ibov_fwd'); if(ibovFwd==null) ibovFwd=(plBr? 100/plBr : 10);
+  const carry=(selic!=null&&fed!=null)?(selic-fed):8;   // carry medido dos insumos macro
+  const muBR=(ibovFwd+SOLVER_ALFA)/100;                 // Brasil fwd = IBOV + alfa
+  const muSP=((1+spFwd/100)*(1+carry/100)-1);           // SPXR11 = S&P + carry (hedgeado)
+  const wSharpe=sharpeOptBR(muBR,muSP);
+  const wCagr=(muBR>muSP)?1:0;                          // CAGR-ótimo: tudo no maior retorno
+  const t=SOLVER_SLIDER/100;
+  const wBR=wSharpe+t*(wCagr-wSharpe);                  // interpola sono↔retorno
+  return {wBR,wSharpe,wCagr,muBR,muSP,carry,spFwd,ibovFwd};
+}
+let SPLIT_RESULT=null;
+function renderSolver(){
+  const r=solveSplit(); SPLIT_RESULT=r;
+  const out=document.getElementById('solverOut'); if(!out) return;
+  const brP=Math.round(r.wBR*100), spP=100-brP;
+  const conv = Math.abs(r.wSharpe-r.wCagr)<0.02;
+  const brW=Math.max(brP,12), spW=Math.max(spP,12);  // largura mínima p/ legibilidade do texto
+  out.innerHTML =
+    '<div class="split-bar">'+
+      '<div class="seg-br" style="flex:'+brW+' 1 0">'+(brP>=18?brP+'%':'')+'</div>'+
+      '<div class="seg-sp" style="flex:'+spW+' 1 0">'+(spP>=18?spP+'%':'')+'</div>'+
+    '</div>'+
+    '<div class="split-legend"><span><b>Brasil '+brP+'%</b> · Organon+Ártica</span><span>SPXR11 · <b>S&amp;P '+spP+'%</b></span></div>'+
+    '<div class="calc-trail">'+
+      '<div class="calc-cell'+(r.muBR>=r.muSP?' win':'')+'"><div class="cc-num">'+(r.muBR*100).toFixed(0)+'%</div><div class="cc-lbl">Brasil fwd</div><div class="cc-sub">IBOV '+r.ibovFwd.toFixed(1)+' + alfa '+SOLVER_ALFA+'</div></div>'+
+      '<div class="calc-cell'+(r.muSP>r.muBR?' win':'')+'"><div class="cc-num">'+(r.muSP*100).toFixed(0)+'%</div><div class="cc-lbl">SPXR11 fwd</div><div class="cc-sub">S&amp;P '+r.spFwd.toFixed(1)+' + carry '+r.carry.toFixed(1)+'</div></div>'+
+    '</div>'+
+    '<div class="solver-verdict">'+
+    (conv ? (r.wCagr>0.5
+              ? 'CAGR e Sharpe coincidem aqui — o <b>Brasil</b> domina nas duas métricas, e o slider não altera o resultado.'
+              : 'CAGR e Sharpe coincidem aqui — o <b>S&amp;P</b> domina nas duas métricas, e o slider não altera o resultado.')
+          : 'Extremos: Sharpe-ótimo seria <b>'+Math.round(r.wSharpe*100)+'% Brasil</b>, CAGR-ótimo <b>'+Math.round(r.wCagr*100)+'% Brasil</b>. O slider acima escolhe entre eles.')+
+    '</div>';
+  const sm=document.getElementById('sliderMode');
+  if(sm) sm.textContent = SOLVER_SLIDER>=66?'CAGR-priorizado':SOLVER_SLIDER<=33?'risco-minimizado':'equilibrado';
+}
 function liveSum(){ const c=gv('caixa_pct')||0,b=gv('brasil_pct')||0,s=gv('sp_pct')||0,T=c+b+s;
   const el=document.getElementById('posReadout'), row=document.getElementById('sumPos');
   el.textContent=Math.round(T*10)/10+'%';
   if(Math.abs(T-100)>0.5){ row.classList.add('warn'); el.textContent=Math.round(T*10)/10+'% — normalizo p/ 100%'; }
   else row.classList.remove('warn'); }
 ['caixa_pct','brasil_pct','sp_pct'].forEach(id=>{const el=document.getElementById(id); if(el) el.addEventListener('input',liveSum);});
-const ae=document.getElementById('alvo_brasil'); if(ae) ae.addEventListener('input',()=>mirrorAlvo('brasil'));
-const as=document.getElementById('alvo_sp'); if(as) as.addEventListener('input',()=>mirrorAlvo('sp'));
+// solver: botões de alfa, slider, e campos fwd
+document.querySelectorAll('.alfa-btn').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.alfa-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); SOLVER_ALFA=parseFloat(b.dataset.alfa);
+  renderSolver(); render(compute(readCfg())); }));
+const srEl=document.getElementById('sonoRet'); if(srEl) srEl.addEventListener('input',()=>{
+  SOLVER_SLIDER=parseFloat(srEl.value); renderSolver(); render(compute(readCfg())); });
+SOLVER_FIELDS.forEach(id=>{ const el=document.getElementById(id); if(el){
+  el.addEventListener('input',()=>{ _fwdDirty[id]=true; });
+  el.addEventListener('change',()=>{ _fwdDirty[id]=(el.value.trim()!==''); renderSolver(); render(compute(readCfg())); });
+}});
 
 function readCfg(){
   let c=gv('caixa_pct')||0,b=gv('brasil_pct')||0,s=gv('sp_pct')||0; const T=(c+b+s)||1;
   c/=T; b/=T; s/=T;                                  // normaliza p/ frações que somam 1
-  const ab=(gv('alvo_brasil')!=null?gv('alvo_brasil'):75)/100;
+  const ab=(SPLIT_RESULT? SPLIT_RESULT.wBR : 0.75);
   const risk=1-c;                                    // fração em risco hoje
   return { cur_caixa:c, cur_brasil:b, cur_sp:s,
     alvo_brasil_risco:ab,
@@ -612,10 +745,10 @@ function flagNeedsEdit(R){
 
 let _sigCache={};
 function cacheSig(el){ if(el&&el.id){ _sigCache[el.id]=el.value; } }   // só guarda; não re-renderiza
-function onSigEdit(){ SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); render(compute(readCfg())); }
+function onSigEdit(){ SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); renderSolver(); render(compute(readCfg())); }
 function restoreSigInputs(){ for(const id in _sigCache){ const el=document.getElementById(id); if(el && _sigCache[id]!=null) el.value=_sigCache[id]; } }
 
-function applyAll(){ syncAlvoSp(); liveSum(); SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); render(compute(readCfg())); }
+function applyAll(){ renderSolver(); liveSum(); SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); render(compute(readCfg())); }
 
 /* ════════════════════ fontes + persistência + carga ════════════════════ */
 function classifySrc(s){ s=(s||'').toLowerCase();
@@ -645,34 +778,33 @@ function fillFromAllocation(a){ if(!a) return;
   setF('pl_br',b.pl); setF('dy_br',b.dy); setF('selic',b.selic); setF('ipca',b.ipca);
   setF('ibov_dd',b.ibov_dd); setF('fund_dd',b.fund_dd); setF('breadth_br',b.breadth_pct); setF('mm200_br',b.mm200_pct); setF('fg_br',b.fg);
   setF('pe_us',u.pe); setF('cape_us',u.cape); setF('dy_us',u.dy); setF('real_us',u.real_us); setF('fed',u.fed); setF('us_cpi',u.us_cpi); setF('sp_dd',u.sp_dd); setF('fg_us',u.fg);
-  setF('alvo_brasil',(bd.alvo_brasil!=null?bd.alvo_brasil*100:75));
   setF('caixa_min',(bd.caixa_min!=null?bd.caixa_min*100:5)); setF('caixa_max',(bd.caixa_max!=null?bd.caixa_max*100:20));
   setF('municao_min',(bd.municao_minima!=null?bd.municao_minima*100:5));
   const af=document.getElementById('asof'); if(af&&a.asof) af.textContent='sinais de '+a.asof+' · recalcula no navegador a partir dos seus números';
 }
-const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,alvo_brasil:75,caixa_min:5,caixa_max:30,municao_min:5,
+const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,caixa_min:5,caixa_max:30,municao_min:5,
   k_barateza:1.0,k_reserva:1.0,
-  pl_br:10.9,dy_br:5.7,selic:14.5,ipca:5.3,ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,
-  pe_us:27,cape_us:37,dy_us:1.3,real_us:1.9,fed:4.5,us_cpi:2.8,sp_dd:-4,fg_us:55};
+  pl_br:10.9,dy_br:5.7,selic:14.25,ipca:5.3,ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,
+  pe_us:32,cape_us:41.7,dy_us:1.3,real_us:1.9,fed:3.6,us_cpi:2.8,sp_dd:-4,fg_us:55};
 
 let ALLOCATION=null;
 async function boot(){
   try{ const r=await fetch('allocation.json',{cache:'no-store'}); if(r.ok) ALLOCATION=await r.json(); }catch(e){}
   // 1) renderiza uma vez p/ criar os inputs inline dos sinais
   Object.keys(DEFAULTS).forEach(k=>setF(k,DEFAULTS[k]));
-  syncAlvoSp(); render(compute(readCfg()));
+  renderSolver(); render(compute(readCfg()));
   // 2) agora popula com allocation + localStorage
   if(ALLOCATION) fillFromAllocation(ALLOCATION);
   const stored=localStorage.getItem('alocador_inputs2');
   if(stored){ try{ const o=JSON.parse(stored); for(const id in o){ const el=document.getElementById(id); if(el) el.value=o[id]; } }catch(e){} }
   Object.keys(DEFAULTS).forEach(k=>{ const el=document.getElementById(k); if(el&&el.value.trim()==='') setF(k,DEFAULTS[k]); });
   SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
-  syncAlvoSp(); liveSum(); render(compute(readCfg()));
+  renderSolver(); liveSum(); render(compute(readCfg()));
 }
 async function reloadAllocation(){ try{ const r=await fetch('allocation.json?t='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
   ALLOCATION=await r.json(); localStorage.removeItem('alocador_inputs2'); _sigCache={};
   fillFromAllocation(ALLOCATION); SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
-  syncAlvoSp(); liveSum(); render(compute(readCfg())); }catch(e){ alert('Não foi possível baixar o allocation.json: '+e.message); } }
+  renderSolver(); liveSum(); render(compute(readCfg())); }catch(e){ alert('Não foi possível baixar o allocation.json: '+e.message); } }
 
 function exportConfig(){ const c=readCfg();
   const cfg={alvo_brasil:c.alvo_brasil_risco,alvo_sp:Math.round((1-c.alvo_brasil_risco)*100)/100,
