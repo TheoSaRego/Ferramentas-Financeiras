@@ -375,7 +375,10 @@
   </div>
 </details>
 
-<button class="apply ghost" style="margin-top:1.2rem" onclick="exportConfig()">exportar config.json</button>
+<div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.2rem">
+  <button class="apply ghost" id="emailBtn" onclick="copyEmail()" data-tip="Monta a leitura com os SEUS números do momento e copia formatado — cole no seu email e envie.">copiar email da leitura atual</button>
+  <button class="apply ghost" onclick="exportConfig()">exportar config.json</button>
+</div>
 
 <script>
 /* ════════════════════ tema ════════════════════ */
@@ -855,6 +858,69 @@ function exportConfig(){ const c=readCfg();
     fed_override:c.fed,us_cpi_override:c.us_cpi,fg_us_override:c.fg_us};
   const blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='config.json'; a.click(); }
+
+/* ════════ EMAIL: monta a leitura do MOMENTO (dados do HTML) e copia formatado ════════
+   Espelha o veredito da tela. Os dados são os que VOCÊ preencheu — não os do .py. */
+function buildEmailHTML(){
+  const R=LAST; if(!R) return null;
+  const cfg=R.cfg, ct=R.ct, alvo=ct.alvo, cur=cfg.cur_caixa, diff=cur-alvo;
+  const f0=v=>(v*100).toFixed(0), f1=v=>(v*10).toFixed(1);
+  const sb=R.scoreBR!=null?R.scoreBR.toFixed(2):'—', su=R.scoreUS!=null?R.scoreUS.toFixed(2):'—';
+  const [labBR,corBR]=signalLabel(R.scoreBR), [labUS,corUS]=signalLabel(R.scoreUS);
+  let act,actTxt;
+  if(diff>0.015){act='APORTAR';actTxt=f0(diff)+'pp de caixa acima do alvo — aporte o excedente em equity.';}
+  else if(diff<-0.015){act='REFORÇAR CAIXA';actTxt=f0(-diff)+'pp abaixo do alvo — deixe o aporte engordar o caixa; não venda equity.';}
+  else {act='NO ALVO';actTxt='Caixa no alvo — direcione novos aportes para equity e mantenha o nível.';}
+  // split do solver do MOMENTO
+  const wBR=SPLIT_RESULT?Math.round(SPLIT_RESULT.wBR*100):null;
+  const splitLine = wBR!=null ? ('Split sugerido do momento: <b>'+wBR+'% Brasil / '+(100-wBR)+'% S&P</b>') : '';
+  let layers='Barateza: melhor dos dois em <b>'+f1(ct.best)+'/10</b> → caixa-base <b>'+f0(ct.base)+'%</b>.';
+  if(ct.resB>0.002||ct.resS>0.002){
+    const parts=[]; if(ct.resB>0.002)parts.push('Brasil +'+f0(ct.resB)+'pp'); if(ct.resS>0.002)parts.push('S&P +'+f0(ct.resS)+'pp');
+    layers+='<br>Reserva de convergência ('+parts.join(' · ')+'): mercado caro e você sub-alocado.';
+  }
+  const mono="font-family:'Courier New',monospace";
+  function sigCell(title,score,lab,cor,conf){
+    return "<td style=\"vertical-align:top;width:50%;padding:10px\">"+
+      "<div style=\""+mono+";font-size:11px;color:#7a7870;text-transform:uppercase;letter-spacing:.1em\">"+title+"</div>"+
+      "<div style=\"font:30px Georgia,serif;color:"+cor+"\">"+score+"<span style=\"font-size:13px;color:#7a7870\">/10</span></div>"+
+      "<div style=\""+mono+";font-size:12px;font-weight:bold;color:"+cor+"\">"+lab+"</div>"+
+      "<div style=\""+mono+";font-size:10px;color:#7a7870\">confiança "+conf+"</div></td>";
+  }
+  return "<div style=\"max-width:640px;margin:0 auto;font-family:Georgia,serif;color:#1a1916;background:#f7f6f2;padding:24px\">"+
+    "<div style=\""+mono+";font-size:11px;color:#7a7870;text-transform:uppercase;letter-spacing:.1em\">alocador tático · "+(new Date().toLocaleDateString('pt-BR'))+"</div>"+
+    "<h1 style=\"font-weight:normal;font-size:22px;margin:6px 0 16px\">Brasil "+sb+" · S&amp;P "+su+"</h1>"+
+    "<table style=\"width:100%;border-collapse:collapse;background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:10px\"><tr>"+
+      sigCell('Brasil · Organon+Ártica',sb,labBR,corBR,R.confBR)+sigCell('S&P 500 · SPXR11',su,labUS,corUS,R.confUS)+
+    "</tr></table>"+
+    "<div style=\"background:#fff;border:1px solid rgba(0,0,0,.16);border-radius:10px;padding:16px;margin-top:12px\">"+
+      "<div style=\"font-size:15px\"><b>Caixa-alvo "+f0(alvo)+"%</b> &nbsp;·&nbsp; <span style=\"color:#c2541f;font-weight:bold\">"+act+"</span></div>"+
+      "<div style=\""+mono+";font-size:11px;color:#7a7870;margin-top:4px\">caixa hoje "+f0(cur)+"% · banda "+f0(cfg.caixa_min)+"–"+f0(cfg.caixa_max)+"%</div>"+
+      "<div style=\"font-size:13px;margin-top:10px;line-height:1.5\">"+actTxt+"</div>"+
+      "<div style=\""+mono+";font-size:11px;color:#5a5852;margin-top:10px;line-height:1.6\">"+layers+"</div>"+
+      (splitLine?"<div style=\"font-size:12px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.08)\">"+splitLine+"</div>":"")+
+    "</div>"+
+    "<div style=\""+mono+";font-size:10px;color:#7a7870;font-style:italic;margin-top:14px\">Leitura do seu próprio material, não recomendação — a decisão é sua.</div>"+
+  "</div>";
+}
+
+async function copyEmail(){
+  const html=buildEmailHTML();
+  if(!html){ alert('Calcule o caixa-alvo primeiro.'); return; }
+  const plain=html.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim();
+  const btn=document.getElementById('emailBtn'); const orig=btn?btn.textContent:'';
+  try{
+    await navigator.clipboard.write([new ClipboardItem({
+      'text/html':new Blob([html],{type:'text/html'}),
+      'text/plain':new Blob([plain],{type:'text/plain'})
+    })]);
+    if(btn){ btn.textContent='✓ copiado — cole no email'; setTimeout(()=>btn.textContent=orig,2500); }
+  }catch(e){
+    // fallback: copia só texto
+    try{ await navigator.clipboard.writeText(plain); if(btn){btn.textContent='✓ copiado (texto)';setTimeout(()=>btn.textContent=orig,2500);} }
+    catch(e2){ alert('Não foi possível copiar: '+e2.message); }
+  }
+}
 
 boot();
 
