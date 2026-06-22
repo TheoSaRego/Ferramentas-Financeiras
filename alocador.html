@@ -294,7 +294,7 @@
 
 <!-- ── 1. POSIÇÃO + ALVOS (entrada em %) ───────────────────────────────────── -->
 <div class="panel">
-  <span class="tag">onde você está · onde quer chegar (% da carteira)</span>
+  <span class="tag">posição hoje · alvos (% da carteira)</span>
 
   <div class="pos-grid">
     <div class="col-lbl">posição hoje</div>
@@ -313,22 +313,22 @@
         <div class="stepper"><input id="caixa_min" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
       <div class="field"><div><label>Caixa máx</label><span class="sub">quando tudo caro</span></div>
         <div class="stepper"><input id="caixa_max" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
-      <p class="col-hint">O caixa-alvo sai dentro desta banda, conforme a barateza. O split abaixo divide o que <em>não</em> está em caixa.</p>
+      <p class="col-hint">O caixa-alvo flutua nesta banda conforme a barateza. O split abaixo divide o que <em>não</em> é caixa.</p>
     </div>
   </div>
 
   <div class="solver" id="solver">
     <div class="solver-h"><span class="tag">split sugerido</span><span class="solver-sub">dos preços de hoje + sua convicção de alfa</span></div>
-    <div class="alfa-lbl">convicção de alfa (Organon + Ártica sobre o IBOV)</div>
+    <div class="alfa-lbl">sua convicção: alfa dos fundos sobre o IBOV</div>
     <div class="alfa-btns" id="alfaBtns">
       <button type="button" class="alfa-btn" data-alfa="5">conservador<small>reversão forte · +5pp</small></button>
       <button type="button" class="alfa-btn active" data-alfa="10">base<small>reversão parcial · +10pp</small></button>
       <button type="button" class="alfa-btn" data-alfa="18.5">otimista<small>alfa histórico · +18,5pp</small></button>
     </div>
     <div class="solver-inputs">
-      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do S&P nos próximos ~10 anos. Média ponderada: CAPE-implícito 70% + Buffett Indicator 30%. Sobrescreva se discordar.">S&amp;P fwd</span></label><span class="sub">CAPE 70 · Buffett 30</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do S&P em ~10 anos. Mistura CAPE-implícito (70%) e Buffett Indicator (30%). Edite para sobrescrever.">S&amp;P fwd</span></label><span class="sub">CAPE 70 · Buffett 30</span></div>
         <div class="stepper"><input id="sp_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
-      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV puro (sem alfa). Média ponderada: earnings yield 30% + Buffett Indicator 70%. Sobrescreva se discordar. O alfa é somado a isto.">IBOV fwd</span></label><span class="sub">EY 30 · Buffett 70</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV puro, sem alfa (o alfa vem dos botões acima). Mistura earnings yield (30%) e Buffett Indicator (70%). Edite para sobrescrever.">IBOV fwd</span></label><span class="sub">EY 30 · Buffett 70</span></div>
         <div class="stepper"><input id="ibov_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
     </div>
     <div class="solver-inputs buf-ret-row">
@@ -352,8 +352,8 @@
 
 <!-- ── 3. SINAIS DE MERCADO (central, editável, começa aberto) ─────────────── -->
 <details class="signals-wrap" id="sigWrap" open>
-  <summary><div class="sig-summary"><span class="chev">sinais de mercado — barateza de cada balde</span>
-    <span class="hint">edite os campos que pedem revisão · clique na fonte p/ conferir</span></div></summary>
+  <summary><div class="sig-summary"><span class="chev">sinais de mercado — barateza de Brasil e S&amp;P</span>
+    <span class="hint">edite o que pedir revisão · clique na fonte p/ conferir</span></div></summary>
   <div id="needsEdit"></div>
   <div class="signals">
     <div class="sig" id="sigBR"></div>
@@ -367,16 +367,10 @@
   <summary>política — sensibilidade do caixa-alvo (mexe raramente)</summary>
   <div class="panel" style="margin-top:0.5rem">
     <div class="grid2">
-      <div>
-        <div class="field"><label><span class="tip" data-tip="quanto a barateza puxa o caixa-alvo entre máx e mín. 1 = usa a banda inteira.">Sensib. barateza</span></label>
-          <div class="stepper"><input id="k_barateza" type="text"></div></div>
-        <div class="field"><label><span class="tip" data-tip="reserva extra de caixa quando um mercado-alvo está caro E você está sub-alocado nele — munição para convergir quando baratear. 0 = desliga (barateza manda sozinha). Estudo (S&P+IBOV, 12 anos): kres 1,0-1,5 melhora CAGR, Sharpe e drawdown ao mesmo tempo no seu universo de 2 equities. Default 1,0.">Reserva convergência</span></label>
-          <div class="stepper"><input id="k_reserva" type="text"></div></div>
-      </div>
-      <div>
-        <div class="field"><label>Munição mínima</label>
-          <div class="stepper"><input id="municao_min" type="text"><span class="unit">%</span></div></div>
-      </div>
+      <div class="field"><label><span class="tip" data-tip="quanto a barateza puxa o caixa-alvo para baixo. Alto (1,5) = fica mais investido quando há barganha (mais CAGR, mais drawdown). Baixo (0,5) = mais cauteloso. Default 1,5 (calibrado para CAGR).">Sensib. barateza</span></label>
+        <div class="stepper"><input id="k_barateza" type="text"></div></div>
+      <div class="field"><label><span class="tip" data-tip="segura caixa extra quando um mercado-alvo está caro e você está sub-alocado nele — munição para convergir quando baratear. 0 = desliga. Default 0,5.">Reserva convergência</span></label>
+        <div class="stepper"><input id="k_reserva" type="text"></div></div>
     </div>
   </div>
 </details>
@@ -488,13 +482,13 @@ function cashTarget(cfg, sBR, sUS){
   const resB=reserva(sBR, cfg.cur_brasil, cfg.tgt_brasil);
   const resS=reserva(sUS, cfg.cur_sp,     cfg.tgt_sp);
   let alvo=base+resB+resS;
-  // nunca abaixo da munição mínima; teto de segurança um pouco acima da banda
-  alvo=Math.max(cfg.municao_min, Math.min(cMax+0.15, alvo));
+  // nunca abaixo do caixa mínimo; teto de segurança um pouco acima da banda
+  alvo=Math.max(cMin, Math.min(cMax+0.15, alvo));
   return {alvo, base, resB, resS, best};
 }
 
 /* ════════════════════ I/O ════════════════════ */
-const PCT_FIELDS=['caixa_pct','brasil_pct','sp_pct','caixa_min','caixa_max','municao_min'];
+const PCT_FIELDS=['caixa_pct','brasil_pct','sp_pct','caixa_min','caixa_max'];
 const SIG_FIELDS=['pl_br','dy_br','selic','ipca','ibov_dd','fund_dd','breadth_br','mm200_br','fg_br',
   'pe_us','cape_us','dy_us','real_us','fed','us_cpi','sp_dd','fg_us','buf_sp','buf_ibov','buf_ratio_br','buf_ratio_us'];
 const POL_FIELDS=['k_barateza','k_reserva'];
@@ -615,9 +609,8 @@ function readCfg(){
     cur_brasil:b, cur_sp:s,
     caixa_min:(gv('caixa_min')!=null?gv('caixa_min'):5)/100,
     caixa_max:(gv('caixa_max')!=null?gv('caixa_max'):20)/100,
-    municao_min:(gv('municao_min')!=null?gv('municao_min'):5)/100,
-    k_barateza:gv('k_barateza')!=null?gv('k_barateza'):1.0,
-    k_reserva:gv('k_reserva')!=null?gv('k_reserva'):1.0,
+    k_barateza:gv('k_barateza')!=null?gv('k_barateza'):1.5,
+    k_reserva:gv('k_reserva')!=null?gv('k_reserva'):0.5,
     pl:gv('pl_br'),dy_br:gv('dy_br'),selic:gv('selic'),ipca:gv('ipca'),ibov_dd:gv('ibov_dd'),
     fund_dd:gv('fund_dd'),breadth_br:gv('breadth_br'),mm200_br:gv('mm200_br'),fg_br:gv('fg_br'),
     buf_ratio_br:gv('buf_ratio_br'),buf_ratio_us:gv('buf_ratio_us'),
@@ -710,19 +703,19 @@ function render(R){ if(!R) return; LAST=R; const cfg=R.cfg, ct=R.ct;
   const alvo=ct.alvo, cur=cfg.cur_caixa;
   // ação derivada
   const diff=cur-alvo; let act,actCls,actTxt;
-  if(diff>0.015){ act='APORTAR'; actCls='act-deploy'; actTxt='Você tem <b>'+(diff*100).toFixed(0)+'pp</b> de caixa acima do alvo — aporte esse excedente em equity.'; }
-  else if(diff<-0.015){ act='REFORÇAR CAIXA'; actCls='act-build'; actTxt='Você está <b>'+(-diff*100).toFixed(0)+'pp</b> abaixo do alvo — deixe o aporte reforçar o caixa; não venda equity.'; }
-  else { act='NO ALVO'; actCls='act-hold'; actTxt='Caixa no alvo — direcione aportes para equity e mantenha este nível enquanto as condições não mudam.'; }
+  if(diff>0.015){ act='APORTAR'; actCls='act-deploy'; actTxt='<b>'+(diff*100).toFixed(0)+'pp</b> de caixa acima do alvo — aporte o excedente em equity.'; }
+  else if(diff<-0.015){ act='REFORÇAR CAIXA'; actCls='act-build'; actTxt='<b>'+(-diff*100).toFixed(0)+'pp</b> abaixo do alvo — deixe o aporte engordar o caixa; não venda equity.'; }
+  else { act='NO ALVO'; actCls='act-hold'; actTxt='Caixa no alvo — direcione novos aportes para equity e mantenha o nível.'; }
 
   // gauge: escala de 0 a (caixa_max+0.15) — banda min..max destacada
   const scaleMax=cfg.caixa_max+0.15;
   const px=v=>Math.max(0,Math.min(100, v/scaleMax*100));
   // diagnóstico em camadas
   let layers='';
-  layers+='<div class="layer"><span class="ic">·</span><span>Barateza: melhor oportunidade entre os baldes em <b>'+(ct.best*10).toFixed(1)+'/10</b> → caixa-base de <b>'+(ct.base*100).toFixed(0)+'%</b> '+(ct.best>0.6?'(há barganha → mira o piso)':ct.best<0.45?'(tudo caro → mira o teto)':'(intermediário)')+'.</span></div>';
+  layers+='<div class="layer"><span class="ic">·</span><span>Barateza: melhor dos dois mercados em <b>'+(ct.best*10).toFixed(1)+'/10</b> → caixa-base <b>'+(ct.base*100).toFixed(0)+'%</b> '+(ct.best>0.6?'(barganha → mira o piso)':ct.best<0.45?'(tudo caro → mira o teto)':'(intermediário)')+'.</span></div>';
   if(ct.resB>0.002||ct.resS>0.002){
     const parts=[]; if(ct.resB>0.002) parts.push('Brasil +'+(ct.resB*100).toFixed(0)+'pp'); if(ct.resS>0.002) parts.push('S&P +'+(ct.resS*100).toFixed(0)+'pp');
-    layers+='<div class="layer"><span class="ic">·</span><span>Reserva de convergência ('+parts.join(' · ')+'): mercado-alvo caro e você sub-alocado — segura munição para convergir quando baratear.</span></div>';
+    layers+='<div class="layer"><span class="ic">·</span><span>Reserva de convergência ('+parts.join(' · ')+'): mercado caro e você sub-alocado nele — segura munição para entrar quando baratear.</span></div>';
   }
 
   let conv='';
@@ -825,11 +818,12 @@ function fillFromAllocation(a){ if(!a) return;
   setF('ibov_dd',b.ibov_dd); setF('fund_dd',b.fund_dd); setF('breadth_br',b.breadth_pct); setF('mm200_br',b.mm200_pct); setF('fg_br',b.fg);
   setF('pe_us',u.pe); setF('cape_us',u.cape); setF('dy_us',u.dy); setF('real_us',u.real_us); setF('fed',u.fed); setF('us_cpi',u.us_cpi); setF('sp_dd',u.sp_dd); setF('fg_us',u.fg);
   setF('caixa_min',(bd.caixa_min!=null?bd.caixa_min*100:5)); setF('caixa_max',(bd.caixa_max!=null?bd.caixa_max*100:20));
-  setF('municao_min',(bd.municao_minima!=null?bd.municao_minima*100:5));
+  if(bd.k_barateza!=null) setF('k_barateza',bd.k_barateza);
+  if(bd.k_reserva!=null) setF('k_reserva',bd.k_reserva);
   const af=document.getElementById('asof'); if(af&&a.asof) af.textContent='sinais de '+a.asof+' · recalcula no navegador a partir dos seus números';
 }
-const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,caixa_min:5,caixa_max:30,municao_min:5,
-  k_barateza:1.0,k_reserva:1.0,
+const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,caixa_min:5,caixa_max:20,
+  k_barateza:1.5,k_reserva:0.5,
   pl_br:10.9,dy_br:5.7,selic:14.25,ipca:5.3,ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,
   pe_us:32,cape_us:41.7,dy_us:1.3,real_us:1.9,fed:3.6,us_cpi:2.8,sp_dd:-4,fg_us:55,buf_sp:-1,buf_ibov:12.5,buf_ratio_br:39,buf_ratio_us:234};
 
@@ -854,7 +848,7 @@ async function reloadAllocation(){ try{ const r=await fetch('allocation.json?t='
 
 function exportConfig(){ const c=readCfg();
   const cfg={alvo_brasil:c.alvo_brasil_risco,alvo_sp:Math.round((1-c.alvo_brasil_risco)*100)/100,
-    caixa_min:c.caixa_min,caixa_max:c.caixa_max,municao_minima:c.municao_min,
+    caixa_min:c.caixa_min,caixa_max:c.caixa_max,municao_minima:c.caixa_min,
     k_barateza:c.k_barateza,k_reserva:c.k_reserva,
     pl_br_override:c.pl,dy_br_override:c.dy_br,selic_override:c.selic,ipca_override:c.ipca,fg_br:c.fg_br,
     pe_us_override:c.pe,cape_us_override:c.cape,dy_us_override:c.dy_us,real_us_override:c.real_us,
