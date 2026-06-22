@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-20T14:28:36.645974+00:00",
+  "generatedAt": "2026-06-22T13:26:26.430050+00:00",
   "asof": "2026-06-19",
   "carteira_total": 450000,
   "caixa": 90000,
@@ -8,7 +8,8 @@
   "banda": {
     "caixa_min": 0.05,
     "caixa_max": 0.2,
-    "lambda": 0.22,
+    "k_barateza": 1.5,
+    "k_reserva": 0.5,
     "municao_minima": 0.05,
     "alvo_brasil": 0.75,
     "alvo_sp": 0.25
@@ -144,19 +145,22 @@
     }
   },
   "decision": {
-    "tranche": 0.0,
-    "piso": 0.11285,
+    "tranche": 6900.0,
+    "piso": 0.09066388888888889,
     "cashpct": 0.2,
-    "gap": 0.08715,
-    "want": 8600.0,
-    "aloc_brasil": 0.0,
+    "gap": 0.10933611111111112,
+    "want": 49200.0,
+    "aloc_brasil": 6900.0,
     "aloc_sp": 0.0,
-    "rodadas": 5,
-    "tgt_brasil": 0.6653625,
-    "tgt_sp": 0.2217875,
+    "rodadas": 1,
+    "base": 0.069275,
+    "res_brasil": 0.0,
+    "res_sp": 0.021388888888888888,
+    "tgt_brasil": 0.6820020833333333,
+    "tgt_sp": 0.22733402777777778,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
-    "desc": "caixa acima do piso, mas nada barato E abaixo do alvo agora — segura munição"
+    "desc": "caixa-alvo 9% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
   },
   "inputs": {
     "br_src": {
