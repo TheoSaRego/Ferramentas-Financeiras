@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-06-22T14:24:41.823844+00:00",
+  "generatedAt": "2026-06-22T14:25:23.122119+00:00",
   "asof": "2026-06-22",
-  "carteira_total": 450000,
-  "caixa": 90000,
-  "brasil": 300000,
-  "sp": 60000,
+  "carteira_total": 450000.0,
+  "caixa": 90000.0,
+  "brasil": 300000.0,
+  "sp": 60000.0,
   "banda": {
     "caixa_min": 0.05,
     "caixa_max": 0.2,
@@ -15,7 +15,7 @@
     "alvo_sp": 0.25
   },
   "brasil_signal": {
-    "score": 5.82,
+    "score": 6.1,
     "conf": "ALTA",
     "label": "NEUTRO",
     "cor": "#b07d0a",
@@ -38,14 +38,14 @@
           },
           {
             "key": "dy",
-            "score": 7,
-            "read": "5.7% — atrativo",
+            "score": 5,
+            "read": "4.8% — razoável",
             "weight": 0.06
           },
           {
             "key": "buf",
-            "score": null,
-            "read": "Buffett n/d",
+            "score": 7.5,
+            "read": "39% TMC/PIB — modest. barato",
             "weight": 0.05
           }
         ]
@@ -89,8 +89,8 @@
         "items": [
           {
             "key": "fg",
-            "score": null,
-            "read": "F&G n/d",
+            "score": 9,
+            "read": "11/100 — medo muito alto",
             "weight": 0.1
           }
         ]
@@ -98,7 +98,7 @@
     }
   },
   "sp_signal": {
-    "score": 2.89,
+    "score": 2.75,
     "conf": "ALTA",
     "label": "HOLD",
     "cor": "#b4322a",
@@ -126,8 +126,8 @@
           },
           {
             "key": "buf",
-            "score": null,
-            "read": "Buffett n/d",
+            "score": 0.5,
+            "read": "234% TMC/PIB — extremo",
             "weight": 0.06
           }
         ]
@@ -149,7 +149,7 @@
           {
             "key": "fg",
             "score": 7,
-            "read": "39/100 — medo moderado",
+            "read": "37/100 — medo moderado",
             "weight": 0.26
           }
         ]
@@ -157,19 +157,19 @@
     }
   },
   "decision": {
-    "tranche": 7200.0,
-    "piso": 0.08992037037037034,
+    "tranche": 8700.0,
+    "piso": 0.08543518518518516,
     "cashpct": 0.2,
-    "gap": 0.11007962962962967,
-    "want": 49500.0,
-    "aloc_brasil": 7200.0,
+    "gap": 0.11456481481481486,
+    "want": 51600.0,
+    "aloc_brasil": 8700.0,
     "aloc_sp": 0.0,
     "rodadas": 1,
-    "base": 0.06904999999999997,
+    "base": 0.06274999999999997,
     "res_brasil": 0.0,
-    "res_sp": 0.02087037037037037,
-    "tgt_brasil": 0.6825597222222223,
-    "tgt_sp": 0.2275199074074074,
+    "res_sp": 0.022685185185185187,
+    "tgt_brasil": 0.6859236111111111,
+    "tgt_sp": 0.22864120370370372,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
     "desc": "caixa-alvo 9% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
@@ -178,28 +178,28 @@
     "br_src": {
       "pl": "manual (override)",
       "dy": "manual (override)",
-      "selic": "BCB SGS 432",
-      "ipca": "BCB SGS 13522",
+      "selic": "manual (override)",
+      "ipca": "manual (override)",
       "ibov_dd": "ibov_price.json",
       "fund_dd": "planilha",
       "breadth": "breadth.json",
       "mm200": "breadth.json",
-      "fg": "MANUAL — sem fetch (não existe F&G oficial p/ Brasil; veja breadth/DD ao lado p/ formar sua leitura)"
+      "fg": "manual (override)"
     },
     "us_src": {
-      "pe": "multpl.com",
-      "cape": "multpl.com",
+      "pe": "manual (override)",
+      "cape": "manual (override)",
       "dy": "multpl.com",
-      "real_us": "multpl.com",
+      "real_us": "manual (override)",
       "sp_dd": "yfinance ^GSPC + ATH persistido",
-      "fg": "CNN",
-      "fed": "FRED DFF",
-      "cpi": "multpl.com"
+      "fg": "manual (override)",
+      "fed": "manual (override)",
+      "cpi": "manual (override)"
     },
     "br": {
-      "pl": 11.03,
-      "ey": 9.066183136899365,
-      "dy": 5.7,
+      "pl": 11.01,
+      "ey": 9.082652134423252,
+      "dy": 4.75,
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
@@ -207,7 +207,7 @@
       "fund_dd": -11.743008543839267,
       "breadth_pct": 25.96,
       "mm200_pct": 32.05,
-      "fg": null,
+      "fg": 10.8,
       "ibov": 169674.59,
       "regime": "bear",
       "pl_src": "manual (override)",
@@ -223,12 +223,12 @@
       "ey": 3.1026993484331373,
       "dy": 1.05,
       "real_us": 2.21,
-      "sp_dd": -1.4,
-      "fg": 39,
+      "sp_dd": -1.36,
+      "fg": 37,
       "fed": 3.63,
       "us_cpi": 4.25,
       "carry": 10.620000000000001,
-      "sp_cur": 7503.1,
+      "sp_cur": 7506.61,
       "sp_ath": 7609.78
     }
   },
