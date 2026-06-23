@@ -684,13 +684,14 @@ function renderSig(elId, market, score, conf, scores, groups, weights, side){
     body+='</div>';
   }
   // insumos macro compartilhados (alimentam ERP e o carry; não têm score próprio)
+  // [input_id, rótulo, unidade, chave_de_fonte_do_.py]
   const macro = side==='br'
-    ? [['selic','Selic','%'],['ipca','IPCA 12m','%']]
-    : [['real_us','juro real 10a','%'],['fed','Fed funds','%'],['us_cpi','CPI 12m','%']];
+    ? [['selic','Selic','%','selic'],['ipca','IPCA 12m','%','ipca']]
+    : [['real_us','juro real 10a','%','real_us'],['fed','Fed funds','%','fed'],['us_cpi','CPI 12m','%','cpi']];
   let macroHTML='<div class="macro"><div class="mhd">insumos macro — entram no ERP'+(side==='us'?' / carry':'')+'</div><div class="mrow">';
-  for(const [id,nm,u] of macro){
+  for(const [id,nm,u,srcKey] of macro){
     macroHTML+='<span class="mitem">'+nm+' <span class="finput"><input id="'+id+'" type="text" inputmode="decimal" oninput="cacheSig(this)" onchange="onSigEdit()">'+
-      '<span class="u">'+u+'</span></span><span class="src" id="src_'+side+'_'+id+'"></span></span>';
+      '<span class="u">'+u+'</span></span><span class="src" id="src_'+side+'_'+srcKey+'"></span></span>';
   }
   macroHTML+='</div></div>';
 
@@ -803,6 +804,7 @@ const SRC_LINKS={br_pl:'https://www.oceans14.com.br/acoes/historico-pl-bovespa',
   br_fg:'https://en.macromicro.me/charts/128837/brazil-mm-fear-and-greed-index-vs-bovespa-index',
   us_pe:'https://www.multpl.com/s-p-500-pe-ratio',us_cape:'https://www.multpl.com/shiller-pe',us_dy:'https://www.multpl.com/s-p-500-dividend-yield',
   us_real_us:'https://www.multpl.com/10-year-real-interest-rate',us_sp_dd:'https://finance.yahoo.com/quote/%5EGSPC/',us_fg:'https://edition.cnn.com/markets/fear-and-greed',
+  us_fed:'https://fred.stlouisfed.org/series/DFF',us_cpi:'https://fred.stlouisfed.org/series/CPIAUCSL',
   br_buf_ratio_br:'https://www.gurufocus.com/global-market-valuation.php?country=BRA',us_buf_ratio_us:'https://www.gurufocus.com/stock-market-valuations.php'};
 function fillSources(a){ const map={br:(a&&a.inputs&&a.inputs.br_src)||{}, us:(a&&a.inputs&&a.inputs.us_src)||{}};
   for(const side of ['br','us']) for(const k in map[side]){ const el=document.getElementById('src_'+side+'_'+k); if(!el) continue;
