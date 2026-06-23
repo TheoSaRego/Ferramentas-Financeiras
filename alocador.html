@@ -359,7 +359,10 @@
     <div class="sig" id="sigBR"></div>
     <div class="sig" id="sigUS"></div>
   </div>
-  <div class="reload-row"><a class="reload-link" onclick="reloadAllocation()" data-tip="Baixa o allocation.json mais recente e repõe os sinais de mercado com o último fetch automático. Descarta edições manuais.">↺ repor sinais do servidor</a></div>
+  <div class="reload-row">
+    <a class="reload-link" onclick="updateFetched()" data-tip="Baixa o allocation.json mais recente e atualiza SÓ os campos com fetch automático (FRED, multpl, CNN, B3…). Preserva todas as suas correções manuais.">↻ atualizar dados com fetch</a>
+    <a class="reload-link" onclick="resetAll()" data-tip="Reset total: campos com fetch voltam ao servidor; campos manuais voltam ao neutro (score ~5). Descarta suas edições." style="margin-left:1rem;opacity:.7">↺ repor tudo</a>
+  </div>
 </details>
 
 <!-- ── 4. POLÍTICA (ajuste fino de verdade) ────────────────────────────────── -->
@@ -832,6 +835,35 @@ const DEFAULTS={caixa_pct:20,brasil_pct:67,sp_pct:13,caixa_min:5,caixa_max:20,
   pl_br:10.9,dy_br:5.7,selic:14.25,ipca:5.3,ibov_dd:-8,fund_dd:-6,breadth_br:24,mm200_br:24,fg_br:30,
   pe_us:32,cape_us:41.7,dy_us:1.3,real_us:1.9,fed:3.6,us_cpi:2.8,sp_dd:-4,fg_us:55,buf_sp:-1,buf_ibov:12.5,buf_ratio_br:39,buf_ratio_us:234};
 
+/* NEUTROS: valor de input que produz score ≈5/10 (ponto médio) em cada fator.
+   Usados pelo "Repor tudo" para os campos que NÃO têm fetch — em vez de fingir um
+   valor de mercado, partem do neutro até você preencher. Derivados dos tiers das
+   funções de score (a faixa cujo score é ~5). */
+const NEUTRALS={
+  pl_br:13.5, dy_br:4.0, fg_br:55, ibov_dd:-21, fund_dd:-18, breadth_br:57, mm200_br:50,
+  pe_us:22, cape_us:25, sp_dd:-15, fg_us:55, buf_ratio_br:48, buf_ratio_us:142,
+  // macro que alimenta ERP/carry: neutro = nível corrente plausível (não tem score próprio)
+  selic:14.25, ipca:4.5, real_us:1.9, fed:3.6, us_cpi:3.0, dy_us:1.3,
+  // retornos fwd do Buffett no solver: neutro = 0 (sem viés)
+  buf_sp:0, buf_ibov:0 };
+
+/* Mapa campo_HTML → [side, chave_de_fonte_no_allocation]. Define como descobrir se um
+   campo tem fetch real (fonte "auto") ou é manual. Campos ausentes aqui são sempre manuais. */
+const FIELD_SRC={
+  pl_br:['br','pl'], dy_br:['br','dy'], selic:['br','selic'], ipca:['br','ipca'],
+  ibov_dd:['br','ibov_dd'], fund_dd:['br','fund_dd'], breadth_br:['br','breadth'],
+  mm200_br:['br','mm200'], fg_br:['br','fg'],
+  pe_us:['us','pe'], cape_us:['us','cape'], dy_us:['us','dy'], real_us:['us','real_us'],
+  fed:['us','fed'], us_cpi:['us','cpi'], sp_dd:['us','sp_dd'], fg_us:['us','fg'] };
+
+/* true se o campo tem fetch REAL e atualizado no allocation atual (fonte classificada "auto"). */
+function isFetched(fieldId){
+  const m=FIELD_SRC[fieldId]; if(!m||!ALLOCATION) return false;
+  const [side,key]=m;
+  const src=((ALLOCATION.inputs&&ALLOCATION.inputs[side+'_src'])||{})[key];
+  return classifySrc(src)[0]==='s-auto';
+}
+
 let ALLOCATION=null;
 async function boot(){
   try{ const r=await fetch('allocation.json',{cache:'no-store'}); if(r.ok) ALLOCATION=await r.json(); }catch(e){}
@@ -846,10 +878,51 @@ async function boot(){
   SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
   renderSolver(); liveSum(); render(compute(readCfg()));
 }
-async function reloadAllocation(){ try{ const r=await fetch('allocation.json?t='+Date.now(),{cache:'no-store'}); if(!r.ok) throw new Error('HTTP '+r.status);
-  ALLOCATION=await r.json(); localStorage.removeItem('alocador_inputs2'); _sigCache={};
-  fillFromAllocation(ALLOCATION); SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
-  renderSolver(); liveSum(); render(compute(readCfg())); }catch(e){ alert('Não foi possível baixar o allocation.json: '+e.message); } }
+/* "Atualizar fetched": baixa o allocation.json mais recente e sobrescreve SOMENTE os
+   campos com fetch real (fonte "auto"). Preserva todos os seus valores manuais. */
+async function updateFetched(){
+  try{
+    const r=await fetch('allocation.json?t='+Date.now(),{cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    ALLOCATION=await r.json();
+    const b=(ALLOCATION.inputs&&ALLOCATION.inputs.br)||{}, u=(ALLOCATION.inputs&&ALLOCATION.inputs.us)||{};
+    const map={ pl_br:b.pl, dy_br:b.dy, selic:b.selic, ipca:b.ipca, ibov_dd:b.ibov_dd,
+      fund_dd:b.fund_dd, breadth_br:b.breadth_pct, mm200_br:b.mm200_pct, fg_br:b.fg,
+      pe_us:u.pe, cape_us:u.cape, dy_us:u.dy, real_us:u.real_us, fed:u.fed, us_cpi:u.us_cpi,
+      sp_dd:u.sp_dd, fg_us:u.fg };
+    let n=0;
+    for(const id in map){ if(isFetched(id) && map[id]!=null){ setF(id,map[id]); _sigCache[id]=document.getElementById(id).value; n++; } }
+    fillSources(ALLOCATION); seedManualSrc();
+    persist(); renderSolver(); liveSum(); render(compute(readCfg()));
+    const af=document.getElementById('asof'); if(af&&ALLOCATION.asof) af.textContent='sinais de '+ALLOCATION.asof+' · '+n+' campos com fetch atualizados · manuais preservados';
+  }catch(e){ alert('Não foi possível baixar o allocation.json: '+e.message); }
+}
+
+/* "Repor tudo": reset total. Fetched → servidor; manuais → NEUTRO (score ~5).
+   Limpa o localStorage e parte do zero. */
+async function resetAll(){
+  if(!confirm('Repor TUDO? Os campos com fetch voltam ao servidor e os manuais voltam ao neutro (score ~5). Suas edições manuais serão descartadas.')) return;
+  try{
+    const r=await fetch('allocation.json?t='+Date.now(),{cache:'no-store'});
+    if(r.ok) ALLOCATION=await r.json();
+  }catch(e){}
+  localStorage.removeItem('alocador_inputs2'); _sigCache={};
+  // 1) parte de TODOS os campos no neutro
+  for(const id in NEUTRALS) setF(id,NEUTRALS[id]);
+  // 2) sobrescreve com fetch real onde existir
+  if(ALLOCATION){
+    const b=(ALLOCATION.inputs&&ALLOCATION.inputs.br)||{}, u=(ALLOCATION.inputs&&ALLOCATION.inputs.us)||{};
+    const map={ pl_br:b.pl, dy_br:b.dy, selic:b.selic, ipca:b.ipca, ibov_dd:b.ibov_dd,
+      fund_dd:b.fund_dd, breadth_br:b.breadth_pct, mm200_br:b.mm200_pct, fg_br:b.fg,
+      pe_us:u.pe, cape_us:u.cape, dy_us:u.dy, real_us:u.real_us, fed:u.fed, us_cpi:u.us_cpi,
+      sp_dd:u.sp_dd, fg_us:u.fg };
+    for(const id in map){ if(isFetched(id) && map[id]!=null) setF(id,map[id]); }
+    fillSources(ALLOCATION);
+  }
+  seedManualSrc();
+  SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;});
+  renderSolver(); liveSum(); render(compute(readCfg()));
+}
 
 function exportConfig(){ const c=readCfg();
   const cfg={alvo_brasil:c.alvo_brasil_risco,alvo_sp:Math.round((1-c.alvo_brasil_risco)*100)/100,
