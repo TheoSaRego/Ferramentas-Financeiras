@@ -891,7 +891,7 @@ async function updateFetched(){
       pe_us:u.pe, cape_us:u.cape, dy_us:u.dy, real_us:u.real_us, fed:u.fed, us_cpi:u.us_cpi,
       sp_dd:u.sp_dd, fg_us:u.fg };
     let n=0;
-    for(const id in map){ if(isFetched(id) && map[id]!=null){ setF(id,map[id]); _sigCache[id]=document.getElementById(id).value; n++; } }
+    for(const id in map){ if(isFetched(id) && map[id]!=null){ setF(id,map[id]); const el=document.getElementById(id); if(el) _sigCache[id]=el.value; n++; } }
     fillSources(ALLOCATION); seedManualSrc();
     persist(); renderSolver(); liveSum(); render(compute(readCfg()));
     const af=document.getElementById('asof'); if(af&&ALLOCATION.asof) af.textContent='sinais de '+ALLOCATION.asof+' · '+n+' campos com fetch atualizados · manuais preservados';
