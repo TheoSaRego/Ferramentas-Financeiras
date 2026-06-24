@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-24T19:10:07.009752+00:00",
+  "generatedAt": "2026-06-24T21:58:45.462414+00:00",
   "asof": "2026-06-24",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 8.5,
-            "read": "27% composto — boa oportunidade",
+            "read": "28% composto — boa oportunidade",
             "weight": 0.12
           },
           {
             "key": "mm200",
             "score": 7,
-            "read": "31% > MM200 — fraqueza técnica",
+            "read": "32% > MM200 — fraqueza técnica",
             "weight": 0.06
           }
         ]
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-3.5% — no topo/ATH",
+            "read": "-3.3% — no topo/ATH",
             "weight": 0.22
           }
         ]
@@ -203,12 +203,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -14.224155202182654,
+      "ibov_dd": -14.170323723805357,
       "fund_dd": -11.669870208275091,
-      "breadth_pct": 27.47,
-      "mm200_pct": 30.769999999999996,
+      "breadth_pct": 28.37,
+      "mm200_pct": 32.05,
       "fg": null,
-      "ibov": 170399.72,
+      "ibov": 170506.66,
       "regime": "bear",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
@@ -218,17 +218,17 @@
       }
     },
     "us": {
-      "pe": 31.65,
-      "cape": 40.96,
-      "ey": 3.1595576619273302,
+      "pe": 31.64,
+      "cape": 40.94,
+      "ey": 3.1605562579013906,
       "dy": 1.07,
-      "real_us": 2.29,
-      "sp_dd": -3.54,
+      "real_us": 2.23,
+      "sp_dd": -3.31,
       "fg": 26,
       "fed": 3.63,
       "us_cpi": 4.25,
       "carry": 10.620000000000001,
-      "sp_cur": 7340.14,
+      "sp_cur": 7358.22,
       "sp_ath": 7609.78
     }
   },
