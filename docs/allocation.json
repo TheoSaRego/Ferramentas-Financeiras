@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-06-23T23:33:39.338842+00:00",
-  "asof": "2026-06-23",
+  "generatedAt": "2026-06-24T14:47:04.584165+00:00",
+  "asof": "2026-06-24",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
   "brasil": 300000.0,
@@ -56,13 +56,13 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-13.8% — correção leve",
+            "read": "-14.4% — correção leve",
             "weight": 0.16
           },
           {
             "key": "fund_dd",
             "score": 4.5,
-            "read": "DD médio -11.8% — correção leve",
+            "read": "DD médio -11.7% — correção leve",
             "weight": 0.16
           }
         ]
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 8.5,
-            "read": "29% composto — boa oportunidade",
+            "read": "27% composto — boa oportunidade",
             "weight": 0.12
           },
           {
             "key": "mm200",
             "score": 7,
-            "read": "32% > MM200 — fraqueza técnica",
+            "read": "31% > MM200 — fraqueza técnica",
             "weight": 0.06
           }
         ]
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-3.2% — no topo/ATH",
+            "read": "-2.6% — no topo/ATH",
             "weight": 0.22
           }
         ]
@@ -178,7 +178,7 @@
     "br_src": {
       "pl": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "dy": "MANUAL — sem fetch (use statusinvest)",
-      "selic": "indisponível",
+      "selic": "BCB SGS 432",
       "ipca": "BCB SGS 13522",
       "ibov_dd": "ibov_price.json",
       "fund_dd": "planilha",
@@ -200,21 +200,21 @@
       "pl": null,
       "ey": null,
       "dy": null,
-      "selic": null,
+      "selic": 14.25,
       "ipca": 4.72,
-      "real_cdi": null,
-      "ibov_dd": -13.791671071243394,
-      "fund_dd": -11.768178891369407,
-      "breadth_pct": 28.939999999999998,
-      "mm200_pct": 32.05,
+      "real_cdi": 9.245000000000001,
+      "ibov_dd": -14.435227553018514,
+      "fund_dd": -11.669870208275091,
+      "breadth_pct": 26.840000000000003,
+      "mm200_pct": 30.769999999999996,
       "fg": null,
-      "ibov": 171258.88,
+      "ibov": 169980.41,
       "regime": "bear",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
-        "organon": -15.583872362486384,
-        "artica": -7.952485420252431
+        "organon": -15.460637139657907,
+        "artica": -7.879103276892274
       }
     },
     "us": {
@@ -223,19 +223,19 @@
       "ey": 3.1595576619273302,
       "dy": 1.07,
       "real_us": 2.29,
-      "sp_dd": -3.21,
+      "sp_dd": -2.6,
       "fg": 28,
       "fed": 3.63,
       "us_cpi": 4.25,
-      "carry": null,
-      "sp_cur": 7365.46,
+      "carry": 10.620000000000001,
+      "sp_cur": 7411.62,
       "sp_ath": 7609.78
     }
   },
   "carry": {
-    "selic": null,
+    "selic": 14.25,
     "fed": 3.63,
-    "diff": null,
+    "diff": 10.620000000000001,
     "nota": "Carry do hedge do SPXR11 ≈ Selic − Fed. Em BRL, SPXR11 ≈ retorno do S&P (USD) + carry. Vs CDI o carry quase se anula (excesso ≈ S&P USD − Fed), por isso não entra no score — é exibido como contexto da posição."
   },
   "weights": {
