@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-25T19:25:11.591278+00:00",
+  "generatedAt": "2026-06-25T21:23:52.761605+00:00",
   "asof": "2026-06-25",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -56,7 +56,7 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-13.3% — correção leve",
+            "read": "-13.4% — correção leve",
             "weight": 0.16
           },
           {
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 8.5,
-            "read": "34% composto — boa oportunidade",
+            "read": "33% composto — boa oportunidade",
             "weight": 0.12
           },
           {
             "key": "mm200",
             "score": 7,
-            "read": "35% > MM200 — fraqueza técnica",
+            "read": "33% > MM200 — fraqueza técnica",
             "weight": 0.06
           }
         ]
@@ -109,13 +109,13 @@
           {
             "key": "erp",
             "score": 3,
-            "read": "ERP real +0.9pp — cara vs juros",
+            "read": "ERP real +1.0pp — cara vs juros",
             "weight": 0.18
           },
           {
             "key": "pe",
             "score": 1,
-            "read": "31.6x — muito caro",
+            "read": "31.7x — muito caro",
             "weight": 0.12
           },
           {
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-3.4% — no topo/ATH",
+            "read": "-3.3% — no topo/ATH",
             "weight": 0.22
           }
         ]
@@ -203,12 +203,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -13.29845411941185,
+      "ibov_dd": -13.423539064820266,
       "fund_dd": -11.423399762618114,
-      "breadth_pct": 33.76,
-      "mm200_pct": 34.62,
+      "breadth_pct": 32.68,
+      "mm200_pct": 33.33,
       "fg": null,
-      "ibov": 172238.69,
+      "ibov": 171990.2,
       "regime": "bear",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
@@ -218,17 +218,17 @@
       }
     },
     "us": {
-      "pe": 31.64,
-      "cape": 40.94,
-      "ey": 3.1605562579013906,
-      "dy": 1.07,
-      "real_us": 2.23,
-      "sp_dd": -3.36,
+      "pe": 31.68,
+      "cape": 41.0,
+      "ey": 3.1565656565656566,
+      "dy": 1.06,
+      "real_us": 2.19,
+      "sp_dd": -3.32,
       "fg": 25,
       "fed": 3.63,
       "us_cpi": 4.25,
       "carry": 10.620000000000001,
-      "sp_cur": 7354.36,
+      "sp_cur": 7357.49,
       "sp_ath": 7609.78
     }
   },
