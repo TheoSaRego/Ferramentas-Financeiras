@@ -2,11 +2,11 @@
   "latest": {
     "date": "2026-06-26",
     "breadth_20": 0.6375,
-    "breadth_50": 0.6587,
-    "breadth_200": 0.6573,
+    "breadth_50": 0.6407,
+    "breadth_200": 0.6473,
     "n_constituents": 503,
     "source": "calculo_proprio",
-    "composite": 0.6548,
+    "composite": 0.6435,
     "regime": "bull"
   },
   "count": 1
