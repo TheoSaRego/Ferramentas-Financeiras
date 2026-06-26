@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-26T18:39:35.915098+00:00",
+  "generatedAt": "2026-06-26T18:41:40.765844+00:00",
   "asof": "2026-06-26",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -56,7 +56,7 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-12.6% — correção leve",
+            "read": "-12.4% — correção leve",
             "weight": 0.16
           },
           {
@@ -203,12 +203,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -12.562653216347774,
+      "ibov_dd": -12.43770921739481,
       "fund_dd": -10.79258861581705,
-      "breadth_pct": 39.75,
+      "breadth_pct": 39.94,
       "mm200_pct": 40.26,
       "fg": null,
-      "ibov": 173700.41,
+      "ibov": 173948.62,
       "regime": "neutral",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
@@ -228,7 +228,7 @@
       "fed": 3.63,
       "us_cpi": 4.25,
       "carry": 10.620000000000001,
-      "sp_cur": 7357.47,
+      "sp_cur": 7357.23,
       "sp_ath": 7609.78
     }
   },
