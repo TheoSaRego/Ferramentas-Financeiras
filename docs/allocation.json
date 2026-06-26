@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-26T15:39:18.765828+00:00",
+  "generatedAt": "2026-06-26T17:19:59.166201+00:00",
   "asof": "2026-06-26",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -19,7 +19,7 @@
     "conf": "MÉDIA",
     "label": "CAUTELOSO",
     "cor": "#c2541f",
-    "regime": "bear",
+    "regime": "neutral",
     "groups": {
       "Valuation": {
         "weight": 0.4,
@@ -56,7 +56,7 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-12.8% — correção leve",
+            "read": "-12.6% — correção leve",
             "weight": 0.16
           },
           {
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 6,
-            "read": "37% composto — abaixo do meio",
+            "read": "40% composto — abaixo do meio",
             "weight": 0.12
           },
           {
             "key": "mm200",
             "score": 5,
-            "read": "38% > MM200 — abaixo da média",
+            "read": "40% > MM200 — abaixo da média",
             "weight": 0.06
           }
         ]
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-3.0% — no topo/ATH",
+            "read": "-3.1% — no topo/ATH",
             "weight": 0.22
           }
         ]
@@ -149,7 +149,7 @@
           {
             "key": "fg",
             "score": 8,
-            "read": "26/100 — medo alto",
+            "read": "25/100 — medo alto",
             "weight": 0.26
           }
         ]
@@ -203,13 +203,13 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -12.827416099105493,
+      "ibov_dd": -12.562653216347774,
       "fund_dd": -10.79258861581705,
-      "breadth_pct": 37.419999999999995,
-      "mm200_pct": 37.66,
+      "breadth_pct": 39.75,
+      "mm200_pct": 40.26,
       "fg": null,
-      "ibov": 173174.44,
-      "regime": "bear",
+      "ibov": 173700.41,
+      "regime": "neutral",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
@@ -223,12 +223,12 @@
       "ey": 3.1565656565656566,
       "dy": 1.06,
       "real_us": 2.19,
-      "sp_dd": -2.95,
-      "fg": 26,
+      "sp_dd": -3.13,
+      "fg": 25,
       "fed": 3.63,
       "us_cpi": 4.25,
       "carry": 10.620000000000001,
-      "sp_cur": 7385.41,
+      "sp_cur": 7371.8,
       "sp_ath": 7609.78
     }
   },
