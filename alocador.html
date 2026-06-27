@@ -605,11 +605,10 @@ function renderSolver(){
   const out=document.getElementById('solverOut'); if(!out) return;
   const brP=Math.round(r.wBR*100), spP=100-brP;
   const conv = Math.abs(r.wSharpe-r.wCagr)<0.02;
-  // largura mínima 12 só para segmento NÃO-nulo; segmento de 0% é OMITIDO (senão o padding deixa um vão)
-  const brW = brP===0 ? 0 : Math.max(brP,12);
-  const spW = spP===0 ? 0 : Math.max(spP,12);
-  const segBR = brP>0 ? '<div class="seg-br" style="flex:'+brW+' 1 0">'+(brP>=18?brP+'%':'')+'</div>' : '';
-  const segSP = spP>0 ? '<div class="seg-sp" style="flex:'+spW+' 1 0">'+(spP>=18?spP+'%':'')+'</div>' : '';
+  // usa a proporção REAL (sem largura mínima, que distorcia 99/1, 86/14 etc.).
+  // o texto só aparece quando o segmento é largo o suficiente (>=18%); segmento 0% é omitido.
+  const segBR = brP>0 ? '<div class="seg-br" style="flex:'+brP+' 1 0">'+(brP>=18?brP+'%':'')+'</div>' : '';
+  const segSP = spP>0 ? '<div class="seg-sp" style="flex:'+spP+' 1 0">'+(spP>=18?spP+'%':'')+'</div>' : '';
   out.innerHTML =
     '<div class="split-bar">'+segBR+segSP+'</div>'+
     '<div class="split-legend"><span><b>Brasil '+brP+'%</b> · Organon+Ártica</span><span>SPXR11 · <b>S&amp;P '+spP+'%</b></span></div>'+
