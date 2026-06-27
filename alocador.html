@@ -326,15 +326,15 @@
       <button type="button" class="alfa-btn" data-alfa="18.5">otimista<small>alfa histórico · +18,5pp</small></button>
     </div>
     <div class="solver-inputs">
-      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do S&P em ~10 anos. Mistura CAPE-implícito (70%) e Buffett Indicator (30%). Edite para sobrescrever.">S&amp;P fwd</span></label><span class="sub">CAPE 70 · Buffett 30</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno nominal esperado do S&P em ~10 anos. Mistura modelo PGIM/Fed (70%) e Buffett Indicator (30%). Edite para sobrescrever.">S&amp;P fwd</span></label><span class="sub">PGIM 70 · Buffett 30</span></div>
         <div class="stepper"><input id="sp_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
-      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV puro, sem alfa (o alfa vem dos botões acima). Mistura earnings yield (30%) e Buffett Indicator (70%). Edite para sobrescrever.">IBOV fwd</span></label><span class="sub">EY 30 · Buffett 70</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV puro, sem alfa (o alfa vem dos botões acima). Mistura Gordon (70%) e Buffett Indicator (30%). Edite para sobrescrever.">IBOV fwd</span></label><span class="sub">Gordon 70 · Buffett 30</span></div>
         <div class="stepper"><input id="ibov_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
     </div>
     <div class="solver-inputs buf-ret-row">
-      <div class="field"><div><label><span class="tip" data-tip="retorno real esperado do S&P pela valuation: earnings yield (1/CAPE). Fórmula: 100/CAPE. Editar aqui recalcula o CAPE lá embaixo, e vice-versa — são o mesmo dado.">via CAPE</span> <a class="src s-auto src-link" data-tip="fonte: multpl (Shiller CAPE) — clique para abrir" onclick="window.open('https://www.multpl.com/shiller-pe','_blank')">auto</a></label><span class="sub">entra no S&amp;P fwd · 70%</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno NOMINAL esperado do S&P (modelo PGIM/Fed): real = 0,04 + 1,0×(1/CAPE − juro real US), depois nominalizado pela inflação US. Editar aqui recalcula o CAPE lá embaixo, e vice-versa.">via CAPE</span> <a class="src s-auto src-link" data-tip="fonte: multpl (Shiller CAPE) + modelo PGIM — clique para abrir" onclick="window.open('https://www.multpl.com/shiller-pe','_blank')">auto</a></label><span class="sub">modelo PGIM · entra no S&amp;P fwd · 70%</span></div>
         <div class="stepper"><input id="sp_cape_ret" type="text" inputmode="decimal" oninput="cacheSig(this)" onchange="onCapeRetEdit()"><span class="unit">%</span></div></div>
-      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV pelo earnings yield (lucro/preço): 100/(P/L). Editar aqui recalcula o P/L lá embaixo, e vice-versa — são o mesmo dado.">via earnings yield</span> <a class="src s-manual src-link" data-tip="fonte: Oceans14 (P/L Ibovespa) — clique para abrir" onclick="window.open('https://www.oceans14.com.br/acoes/historico-pl-bovespa','_blank')">manual</a></label><span class="sub">entra no IBOV fwd · 30%</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno NOMINAL esperado do IBOV (modelo Gordon): dividend yield + crescimento nominal de lucros (PIB real 2,5% + inflação BR). Editar aqui recalcula o DY do IBOV, e vice-versa.">via Gordon</span> <a class="src s-manual src-link" data-tip="fonte: dividend yield IBOV (Status Invest) — clique para abrir" onclick="window.open('https://statusinvest.com.br/indices/ibovespa','_blank')">manual</a></label><span class="sub">DY + cresc. · entra no IBOV fwd · 70%</span></div>
         <div class="stepper"><input id="ibov_ey_ret" type="text" inputmode="decimal" oninput="cacheSig(this)" onchange="onEyRetEdit()"><span class="unit">%</span></div></div>
     </div>
     <div class="solver-inputs buf-ret-row">
@@ -521,14 +521,40 @@ function bump(id,dir){ const el=document.getElementById(id); let v=gv(id)||0;
    Tudo o mais — carry, vols, correlação — é medido/dado, não suposto.
    Parâmetros de risco medidos nos dados reais 2014-26:                        */
 const SOLV={ corr:0.33, vBR:0.22, vSP:0.12, cdi:0.115 };  // correlação, vols anuais, CDI nominal
-const W_SP_CAPE=0.70;  // peso do CAPE no S&P fwd (resto = Buffett Indicator)
-const W_IB_EY=0.30;    // peso do earnings yield no IBOV fwd (resto = Buffett Indicator)
+const W_SP_CAPE=0.70;  // peso do modelo PGIM no S&P fwd (resto = Buffett Indicator)
+const W_IB_EY=0.70;    // peso do Gordon no IBOV fwd (resto = Buffett Indicator) — invertido: valuation próprio pesa mais
 let SOLVER_ALFA=10;   // pp; default = botão 'base'
 let SOLVER_SLIDER=80; // 0=Sharpe-ótimo .. 100=CAGR-ótimo
 let _fwdDirty={};     // marca se o usuário sobrescreveu sp_fwd/ibov_fwd manualmente
 
-/* S&P forward implícito do CAPE: relação histórica 145 anos (ret ≈ 3,4% + 0,85/CAPE) */
-function spFwdFromCape(cape){ if(!cape||cape<=0) return null; return 100/cape; }  // earnings yield (CAEY): retorno real esperado = 1/CAPE
+/* ── Modelo de retorno do S&P: regressão PGIM sobre excess yield ──────────────
+   PGIM Multi-Asset (jan/2025): o (1/CAPE − R) teve o menor erro out-of-sample.
+   retorno_REAL = α + β·(1/CAPE − R_real),  α≈0,04  β≈1,0  (coef. aprox., não no fonte primário)
+   Depois nominaliza: (1+real)·(1+inflação_US) − 1.
+   O 1/CAPE é quantidade REAL (inflação no preço e nos lucros se cancela). */
+const SP_ALPHA=0.04, SP_BETA=1.0;   // PGIM: intercepto (cresc. de lucros retidos) + coef. excess yield
+function spFwdFromCape(cape, rUsReal, inflUs){
+  if(!cape||cape<=0) return null;
+  const ey=1/cape;                              // earnings yield real
+  const R=(rUsReal!=null? rUsReal/100 : 0.02);  // juro real US 10a (decimal); fallback 2%
+  const infl=(inflUs!=null? inflUs/100 : 0.025);// inflação esperada US; fallback 2,5%
+  const real=SP_ALPHA + SP_BETA*(ey - R);       // retorno real USD
+  const nom=(1+real)*(1+infl)-1;                // retorno nominal USD
+  return nom*100;                                // em pp
+}
+
+/* ── Modelo de retorno do IBOV: Gordon building-block (nominal) ───────────────
+   Pesquisa: evidência de CAPE/PL no Brasil é fraca (R² 0,11–0,30); usar Gordon
+   transparente e robusto a quebras. retorno_NOMINAL = DY + g_nominal + reversão.
+   g_nominal = (1+g_real)·(1+inflação_BR) − 1, com g_real ancorado no PIB (~2,5%). */
+const IB_G_REAL=0.025;   // crescimento real de lucros de LP (proxy PIB Brasil); documentado
+function ibovFwdGordon(dyBr, inflBr){
+  const dy=(dyBr!=null? dyBr/100 : 0.045);      // dividend yield IBOV; fallback 4,5%
+  const infl=(inflBr!=null? inflBr/100 : 0.04); // inflação esperada BR (Focus); fallback 4%
+  const gNom=(1+IB_G_REAL)*(1+infl)-1;          // crescimento nominal de lucros
+  const nom=dy + gNom;                           // retorno nominal BRL (sem reversão; o Buffett captura valuation)
+  return nom*100;                                // em pp
+}
 
 /* tangência long-only de 2 ativos (Sharpe-ótimo) */
 function sharpeOptBR(muBR,muSP){
@@ -544,19 +570,20 @@ function sharpeOptBR(muBR,muSP){
 function solveSplit(){
   let cape=gv('cape_us'); if(cape==null) cape=41.7;   // fallback ao real atual
   const selic=gv('selic'), fed=gv('fed'), plBr=gv('pl_br');
+  const rUsReal=gv('real_us'), inflUs=gv('us_cpi'), inflBr=gv('ipca'), dyBr=gv('dy_br');
   const bufSp=gv('buf_sp'), bufIb=gv('buf_ibov');     // Buffett Indicator fwd (manual)
-  // S&P fwd = média ponderada CAPE-implícito (70%) + Buffett (30%); só CAPE se Buffett ausente
-  const spCape=spFwdFromCape(cape);
-  // espelha o componente CAPE no campo editável (sincronizado com o CAPE de baixo)
+  // S&P fwd = média ponderada modelo PGIM (70%) + Buffett (30%); só PGIM se Buffett ausente
+  const spCape=spFwdFromCape(cape, rUsReal, inflUs);  // já nominalizado (USD nominal)
+  // espelha o componente PGIM no campo editável (sincronizado com o CAPE de baixo)
   const spCapeEl=document.getElementById('sp_cape_ret');
   if(spCapeEl && spCape!=null && document.activeElement!==spCapeEl){ spCapeEl.value=(Math.round(spCape*10)/10).toString().replace('.',','); }
-  const spBlend=(bufSp!=null)? (W_SP_CAPE*spCape + (1-W_SP_CAPE)*bufSp) : spCape;
+  const spBlend=(bufSp!=null&&spCape!=null)? (W_SP_CAPE*spCape + (1-W_SP_CAPE)*bufSp) : (spCape!=null?spCape:bufSp);
   const spEl=document.getElementById('sp_fwd');
-  if(spEl && !_fwdDirty['sp_fwd']){ spEl.value=(Math.round(spBlend*10)/10).toString().replace('.',','); }
+  if(spEl && !_fwdDirty['sp_fwd'] && spBlend!=null){ spEl.value=(Math.round(spBlend*10)/10).toString().replace('.',','); }
   let spFwd=gv('sp_fwd'); if(spFwd==null) spFwd=spBlend;
-  // IBOV fwd = média ponderada earnings yield (30%) + Buffett (70%); só EY se Buffett ausente
-  const ibEy=(plBr? 100/plBr : 10);
-  // espelha o componente EY no campo editável (sincronizado com o P/L de baixo)
+  // IBOV fwd = média ponderada Gordon (70%) + Buffett (30%); só Gordon se Buffett ausente
+  const ibEy=ibovFwdGordon(dyBr, inflBr);             // Gordon nominal (BRL nominal)
+  // espelha o componente Gordon no campo editável
   const ibEyEl=document.getElementById('ibov_ey_ret');
   if(ibEyEl && document.activeElement!==ibEyEl){ ibEyEl.value=(Math.round(ibEy*10)/10).toString().replace('.',','); }
   const ibBlend=(bufIb!=null)? (W_IB_EY*ibEy + (1-W_IB_EY)*bufIb) : ibEy;
@@ -564,8 +591,8 @@ function solveSplit(){
   if(ibEl && !_fwdDirty['ibov_fwd']){ ibEl.value=(Math.round(ibBlend*10)/10).toString().replace('.',','); }
   let ibovFwd=gv('ibov_fwd'); if(ibovFwd==null) ibovFwd=ibBlend;
   const carry=(selic!=null&&fed!=null)?(selic-fed):8;   // carry medido dos insumos macro
-  const muBR=(ibovFwd+SOLVER_ALFA)/100;                 // Brasil fwd = IBOV + alfa
-  const muSP=((1+spFwd/100)*(1+carry/100)-1);           // SPXR11 = S&P + carry (hedgeado)
+  const muBR=(ibovFwd+SOLVER_ALFA)/100;                 // Brasil fwd = IBOV + alfa (BRL nominal)
+  const muSP=((1+spFwd/100)*(1+carry/100)-1);           // SPXR11 = S&P USD nominal + carry → BRL nominal
   const wSharpe=sharpeOptBR(muBR,muSP);
   const wCagr=(muBR>muSP)?1:0;                          // CAGR-ótimo: tudo no maior retorno
   const t=SOLVER_SLIDER/100;
@@ -578,12 +605,13 @@ function renderSolver(){
   const out=document.getElementById('solverOut'); if(!out) return;
   const brP=Math.round(r.wBR*100), spP=100-brP;
   const conv = Math.abs(r.wSharpe-r.wCagr)<0.02;
-  const brW=Math.max(brP,12), spW=Math.max(spP,12);  // largura mínima p/ legibilidade do texto
+  // largura mínima 12 só para segmento NÃO-nulo; segmento de 0% é OMITIDO (senão o padding deixa um vão)
+  const brW = brP===0 ? 0 : Math.max(brP,12);
+  const spW = spP===0 ? 0 : Math.max(spP,12);
+  const segBR = brP>0 ? '<div class="seg-br" style="flex:'+brW+' 1 0">'+(brP>=18?brP+'%':'')+'</div>' : '';
+  const segSP = spP>0 ? '<div class="seg-sp" style="flex:'+spW+' 1 0">'+(spP>=18?spP+'%':'')+'</div>' : '';
   out.innerHTML =
-    '<div class="split-bar">'+
-      '<div class="seg-br" style="flex:'+brW+' 1 0">'+(brP>=18?brP+'%':'')+'</div>'+
-      '<div class="seg-sp" style="flex:'+spW+' 1 0">'+(spP>=18?spP+'%':'')+'</div>'+
-    '</div>'+
+    '<div class="split-bar">'+segBR+segSP+'</div>'+
     '<div class="split-legend"><span><b>Brasil '+brP+'%</b> · Organon+Ártica</span><span>SPXR11 · <b>S&amp;P '+spP+'%</b></span></div>'+
     '<div class="calc-trail">'+
       '<div class="calc-cell'+(r.muBR>=r.muSP?' win':'')+'"><div class="cc-num">'+(r.muBR*100).toFixed(0)+'%</div><div class="cc-lbl">Brasil fwd</div><div class="cc-sub">IBOV '+r.ibovFwd.toFixed(1)+' + alfa '+SOLVER_ALFA+'</div></div>'+
@@ -804,18 +832,32 @@ let _sigCache={};
 function cacheSig(el){ if(el&&el.id){ _sigCache[el.id]=el.value; } }   // só guarda; não re-renderiza
 function onSigEdit(){ SIG_FIELDS.forEach(id=>{const el=document.getElementById(id); if(el) _sigCache[id]=el.value;}); persist(); renderSolver(); render(compute(readCfg())); }
 
-/* Sincronização bidirecional: editar o retorno-via-CAPE recalcula o CAPE lá embaixo.
-   Earnings yield: fwd = 100/CAPE  →  CAPE = 100/fwd. */
+/* Sincronização bidirecional: editar o retorno-via-CAPE (nominal, modelo PGIM) recalcula o CAPE.
+   Inverte: nom=(1+real)(1+infl)−1, real=α+β(1/CAPE−R) → CAPE = 1/((real−α)/β + R). */
 function onCapeRetEdit(){
-  const v=gv('sp_cape_ret');
-  if(v!=null && v>0){ const cape=100/v; setF('cape_us',cape); _sigCache['cape_us']=document.getElementById('cape_us').value; }
+  const v=gv('sp_cape_ret');                         // retorno nominal USD em pp
+  const rUsReal=gv('real_us'), inflUs=gv('us_cpi');
+  if(v!=null){
+    const infl=(inflUs!=null? inflUs/100 : 0.025);
+    const R=(rUsReal!=null? rUsReal/100 : 0.02);
+    const real=(1+v/100)/(1+infl)-1;                 // desnominaliza
+    const ey=(real-SP_ALPHA)/SP_BETA + R;            // 1/CAPE implícito
+    if(ey>0){ const cape=1/ey; setF('cape_us',cape); const el=document.getElementById('cape_us'); if(el) _sigCache['cape_us']=el.value; }
+  }
   _sigCache['sp_cape_ret']=document.getElementById('sp_cape_ret').value;
   persist(); renderSolver(); render(compute(readCfg()));
 }
-/* Editar o retorno-via-EY recalcula o P/L lá embaixo. Inverte fwd = 100/PL → PL = 100/fwd. */
+/* Editar o retorno-via-Gordon recalcula o DY do IBOV (o componente editável do Gordon).
+   Inverte: nom = DY + g_nominal  →  DY = nom − g_nominal. */
 function onEyRetEdit(){
-  const v=gv('ibov_ey_ret');
-  if(v!=null && v>0){ const pl=100/v; setF('pl_br',pl); _sigCache['pl_br']=document.getElementById('pl_br').value; }
+  const v=gv('ibov_ey_ret');                         // retorno nominal BRL em pp
+  const inflBr=gv('ipca');
+  if(v!=null){
+    const infl=(inflBr!=null? inflBr/100 : 0.04);
+    const gNom=(1+IB_G_REAL)*(1+infl)-1;
+    const dy=(v/100 - gNom)*100;                      // DY implícito em pp
+    if(dy>=0){ setF('dy_br',dy); const el=document.getElementById('dy_br'); if(el) _sigCache['dy_br']=el.value; }
+  }
   _sigCache['ibov_ey_ret']=document.getElementById('ibov_ey_ret').value;
   persist(); renderSolver(); render(compute(readCfg()));
 }
