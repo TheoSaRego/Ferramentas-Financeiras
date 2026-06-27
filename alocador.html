@@ -190,7 +190,7 @@
   .alfa-btn.active { border-color:var(--accent); background:var(--accent); color:#fff; box-shadow:0 2px 8px rgba(0,0,0,.12); }
   .alfa-btn.active small { color:rgba(255,255,255,.82); }
   .solver-inputs { display:flex; gap:1.2rem; margin-bottom:1rem; }
-  .solver-inputs .field { flex:1; min-width:0; display:flex; align-items:center; justify-content:space-between; gap:.6rem; }
+  .solver-inputs .field { flex:1; min-width:0; display:flex; align-items:center; justify-content:space-between; gap:.6rem; border-bottom:none; padding:0; }
   .solver-inputs .field > div:first-child { margin-bottom:0; }
   .solver-inputs .stepper { flex:0 0 auto; }
   .solver-inputs .stepper input { width:52px; text-align:right; }
@@ -226,8 +226,8 @@
     background: transparent; color: var(--text); text-align: right; padding: 0 8px; }
   .stepper input:focus { outline: none; background: var(--green-light); }
   .stepper .unit { font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--muted); padding: 0 8px; }
-  .sumline { font-family: 'Courier New', monospace; font-size: 0.68rem; margin-top: 0.8rem;
-    padding-top: 0.8rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; }
+  .sumline { font-family: 'Courier New', monospace; font-size: 0.68rem; margin-top: 0.6rem;
+    padding-top: 0; display: flex; justify-content: space-between; }
   .sumline.warn span:last-child { color: var(--accent); }
 
   .apply { font-family: 'Courier New', monospace; font-size: 0.74rem; margin-top: 1.1rem;
