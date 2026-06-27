@@ -12,12 +12,14 @@
     --border-str: rgba(0,0,0,0.16); --text: #1a1916; --muted: #7a7870;
     --green: #1a7a52; --green-light: #e8f5ee; --accent: #e05c2a;
     --track: rgba(0,0,0,0.06);
+    --ink: var(--text); --paper: var(--surface);
   }
   [data-theme=dark] {
     --bg: #141412; --surface: #1e1d1a; --border: rgba(255,255,255,0.09);
     --border-str: rgba(255,255,255,0.18); --text: #e8e6e0; --muted: #7a7870;
     --green: #2db87a; --green-light: #0d2e1e; --accent: #f07040;
     --track: rgba(255,255,255,0.07);
+    --ink: var(--text); --paper: var(--surface);
   }
 
   body {
@@ -129,8 +131,8 @@
   .bar > span { display: block; height: 100%; border-radius: 3px; }
 
   /* fator agora editável inline */
-  .grp { margin-top: 0.9rem; }
-  .grp:first-of-type { margin-top: 0; }
+  .grp { margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  .grp:first-of-type { margin-top: 0; padding-top: 0; border-top: none; }
   .grp .gname { font-family: 'Courier New', monospace; font-size: 0.58rem; text-transform: uppercase;
     letter-spacing: 0.07em; color: var(--text); margin-bottom: 0.45rem; display: flex; justify-content: space-between; }
   .grp .gname span:last-child { color: var(--muted); }
@@ -162,7 +164,7 @@
     line-height: 1.6; margin: 0.4rem 0 0.9rem; padding: 0.5rem 0.7rem; border: 1px dashed var(--accent); border-radius: 8px; }
 
   /* insumos macro compartilhados (alimentam ERP/carry, não são fatores) */
-  .macro { margin-top: 0.9rem; padding-top: 0.8rem; border-top: 1px dashed var(--border); }
+  .macro { margin-top: 1.3rem; padding-top: 1rem; border-top: 1px dashed var(--border-str); }
   .macro .mhd { font-family: 'Courier New', monospace; font-size: 0.55rem; text-transform: uppercase;
     letter-spacing: 0.07em; color: var(--muted); margin-bottom: 0.5rem; }
   .macro .mrow { display: flex; flex-wrap: wrap; gap: 0.5rem 0.9rem; }
@@ -241,7 +243,7 @@
   details.adv[open] > summary::before { content: '▾ '; }
   details.adv > summary:hover { color: var(--text); }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 1.5rem; align-items: start; }
-  .col-lbl { font-size:.66rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 .7rem; padding-bottom:.35rem; border-bottom:1px solid var(--border-str); }
+  .col-lbl { font-size:.62rem; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 .85rem; padding-bottom:.5rem; border-bottom:1px solid var(--border); }
   .col-hint { font-size:.74rem; color:var(--muted); line-height:1.5; margin:.9rem 0 0; font-style:italic; }
   .col-hint em { font-style:normal; font-weight:600; color:var(--ink); }
   /* posição: duas seções lado a lado, campos horizontais compactos */
@@ -285,16 +287,13 @@
 
 <div class="hero">
   <h1>Alocador Tático</h1>
-  <p>Quanto manter em caixa, em %, conforme a barateza de cada mercado. Você informa onde está
-     e onde quer chegar; a ferramenta devolve o <b>caixa-alvo</b> de hoje — e se isso significa
-     aportar em equity, manter ou reforçar o caixa. Três baldes: caixa (CDI), Brasil (Organon+Ártica)
-     e S&amp;P (SPXR11).</p>
+  <p>O caixa-alvo de hoje conforme a barateza de Brasil e S&amp;P.</p>
   <div class="asof" id="asof"></div>
 </div>
 
 <!-- ── 1. POSIÇÃO + ALVOS (entrada em %) ───────────────────────────────────── -->
 <div class="panel">
-  <span class="tag">posição hoje · alvos (% da carteira)</span>
+  <span class="tag">posição e banda de caixa · % da carteira</span>
 
   <div class="pos-grid">
     <div class="col-lbl">posição hoje</div>
@@ -313,12 +312,11 @@
         <div class="stepper"><input id="caixa_min" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
       <div class="field"><div><label>Caixa máx</label><span class="sub">quando tudo caro</span></div>
         <div class="stepper"><input id="caixa_max" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
-      <p class="col-hint">O caixa-alvo flutua nesta banda conforme a barateza. O split abaixo divide o que <em>não</em> é caixa.</p>
     </div>
   </div>
 
   <div class="solver" id="solver">
-    <div class="solver-h"><span class="tag">split sugerido</span><span class="solver-sub">dos preços de hoje + sua convicção de alfa</span></div>
+    <div class="solver-h"><span class="tag">split sugerido</span><span class="solver-sub">preços de hoje + sua convicção de alfa</span></div>
     <div class="alfa-lbl">sua convicção: alfa dos fundos sobre o IBOV</div>
     <div class="alfa-btns" id="alfaBtns">
       <button type="button" class="alfa-btn" data-alfa="5">conservador<small>reversão forte · +5pp</small></button>
@@ -328,13 +326,13 @@
     <div class="solver-inputs">
       <div class="field"><div><label><span class="tip" data-tip="retorno nominal esperado do S&P em ~10 anos. Mistura modelo PGIM/Fed (80%) e Buffett Indicator (20%). Edite para sobrescrever.">S&amp;P fwd</span></label><span class="sub">PGIM 80 · Buffett 20</span></div>
         <div class="stepper"><input id="sp_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
-      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV puro, sem alfa (o alfa vem dos botões acima). Mistura Gordon (70%) e Buffett Indicator (30%). Edite para sobrescrever.">IBOV fwd</span></label><span class="sub">Gordon 70 · Buffett 30</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno esperado do IBOV puro, sem alfa (o alfa vem dos botões acima). Mistura Gordon (80%) e Buffett Indicator (20%). Edite para sobrescrever.">IBOV fwd</span></label><span class="sub">Gordon 80 · Buffett 20</span></div>
         <div class="stepper"><input id="ibov_fwd" type="text" inputmode="decimal"><span class="unit">%</span></div></div>
     </div>
     <div class="solver-inputs buf-ret-row">
-      <div class="field"><div><label><span class="tip" data-tip="retorno NOMINAL esperado do S&P (modelo PGIM/Fed): real = 0,04 + 1,0×(1/CAPE − juro real US), depois nominalizado pela inflação ESPERADA de 10a (FRED T10YIE), não pelo CPI corrente. Editar aqui recalcula o CAPE lá embaixo, e vice-versa.">via CAPE</span> <a class="src s-auto src-link" data-tip="fonte: multpl (Shiller CAPE) + modelo PGIM — clique para abrir" onclick="window.open('https://www.multpl.com/shiller-pe','_blank')">auto</a></label><span class="sub">modelo PGIM · entra no S&amp;P fwd · 80%</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno NOMINAL esperado do S&P (modelo PGIM/Fed): real = 0,04 + 1,0×(1/CAPE − juro real US), depois nominalizado pela inflação ESPERADA de 10a (FRED T10YIE), não pelo CPI corrente. Editar aqui recalcula o CAPE lá embaixo, e vice-versa.">via CAPE</span> <a class="src s-auto src-link" data-tip="fonte: multpl (Shiller CAPE) + modelo PGIM — clique para abrir" onclick="window.open('https://www.multpl.com/shiller-pe','_blank')">auto</a></label><span class="sub">modelo PGIM · entra no S&amp;P fwd</span></div>
         <div class="stepper"><input id="sp_cape_ret" type="text" inputmode="decimal" oninput="cacheSig(this)" onchange="onCapeRetEdit()"><span class="unit">%</span></div></div>
-      <div class="field"><div><label><span class="tip" data-tip="retorno NOMINAL esperado do IBOV (modelo Gordon): dividend yield + crescimento nominal de lucros (PIB real 2,5% + inflação BR). Editar aqui recalcula o DY do IBOV, e vice-versa.">via Gordon</span> <a class="src s-manual src-link" data-tip="fonte: dividend yield IBOV (Status Invest) — clique para abrir" onclick="window.open('https://statusinvest.com.br/indices/ibovespa','_blank')">manual</a></label><span class="sub">DY + cresc. · entra no IBOV fwd · 70%</span></div>
+      <div class="field"><div><label><span class="tip" data-tip="retorno NOMINAL esperado do IBOV (modelo Gordon): dividend yield + crescimento nominal de lucros (PIB real 2,5% + inflação BR). Editar aqui recalcula o DY do IBOV, e vice-versa.">via Gordon</span> <a class="src s-manual src-link" data-tip="fonte: dividend yield IBOV (Status Invest) — clique para abrir" onclick="window.open('https://statusinvest.com.br/indices/ibovespa','_blank')">manual</a></label><span class="sub">DY + cresc. · entra no IBOV fwd</span></div>
         <div class="stepper"><input id="ibov_ey_ret" type="text" inputmode="decimal" oninput="cacheSig(this)" onchange="onEyRetEdit()"><span class="unit">%</span></div></div>
     </div>
     <div class="solver-inputs buf-ret-row">
@@ -522,7 +520,7 @@ function bump(id,dir){ const el=document.getElementById(id); let v=gv(id)||0;
    Parâmetros de risco medidos nos dados reais 2014-26:                        */
 const SOLV={ corr:0.33, vBR:0.22, vSP:0.12, cdi:0.115 };  // correlação, vols anuais, CDI nominal
 const W_SP_CAPE=0.80;  // peso do modelo PGIM no S&P fwd (resto = Buffett Indicator). 80/20: Buffett é quase redundante c/ CAPE (relatório).
-const W_IB_EY=0.70;    // peso do Gordon no IBOV fwd (resto = Buffett Indicator) — invertido: valuation próprio pesa mais
+const W_IB_EY=0.80;    // peso do Gordon no IBOV fwd (resto = Buffett 20%). Simetria c/ S&P; Buffett pesa pouco em todo lugar.
 let SOLVER_ALFA=10;   // pp; default = botão 'base'
 let SOLVER_SLIDER=80; // 0=Sharpe-ótimo .. 100=CAGR-ótimo
 let _fwdDirty={};     // marca se o usuário sobrescreveu sp_fwd/ibov_fwd manualmente
@@ -618,9 +616,9 @@ function renderSolver(){
     '</div>'+
     '<div class="solver-verdict">'+
     (conv ? (r.wCagr>0.5
-              ? 'CAGR e Sharpe coincidem aqui — o <b>Brasil</b> domina nas duas métricas, e o slider não altera o resultado.'
-              : 'CAGR e Sharpe coincidem aqui — o <b>S&amp;P</b> domina nas duas métricas, e o slider não altera o resultado.')
-          : 'Extremos: Sharpe-ótimo seria <b>'+Math.round(r.wSharpe*100)+'% Brasil</b>, CAGR-ótimo <b>'+Math.round(r.wCagr*100)+'% Brasil</b>. O slider acima escolhe entre eles.')+
+              ? 'Brasil domina em Sharpe e CAGR — o slider não muda nada.'
+              : 'S&amp;P domina em Sharpe e CAGR — o slider não muda nada.')
+          : 'Sharpe-ótimo <b>'+Math.round(r.wSharpe*100)+'%</b> Brasil · CAGR-ótimo <b>'+Math.round(r.wCagr*100)+'%</b> Brasil — o slider escolhe entre eles.')+
     '</div>';
   const sm=document.getElementById('sliderMode');
   if(sm) sm.textContent = SOLVER_SLIDER>=66?'CAGR-priorizado':SOLVER_SLIDER<=33?'risco-minimizado':'equilibrado';
@@ -876,7 +874,7 @@ const SRC_LINKS={br_pl:'https://www.oceans14.com.br/acoes/historico-pl-bovespa',
   br_fg:'https://en.macromicro.me/charts/128837/brazil-mm-fear-and-greed-index-vs-bovespa-index',
   us_pe:'https://www.multpl.com/s-p-500-pe-ratio',us_cape:'https://www.multpl.com/shiller-pe',us_dy:'https://www.multpl.com/s-p-500-dividend-yield',
   us_real_us:'https://www.multpl.com/10-year-real-interest-rate',us_sp_dd:'https://finance.yahoo.com/quote/%5EGSPC/',us_fg:'https://edition.cnn.com/markets/fear-and-greed',
-  us_fed:'https://fred.stlouisfed.org/series/DFF',us_cpi:'https://fred.stlouisfed.org/series/CPIAUCSL',infl_exp:'https://fred.stlouisfed.org/series/T10YIE',
+  us_fed:'https://fred.stlouisfed.org/series/DFF',us_cpi:'https://fred.stlouisfed.org/series/CPIAUCSL',us_infl_exp:'https://fred.stlouisfed.org/series/T10YIE',
   br_buf_ratio_br:'https://www.gurufocus.com/global-market-valuation.php?country=BRA',us_buf_ratio_us:'https://www.gurufocus.com/stock-market-valuations.php'};
 function fillSources(a){ const map={br:(a&&a.inputs&&a.inputs.br_src)||{}, us:(a&&a.inputs&&a.inputs.us_src)||{}};
   for(const side of ['br','us']) for(const k in map[side]){ const el=document.getElementById('src_'+side+'_'+k); if(!el) continue;
@@ -885,7 +883,7 @@ function fillSources(a){ const map={br:(a&&a.inputs&&a.inputs.br_src)||{}, us:(a
     if(href){ el.style.cursor='pointer'; el.onclick=(e)=>{e.preventDefault();window.open(href,'_blank');}; } } }
 
 function persist(){ const o={}; ALL.forEach(id=>{const el=document.getElementById(id); if(el) o[id]=el.value;}); localStorage.setItem('alocador_inputs2',JSON.stringify(o)); }
-function setF(id,val){ const el=document.getElementById(id); if(el&&val!=null&&!isNaN(val)) el.value=(''+(Math.round(val*100)/100)); }
+function setF(id,val){ const el=document.getElementById(id); if(el&&val!=null&&!isNaN(val)) el.value=(''+(Math.round(val*100)/100)).replace('.',','); }
 
 function fillFromAllocation(a){ if(!a) return;
   const T=(a.carteira_total||1);
