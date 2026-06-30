@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-30T19:13:19.758805+00:00",
+  "generatedAt": "2026-06-30T22:04:25.724919+00:00",
   "asof": "2026-06-30",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -56,7 +56,7 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-13.2% — correção leve",
+            "read": "-13.4% — correção leve",
             "weight": 0.12
           },
           {
@@ -73,7 +73,7 @@
           {
             "key": "breadth",
             "score": 6,
-            "read": "36% composto — abaixo do meio",
+            "read": "35% composto — abaixo do meio",
             "weight": 0.1
           },
           {
@@ -98,7 +98,7 @@
     }
   },
   "sp_signal": {
-    "score": 2.39,
+    "score": 2.35,
     "conf": "ALTA",
     "label": "HOLD",
     "cor": "#b4322a",
@@ -109,19 +109,19 @@
           {
             "key": "erp",
             "score": 3,
-            "read": "ERP real +1.0pp — cara vs juros",
+            "read": "ERP real +0.9pp — cara vs juros",
             "weight": 0.2444
           },
           {
             "key": "pe",
-            "score": 1,
-            "read": "32.0x — muito caro",
+            "score": 0.5,
+            "read": "32.2x — extremo",
             "weight": 0.0889
           },
           {
             "key": "cape",
             "score": 0.5,
-            "read": "CAPE 41x — extremo (tipo 1999/2021)",
+            "read": "CAPE 42x — extremo (tipo 1999/2021)",
             "weight": 0.2444
           },
           {
@@ -158,18 +158,18 @@
   },
   "decision": {
     "tranche": 0.0,
-    "piso": 0.11125185185185184,
+    "piso": 0.11177037037037035,
     "cashpct": 0.2,
-    "gap": 0.08874814814814817,
-    "want": 39900.0,
+    "gap": 0.08822962962962966,
+    "want": 39700.0,
     "aloc_brasil": 0.0,
     "aloc_sp": 0.0,
     "rodadas": 1,
     "base": 0.08389999999999999,
     "res_brasil": 0.0,
-    "res_sp": 0.02735185185185185,
-    "tgt_brasil": 0.6665611111111112,
-    "tgt_sp": 0.22218703703703704,
+    "res_sp": 0.02787037037037037,
+    "tgt_brasil": 0.6661722222222223,
+    "tgt_sp": 0.22205740740740743,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
     "desc": "caixa acima do alvo, mas nada barato E abaixo do alvo agora — segura munição"
@@ -204,12 +204,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -13.217661597628073,
+      "ibov_dd": -13.406464408503105,
       "fund_dd": -10.087166895262106,
-      "breadth_pct": 35.6,
+      "breadth_pct": 35.410000000000004,
       "mm200_pct": 33.77,
       "fg": null,
-      "ibov": 172399.19,
+      "ibov": 172024.12,
       "regime": "bear",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
@@ -219,18 +219,18 @@
       }
     },
     "us": {
-      "pe": 31.98,
-      "cape": 41.39,
-      "ey": 3.1269543464665417,
+      "pe": 32.24,
+      "cape": 41.72,
+      "ey": 3.1017369727047144,
       "dy": 1.05,
-      "real_us": 2.16,
-      "sp_dd": -1.38,
+      "real_us": 2.2,
+      "sp_dd": -1.45,
       "fg": 31,
       "fed": 3.63,
       "us_cpi": 4.25,
-      "infl_exp": 2.22,
+      "infl_exp": 2.24,
       "carry": 10.620000000000001,
-      "sp_cur": 7505.03,
+      "sp_cur": 7499.36,
       "sp_ath": 7609.78
     }
   },
