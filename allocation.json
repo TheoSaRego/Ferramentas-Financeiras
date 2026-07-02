@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-01T22:53:05.431462+00:00",
-  "asof": "2026-07-01",
+  "generatedAt": "2026-07-02T15:31:48.337435+00:00",
+  "asof": "2026-07-02",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
   "brasil": 300000.0,
@@ -56,13 +56,13 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-13.6% — correção leve",
+            "read": "-13.3% — correção leve",
             "weight": 0.12
           },
           {
             "key": "fund_dd",
             "score": 4.5,
-            "read": "DD médio -10.3% — correção leve",
+            "read": "DD médio -10.6% — correção leve",
             "weight": 0.12
           }
         ]
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 6,
-            "read": "35% composto — abaixo do meio",
+            "read": "37% composto — abaixo do meio",
             "weight": 0.1
           },
           {
             "key": "mm200",
             "score": 7,
-            "read": "34% > MM200 — fraqueza técnica",
+            "read": "32% > MM200 — fraqueza técnica",
             "weight": 0.04
           }
         ]
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-1.7% — no topo/ATH",
+            "read": "-1.6% — no topo/ATH",
             "weight": 0.2
           }
         ]
@@ -204,18 +204,18 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -13.57535349874407,
-      "fund_dd": -10.343685040198647,
-      "breadth_pct": 35.15,
-      "mm200_pct": 33.77,
+      "ibov_dd": -13.328963993214437,
+      "fund_dd": -10.644337386398162,
+      "breadth_pct": 37.07,
+      "mm200_pct": 32.47,
       "fg": null,
-      "ibov": 171688.61,
+      "ibov": 172178.08,
       "regime": "bear",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
-        "organon": -14.803382617905969,
-        "artica": -5.883987462491325
+        "organon": -14.797386813531288,
+        "artica": -6.491287959265035
       }
     },
     "us": {
@@ -224,13 +224,13 @@
       "ey": 3.1065548306927617,
       "dy": 1.05,
       "real_us": 2.25,
-      "sp_dd": -1.66,
+      "sp_dd": -1.63,
       "fg": 32,
       "fed": 3.63,
       "us_cpi": 4.25,
       "infl_exp": 2.23,
       "carry": 10.620000000000001,
-      "sp_cur": 7483.23,
+      "sp_cur": 7486.01,
       "sp_ath": 7609.78
     }
   },
