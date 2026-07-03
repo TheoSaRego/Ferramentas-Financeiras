@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-03T18:34:14.447765+00:00",
+  "generatedAt": "2026-07-03T21:29:13.856737+00:00",
   "asof": "2026-07-03",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -56,7 +56,7 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-12.3% — correção leve",
+            "read": "-12.4% — correção leve",
             "weight": 0.12
           },
           {
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 6,
-            "read": "46% composto — abaixo do meio",
+            "read": "44% composto — abaixo do meio",
             "weight": 0.1
           },
           {
             "key": "mm200",
             "score": 5,
-            "read": "42% > MM200 — abaixo da média",
+            "read": "40% > MM200 — abaixo da média",
             "weight": 0.04
           }
         ]
@@ -204,12 +204,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -12.257700458579357,
+      "ibov_dd": -12.376473016304491,
       "fund_dd": -10.690745449181088,
-      "breadth_pct": 45.910000000000004,
-      "mm200_pct": 41.56,
+      "breadth_pct": 43.72,
+      "mm200_pct": 40.26,
       "fg": null,
-      "ibov": 174306.22,
+      "ibov": 174070.27,
       "regime": "neutral",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
