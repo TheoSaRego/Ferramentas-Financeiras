@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-06T19:14:52.622655+00:00",
+  "generatedAt": "2026-07-06T21:20:56.039399+00:00",
   "asof": "2026-07-06",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -56,7 +56,7 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-13.3% — correção leve",
+            "read": "-13.2% — correção leve",
             "weight": 0.12
           },
           {
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 6,
-            "read": "38% composto — abaixo do meio",
+            "read": "36% composto — abaixo do meio",
             "weight": 0.1
           },
           {
             "key": "mm200",
             "score": 5,
-            "read": "36% > MM200 — abaixo da média",
+            "read": "35% > MM200 — abaixo da média",
             "weight": 0.04
           }
         ]
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-0.8% — no topo/ATH",
+            "read": "-0.9% — no topo/ATH",
             "weight": 0.2
           }
         ]
@@ -149,7 +149,7 @@
           {
             "key": "fg",
             "score": 6,
-            "read": "45/100 — leve medo",
+            "read": "44/100 — leve medo",
             "weight": 0.1556
           }
         ]
@@ -204,12 +204,12 @@
       "selic": 14.25,
       "ipca": 4.72,
       "real_cdi": 9.245000000000001,
-      "ibov_dd": -13.253054259351549,
+      "ibov_dd": -13.193303029845415,
       "fund_dd": -10.3955309980572,
-      "breadth_pct": 38.12,
-      "mm200_pct": 36.36,
+      "breadth_pct": 36.19,
+      "mm200_pct": 35.06,
       "fg": null,
-      "ibov": 172328.88,
+      "ibov": 172447.58,
       "regime": "bear",
       "pl_src": "MANUAL — sem fetch (confira em oceans14.com.br/acoes/historico-pl-bovespa)",
       "fund_dd_src": "planilha",
@@ -223,14 +223,14 @@
       "cape": 41.6,
       "ey": 3.1104199066874028,
       "dy": 1.05,
-      "real_us": 2.26,
-      "sp_dd": -0.84,
-      "fg": 45,
+      "real_us": 2.24,
+      "sp_dd": -0.95,
+      "fg": 44,
       "fed": 3.63,
       "us_cpi": 4.25,
-      "infl_exp": 2.23,
+      "infl_exp": 2.24,
       "carry": 10.620000000000001,
-      "sp_cur": 7545.81,
+      "sp_cur": 7537.43,
       "sp_ath": 7609.78
     }
   },
