@@ -96,7 +96,11 @@ def load_config():
             cfg.update(json.loads(p.read_text(encoding="utf-8")))
             log.info("config.json carregado")
         except Exception as e:
-            log.warning(f"config.json inválido ({e})")
+            # FALHA ALTA, não degradação silenciosa: um config.json inválido já
+            # deixou o allocation.json rodando com defaults em produção sem
+            # ninguém perceber (jul/2026). Melhor o CI quebrar visivelmente.
+            log.error(f"config.json INVÁLIDO — abortando ({e})")
+            sys.exit(1)
     for env, key in [("ALOC_CAIXA", "caixa"), ("ALOC_BRASIL", "brasil"), ("ALOC_SP", "sp")]:
         if os.getenv(env):
             try: cfg[key] = float(os.getenv(env))
@@ -526,7 +530,9 @@ def cash_target(cfg, sBR, sUS, cur_br, cur_sp):
     resB = reserva(sBR, cur_br, cfg["alvo_brasil"])
     resS = reserva(sUS, cur_sp, cfg["alvo_sp"])
     alvo = base + resB + resS
-    alvo = max(cfg["municao_minima"], min(cMax + 0.15, alvo))
+    # clamp inferior = caixa_min — IDÊNTICO ao cashTarget() do HTML (que não tem
+    # campo municao_minima; a munição só entra no cap do deployable, em decide()).
+    alvo = max(cMin, min(cMax + 0.15, alvo))
     return alvo, base, resB, resS
 
 def decide(cfg, sBR, sUS):
@@ -576,10 +582,34 @@ def signal_label(score):
 
 
 def decay_monitor(cfg):
-    flags = []; al = fund_alpha()
-    for k, a in al.items():
-        if a is not None and a < 0:
-            flags.append(("medio", f"{k}: alfa vs CDI 60m {a:+.1f}pp — janela de revisão (ciclo × erosão)."))
+    """Erosão de skill dos fundos-núcleo.
+    Sinal primário: alfa ROLANTE 60m vs CDI (fund.cagr60 − cdi.cagr60, ambos já
+    no data.json). O alfa de inception é inútil como detector: com 12 anos de
+    histórico ele leva anos de underperformance para virar negativo — e, pior,
+    o fetch_cdi antigo (84 meses) nem alcançava o inception do Organon (2014),
+    deixando alphaVsCdi=None e o monitor estruturalmente cego pro maior fundo.
+    Fallback: alfa de inception, se o 60m não existir. Se NENHUM existir, a
+    flag diz isso explicitamente em vez de silenciar."""
+    flags = []
+    d = rj("data.json") or {}
+    cdi60 = (d.get("cdi") or {}).get("cagr60")
+    al_inc = fund_alpha()
+    for f in d.get("funds", []):
+        nm = (f.get("name") or "").lower()
+        k = "Organon" if "organon" in nm else "Ártica" if "artica" in nm or "ártica" in nm else None
+        if not k: continue
+        a60 = (f.get("cagr60") - cdi60) if (f.get("cagr60") is not None and cdi60 is not None) else None
+        if a60 is not None:
+            if a60 < 0:
+                flags.append(("medio", f"{k}: alfa vs CDI 60m {a60:+.1f}pp NEGATIVO — janela de revisão (ciclo × erosão)."))
+            elif a60 < 2.0:
+                flags.append(("baixo", f"{k}: alfa vs CDI 60m {a60:+.1f}pp — positivo mas fino; acompanhar."))
+        else:
+            a_inc = al_inc.get(k.replace("Á", "A").replace("á", "a"))
+            if a_inc is not None and a_inc < 0:
+                flags.append(("medio", f"{k}: alfa vs CDI desde inception {a_inc:+.1f}pp — revisão."))
+            elif a_inc is None:
+                flags.append(("baixo", f"{k}: sem dado de alfa vs CDI (60m nem inception) — monitor cego; verificar data.json."))
     nucleo = cfg["brasil"]/max(1.0, cfg["carteira_total"])
     if nucleo > 0.55:
         flags.append(("medio", f"Brasil (Organon+Ártica) em {nucleo*100:.0f}% — concentração pessoa-chave; "
