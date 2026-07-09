@@ -207,12 +207,12 @@
   #sonoRet { width:100%; accent-color:var(--accent); height:4px; }
   /* resultado — o herói */
   .solver-out { margin-top:1.05rem; padding-top:1rem; border-top:1px solid var(--border-str); }
-  .decay-strip { font-family:'Courier New',monospace; font-size:.72rem; line-height:1.6; margin-top:.6rem;
-    padding:.5rem .8rem; border:1px solid var(--border); border-left:3px solid #c2541f; border-radius:6px;
-    color:var(--muted); }
+  /* monitor dos fundos — seção discreta: hairline em cima, mono miúdo, sem caixa */
+  .decay-strip { font-family:'Courier New',monospace; font-size:.66rem; line-height:1.75;
+    color:var(--muted); margin-top:1.4rem; padding-top:.6rem; border-top:1px dashed var(--border); }
+  .decay-strip .dhd { font-size:.56rem; text-transform:uppercase; letter-spacing:.11em; margin-bottom:.2rem; }
   .decay-strip .dl { display:block; }
-  .decay-strip .dl.ok { border:none; color:var(--muted); }
-  .decay-strip b { color:var(--text); }
+  .decay-strip .dl::before { content:'· '; opacity:.6; }
   .fwd-ovr { font-family:'Courier New',monospace; font-size:.62rem; letter-spacing:.04em; text-transform:uppercase;
     color:var(--accent); border:1px solid var(--accent); border-radius:9px; padding:1px 7px; margin-left:6px;
     cursor:pointer; user-select:none; vertical-align:middle; white-space:nowrap; }
@@ -309,7 +309,6 @@
   <h1>Alocador Tático</h1>
   <p>O caixa-alvo de hoje conforme a barateza de Brasil e S&amp;P.</p>
   <div class="asof" id="asof"></div>
-  <div class="decay-strip" id="decayStrip" style="display:none"></div>
 </div>
 
 <!-- ── 1. POSIÇÃO + ALVOS (entrada em %) ───────────────────────────────────── -->
@@ -402,6 +401,8 @@
     </div>
   </div>
 </details>
+
+<div class="decay-strip" id="decayStrip" style="display:none"></div>
 
 <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.2rem">
   <button class="apply ghost" id="emailBtn" onclick="copyEmail()" data-tip="Monta a leitura com os SEUS números do momento e copia formatado — cole no seu email e envie.">copiar email da leitura atual</button>
@@ -953,9 +954,10 @@ function fillFromAllocation(a){ if(!a) return;
   // Só aparece se houver flag de atenção — silêncio quando está tudo ok.
   const ds=document.getElementById('decayStrip');
   if(ds){
-    const flags=(a.decay_flags||[]).filter(f=>f.level!=='ok');
+    const flags=(a.decay_flags||[]).filter(f=>f.level!=='ok' && f.msg.indexOf('concentração')<0);
     if(flags.length){
-      ds.innerHTML='<b>monitor dos fundos</b> — '+flags.map(f=>'<span class="dl">'+f.msg+'</span>').join('');
+      ds.innerHTML='<div class="dhd">monitor dos fundos · alfa 60m vs CDI · calculado no servidor</div>'
+        +flags.map(f=>'<span class="dl">'+f.msg+'</span>').join('');
       ds.style.display='';
     } else ds.style.display='none';
   }
