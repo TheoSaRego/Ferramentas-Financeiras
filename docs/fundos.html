@@ -159,6 +159,18 @@
     grid-template-columns: 1fr 1.4fr 1fr;
     border-top: 2px solid var(--accent);
   }
+  /* matriz de alphas vs índices — bloco discreto de largura total no painel */
+  .alpha-matrix-wrap { grid-column: 1 / -1; border-top: 1px dashed var(--border); }
+  .alpha-matrix { width: 100%; border-collapse: collapse; font-family: 'Courier New', monospace; font-size: 0.68rem; }
+  .alpha-matrix th { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
+    font-weight: normal; text-align: right; padding: 2px 8px 4px; border-bottom: 1px dashed var(--border); }
+  .alpha-matrix th:first-child, .alpha-matrix td:first-child { text-align: left; padding-left: 0; }
+  .alpha-matrix td { text-align: right; padding: 3.5px 8px; white-space: nowrap; }
+  .alpha-matrix td:first-child { color: var(--muted); }
+  .alpha-matrix tbody tr:not(:first-child) td { border-top: 1px dotted color-mix(in srgb, var(--border) 55%, transparent); }
+  .am-pos { color: var(--green); }
+  .am-neg { color: var(--red); }
+  .am-na  { color: var(--muted); opacity: 0.6; }
 
   .detail-col {
     padding: 0.9rem 1.2rem;
@@ -3465,6 +3477,9 @@ let ibov         = { cagr12: null, cagr36: null, cagr60: null };
 let fundBetas    = {};
 let jensenAlphaMap = {};
 let sp500        = { cagr12: null, cagr36: null, cagr60: null };
+let sp500usd     = { cagr12: null, cagr36: null, cagr60: null };   // S&P nominal, USD
+let smll         = { cagr12: null, cagr36: null, cagr60: null };   // small caps B3
+let idiv         = { cagr12: null, cagr36: null, cagr60: null };   // dividendos B3
 let cdi          = { cagr12: null, cagr36: null, cagr60: null };
 // NTN-B: taxa real das NTN-B longas (Tesouro IPCA+) — âncora de juro real estrutural.
 // Atualizado automaticamente pelo fetch_data.py a cada execução do workflow.
@@ -4167,7 +4182,44 @@ function buildDetailPanel(f, isExp) {
         </div>
       </div>
 
+      ${buildAlphaMatrix(f)}
+
     </div>
+  </div>`;
+}
+
+// ── Matriz de alphas vs. índices (dados do fetch_data.py: f.alphas) ─────────
+// Alpha do CAGR do fundo sobre cada índice, por janela e desde a inception CVM.
+// Janelas = diferença simples de CAGRs (mesma convenção da coluna Alpha);
+// início = índice recalculado no período exato do fundo. '—' quando o
+// histórico do índice não alcança a inception. Bloco some se não houver dados.
+function buildAlphaMatrix(f) {
+  const A = f.alphas;
+  if (!A) return '';
+  const rows = [
+    ['ibov',   'Ibovespa'],
+    ['smll',   'SMLL'],
+    ['idiv',   'IDIV'],
+    ['sp_usd', 'S&P 500 (USD)'],
+    ['sp_brl', 'S&P 500 (BRL · hedge)'],
+  ];
+  const fmt = v => v == null
+    ? '<span class="am-na">—</span>'
+    : `<span class="${v >= 0 ? 'am-pos' : 'am-neg'}">${v >= 0 ? '+' : ''}${v.toFixed(1)}</span>`;
+  let body = '';
+  let any = false;
+  for (const [k, lbl] of rows) {
+    const a = A[k] || {};
+    if (a.a12 != null || a.a36 != null || a.a60 != null || a.inc != null) any = true;
+    body += `<tr><td>${lbl}</td><td>${fmt(a.a12)}</td><td>${fmt(a.a36)}</td><td>${fmt(a.a60)}</td><td>${fmt(a.inc)}</td></tr>`;
+  }
+  if (!any) return '';
+  return `<div class="detail-col alpha-matrix-wrap">
+    <div class="detail-col-header" data-tip="Excesso de CAGR do fundo sobre cada índice, em pp/ano.&#10;12M/36M/60M: diferença dos CAGRs nas janelas da tabela.&#10;Início: índice recalculado entre a inception do fundo (CVM) e a data de referência — comparação no período exato do fundo.&#10;'—' = histórico do índice não alcança a inception do fundo.">Alpha do CAGR vs. índices <span style="text-transform:none;letter-spacing:0;opacity:0.75">· pp/ano</span></div>
+    <table class="alpha-matrix">
+      <thead><tr><th>índice</th><th>12M</th><th>36M</th><th>60M</th><th>início</th></tr></thead>
+      <tbody>${body}</tbody>
+    </table>
   </div>`;
 }
 
@@ -4358,6 +4410,9 @@ function render() {
     if (ibov[key]  != null) merged.push({ isFund:false, sortVal: ibov[key],  row: buildIbovRow()  });
     if (cdi[key]   != null) merged.push({ isFund:false, sortVal: cdi[key],   row: buildCdiRow()   });
     if (sp500[key] != null) merged.push({ isFund:false, sortVal: sp500[key], row: buildSP500Row() });
+    if (smll[key]     != null) merged.push({ isFund:false, sortVal: smll[key],     row: buildIndexStrip('SMLL · small caps', smll, idxSourceNote(smll)) });
+    if (idiv[key]     != null) merged.push({ isFund:false, sortVal: idiv[key],     row: buildIndexStrip('IDIV · dividendos', idiv, idxSourceNote(idiv)) });
+    if (sp500usd[key] != null) merged.push({ isFund:false, sortVal: sp500usd[key], row: buildIndexStrip('S&P 500 · USD', sp500usd, 'nominal, sem câmbio e sem hedge') });
   }
   merged.sort((a, z) => sortDir * (z.sortVal - a.sortVal));
 
@@ -4405,6 +4460,9 @@ function render() {
 
   if (!sortingByCagr) {
     html += buildIbovRow();
+    html += buildIndexStrip('SMLL · small caps', smll, idxSourceNote(smll));
+    html += buildIndexStrip('IDIV · dividendos', idiv, idxSourceNote(idiv));
+    html += buildIndexStrip('S&P 500 · USD', sp500usd, 'nominal, sem câmbio e sem hedge');
     html += buildCdiRow();
     html += buildSP500Row();
   }
@@ -4430,6 +4488,32 @@ function buildIbovRow() {
       </div>
     </td>
   </tr>`;
+}
+
+// Faixa discreta genérica — mesmo desenho da referência Ibovespa, para os
+// índices não-investíveis (SMLL, IDIV, S&P USD). Sem border-top para não
+// duplicar a linha tracejada quando as faixas ficam empilhadas.
+function buildIndexStrip(label, blk, note) {
+  if (!blk || (blk.cagr12 == null && blk.cagr36 == null && blk.cagr60 == null)) return '';
+  const f = v => v != null ? (v >= 0 ? '+' : '') + v.toFixed(1) + '%' : '—';
+  return `<tr class="ibov-row">
+    <td colspan="7" style="padding:0">
+      <div style="display:flex;align-items:center;gap:0.7rem;padding:5px 16px;background:color-mix(in srgb,var(--blue-light) 60%,transparent);border-bottom:1px dashed var(--border)">
+        <span style="font-family:'Courier New',monospace;font-size:0.58rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--blue);font-weight:bold">▼ referência: ${label}</span>
+        <span style="font-family:'Courier New',monospace;font-size:0.65rem;color:var(--blue)">12M: ${f(blk.cagr12)}</span>
+        <span style="font-family:'Courier New',monospace;font-size:0.65rem;color:var(--blue)">36M: ${f(blk.cagr36)}</span>
+        <span style="font-family:'Courier New',monospace;font-size:0.65rem;color:var(--blue)">60M: ${f(blk.cagr60)}</span>
+        ${note ? `<span style="font-family:'Courier New',monospace;font-size:0.56rem;color:var(--muted);margin-left:auto">${note}</span>` : ''}
+      </div>
+    </td>
+  </tr>`;
+}
+
+// nota de fonte: quando o fetch caiu no ETF (^SMLL/^IDIV indisponíveis no Yahoo),
+// deixa explícito que é proxy de retorno total com o drag da taxa do ETF.
+function idxSourceNote(blk) {
+  if (!blk || !blk.source) return '';
+  return blk.source.startsWith('^') ? '' : `proxy: ETF ${blk.source.replace('.SA','')} · retorno total, líq. de taxa`;
 }
 
 function buildCdiRow() {
@@ -4516,6 +4600,9 @@ async function load() {
     if (data.ibov)        ibov       = data.ibov;
     if (data.cdi)         cdi        = data.cdi;
     if (data.sp500)       sp500      = data.sp500;
+    if (data.sp500_usd)   sp500usd   = data.sp500_usd;
+    if (data.smll)        smll       = data.smll;
+    if (data.idiv)        idiv       = data.idiv;
     if (data.ntnb)        ntnb       = data.ntnb;
     if (data.ipca_focus)  ipcaFocus  = data.ipca_focus;
     if (data.fund_betas)  fundBetas  = data.fund_betas;
