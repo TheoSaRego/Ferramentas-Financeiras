@@ -446,14 +446,29 @@ def fetch_cdi(anchor: datetime.date, a12: datetime.date, a36: datetime.date, a60
     import calendar as _cal
     _d = min(anchor.day, _cal.monthrange(_y, _m)[1])
     start = datetime.date(_y, _m, _d) - datetime.timedelta(days=5)
-    url   = (f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados"
-             f"?formato=json"
-             f"&dataInicial={start.strftime('%d/%m/%Y')}"
-             f"&dataFinal={anchor.strftime('%d/%m/%Y')}")
     try:
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read())
+        # A API SGS do BCB limita séries DIÁRIAS a ~10 anos por request — um range
+        # de 13 anos numa chamada só devolve erro. Busca em janelas de 9 anos,
+        # em ordem cronológica (o acumulador de cotas exige processar em ordem).
+        data = []
+        _ws = start
+        while _ws <= anchor:
+            _we = min(datetime.date(_ws.year + 9, _ws.month, min(_ws.day, 28)), anchor)
+            url = (f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.12/dados"
+                   f"?formato=json"
+                   f"&dataInicial={_ws.strftime('%d/%m/%Y')}"
+                   f"&dataFinal={_we.strftime('%d/%m/%Y')}")
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                chunk = json.loads(resp.read())
+            if chunk: data.extend(chunk)
+            _ws = _we + datetime.timedelta(days=1)
+        # dedup preservando ordem (bordas de janela podem repetir um dia)
+        _seen = set(); _dedup = []
+        for entry in data:
+            if entry["data"] not in _seen:
+                _seen.add(entry["data"]); _dedup.append(entry)
+        data = _dedup
         if not data:
             raise ValueError("Resposta vazia do BCB")
         price_map: dict = {}
@@ -2425,8 +2440,74 @@ def fetch_fed_dff(start: datetime.date, anchor: datetime.date) -> dict:
         return price_map
 
 
+def _yahoo_chart_map(ticker: str, start: datetime.date, end: datetime.date) -> dict:
+    """Mapa {date_iso: close} via chart API do Yahoo. Levanta exceção em falha —
+    quem chama decide o fallback."""
+    period1 = int(datetime.datetime.combine(start, datetime.time(), tzinfo=datetime.timezone.utc).timestamp())
+    period2 = int(datetime.datetime.combine(end + datetime.timedelta(days=5), datetime.time(), tzinfo=datetime.timezone.utc).timestamp())
+    url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
+           f"?interval=1d&period1={period1}&period2={period2}")
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        data = json.loads(resp.read())
+    result     = data["chart"]["result"][0]
+    timestamps = result["timestamp"]
+    closes     = result["indicators"]["quote"][0]["close"]
+    m = {
+        datetime.datetime.fromtimestamp(ts, datetime.timezone.utc).date().isoformat(): price
+        for ts, price in zip(timestamps, closes) if price is not None
+    }
+    if not m:
+        raise ValueError(f"{ticker}: mapa vazio")
+    return m
+
+
+def index_cagr_between(price_map: dict, d_start: datetime.date, d_end: datetime.date) -> float | None:
+    """CAGR de um índice entre duas datas usando o preço na data ≤ alvo.
+    None se o mapa não cobre o início (ex.: inception do fundo anterior ao
+    histórico disponível do índice) — o UI mostra '—' nesses casos."""
+    if not price_map: return None
+    dates = sorted(price_map.keys())
+    if d_start.isoformat() < dates[0]:      # início fora da cobertura: não estimar
+        return None
+    p_s, ds = _best_price_and_date(price_map, dates, d_start)
+    p_e, de = _best_price_and_date(price_map, dates, d_end)
+    if not (p_s and p_e and ds and de): return None
+    return cagr(p_s, p_e, years_apart(ds, de))
+
+
+def _index_block(price_map: dict, anchor, a12, a36, a60) -> dict:
+    return {
+        "cagr12": index_cagr_between(price_map, a12, anchor),
+        "cagr36": index_cagr_between(price_map, a36, anchor),
+        "cagr60": index_cagr_between(price_map, a60, anchor),
+    }
+
+
+def fetch_index_simple(label: str, tickers: list, anchor, a12, a36, a60,
+                       fetch_from: datetime.date) -> tuple[dict, dict]:
+    """Índice simples (sem conversão): tenta os tickers em ordem e devolve
+    (bloco de CAGRs + fonte, price_map). Os símbolos ^SMLL/^IDIV podem não
+    existir no Yahoo; os ETFs (SMAL11/DIVO11) são o fallback confiável —
+    proxies de retorno total do índice, com o pequeno drag da taxa de adm."""
+    for tk in tickers:
+        try:
+            pm = _yahoo_chart_map(tk, fetch_from, anchor)
+            blk = _index_block(pm, anchor, a12, a36, a60)
+            blk["source"] = tk.replace("%5E", "^")
+            vals = {k: (f"{v:.2f}%" if isinstance(v, float) else "N/D") for k, v in blk.items() if k.startswith("cagr")}
+            print(f"  {label} [{blk['source']}] 12M={vals['cagr12']} 36M={vals['cagr36']} 60M={vals['cagr60']}"
+                  f" · histórico desde {sorted(pm.keys())[0]}")
+            return blk, pm
+        except Exception as e:
+            print(f"  {label}: {tk} falhou ({e}) — tentando próximo")
+    print(f"  ✗ {label}: todas as fontes falharam")
+    return {"cagr12": None, "cagr36": None, "cagr60": None, "source": None}, {}
+
+
 def fetch_sp500(anchor: datetime.date, a12: datetime.date, a36: datetime.date, a60: datetime.date,
-                cdi_price_map: dict | None = None) -> dict:
+                cdi_price_map: dict | None = None,
+                fetch_from: datetime.date | None = None) -> tuple[dict, dict]:
     """S&P 500 em BRL na lógica SPXR11 (HEDGEADO): retorno do índice em USD MAIS o
     carry do diferencial de juros (CDI − Fed), SEM exposição cambial.
 
@@ -2435,70 +2516,46 @@ def fetch_sp500(anchor: datetime.date, a12: datetime.date, a36: datetime.date, a
     O câmbio NÃO entra. A Selic (via CDI, BCB série 12) e a Fed funds (FRED DFF)
     formam o carry. Isto corrige o cálculo antigo (S&P_USD × câmbio), que era o
     S&P NÃO-hedgeado, exposto ao dólar — não corresponde ao SPXR11.
+
+    Devolve (bloco de CAGRs, sp_brl_price_map). O mapa serve para o alpha desde
+    inception por fundo; sua cobertura é limitada pela interseção S&P × CDI × Fed
+    (o CDI cobre 156 meses — funds com inception anterior ficam com alpha '—').
+    fetch_from estende o histórico além de a60 (default: comportamento antigo).
     """
-    def _yahoo(ticker, period1, period2):
-        url = (f"https://query1.finance.yahoo.com/v8/finance/chart/{ticker}"
-               f"?interval=1d&period1={period1}&period2={period2}")
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Accept": "application/json"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = json.loads(resp.read())
-        result     = data["chart"]["result"][0]
-        timestamps = result["timestamp"]
-        closes     = result["indicators"]["quote"][0]["close"]
-        return {
-            datetime.datetime.fromtimestamp(ts, datetime.timezone.utc).date().isoformat(): price
-            for ts, price in zip(timestamps, closes) if price is not None
-        }
-
-    period1 = int(datetime.datetime.combine(
-        a60 - datetime.timedelta(days=10), datetime.time(),
-        tzinfo=datetime.timezone.utc).timestamp())
-    period2 = int(datetime.datetime.combine(
-        anchor + datetime.timedelta(days=5), datetime.time(),
-        tzinfo=datetime.timezone.utc).timestamp())
-
+    start = fetch_from or (a60 - datetime.timedelta(days=10))
     try:
-        sp_map  = _yahoo("%5EGSPC", period1, period2)
+        sp_map = _yahoo_chart_map("%5EGSPC", start, anchor)
         if not cdi_price_map:
             raise ValueError("cdi_price_map ausente — necessário para o carry")
-        fed_map = fetch_fed_dff(a60 - datetime.timedelta(days=10), anchor)
+        fed_map = fetch_fed_dff(start, anchor)
         if not fed_map:
             raise ValueError("Fed DFF ausente — necessário para o carry")
 
-        def _nearest(m, date_str):
-            if date_str in m: return m[date_str]
-            ds = [d for d in sorted(m.keys()) if d <= date_str]
-            return m[ds[-1]] if ds else None
+        # lookup "preço na data ≤ alvo" com bisect — o _nearest antigo reordenava
+        # o mapa inteiro a cada chamada (O(n log n) por lookup; inviável para
+        # construir um mapa diário de 13 anos).
+        import bisect
+        cdi_dates = sorted(cdi_price_map.keys())
+        fed_dates = sorted(fed_map.keys())
+        def _le(m, dates, ds):
+            i = bisect.bisect_right(dates, ds)
+            return m[dates[i-1]] if i else None
 
-        # S&P em BRL hedgeado = S&P_USD × (CDI_acc / Fed_acc)
-        def sp_brl(date_str):
-            sp  = _nearest(sp_map, date_str)
-            cdi = _nearest(cdi_price_map, date_str)
-            fed = _nearest(fed_map, date_str)
-            if sp and cdi and fed and fed > 0:
-                return sp * (cdi / fed)
-            return None
+        sp_brl_map = {}
+        for ds in sorted(sp_map.keys()):
+            cdi = _le(cdi_price_map, cdi_dates, ds)
+            fed = _le(fed_map, fed_dates, ds)
+            if sp_map[ds] and cdi and fed and fed > 0:
+                sp_brl_map[ds] = sp_map[ds] * (cdi / fed)
 
-        p_anchor = sp_brl(anchor.isoformat())
-        p12      = sp_brl(a12.isoformat())
-        p36      = sp_brl(a36.isoformat())
-        p60      = sp_brl(a60.isoformat())
-
-        def sp_cagr(p_s, p_e, d_s, d_e):
-            if not p_s or not p_e: return None
-            return cagr(p_s, p_e, years_apart(d_s, d_e))
-
-        result_sp = {
-            "cagr12": sp_cagr(p12,  p_anchor, a12.isoformat(),  anchor.isoformat()),
-            "cagr36": sp_cagr(p36,  p_anchor, a36.isoformat(),  anchor.isoformat()),
-            "cagr60": sp_cagr(p60,  p_anchor, a60.isoformat(),  anchor.isoformat()),
-        }
+        result_sp = _index_block(sp_brl_map, anchor, a12, a36, a60)
         vals = {k: f"{v:.2f}%" if v is not None else "N/D" for k, v in result_sp.items()}
-        print(f"  S&P500 BRL (SPXR11/hedge) 12M={vals['cagr12']} 36M={vals['cagr36']} 60M={vals['cagr60']}")
-        return result_sp
+        print(f"  S&P500 BRL (SPXR11/hedge) 12M={vals['cagr12']} 36M={vals['cagr36']} 60M={vals['cagr60']}"
+              f" · mapa desde {sorted(sp_brl_map.keys())[0] if sp_brl_map else '—'}")
+        return result_sp, sp_brl_map
     except Exception as e:
         print(f"  ✗ S&P500 falhou: {e}")
-        return {"cagr12": None, "cagr36": None, "cagr60": None}
+        return {"cagr12": None, "cagr36": None, "cagr60": None}, {}
 
 
 
@@ -2761,7 +2818,34 @@ def main() -> None:
     # CDI já buscado antes de update_history (pré-fetch acima).
 
     print(f"\n── S&P 500 (SPXR11 / hedge cambial — carry CDI−Fed, sem câmbio)")
-    sp500 = fetch_sp500(anchor, a12, a36, a60, cdi_price_map)
+    # fetch longo: o mapa BRL-hedge alimenta o alpha desde inception por fundo.
+    # Cobertura limitada pelo CDI (156 meses) — inceptions anteriores ficam '—'.
+    _idx_from = datetime.date(max(2008, anchor.year - 13), 1, 1)
+    sp500, sp_brl_map = fetch_sp500(anchor, a12, a36, a60, cdi_price_map, fetch_from=_idx_from)
+
+    print(f"\n── S&P 500 (USD nominal)")
+    sp500_usd, sp_usd_map = fetch_index_simple("S&P 500 USD", ["%5EGSPC"], anchor, a12, a36, a60, datetime.date(2008, 1, 1))
+
+    print(f"\n── SMLL (small caps B3)")
+    smll, smll_map = fetch_index_simple("SMLL", ["%5ESMLL", "SMAL11.SA"], anchor, a12, a36, a60, datetime.date(2008, 1, 1))
+
+    print(f"\n── IDIV (dividendos B3)")
+    idiv, idiv_map = fetch_index_simple("IDIV", ["%5EIDIV", "DIVO11.SA"], anchor, a12, a36, a60, datetime.date(2008, 1, 1))
+
+    # fallback dos índices novos: se o fetch falhou de ponta a ponta, reusa o
+    # último bloco bom do data.json (mesma lógica do fallback de CDI abaixo).
+    # Só os CAGRs — sem price map, o alpha de inception fica None neste run.
+    if out_path.exists():
+        try:
+            _prev = json.loads(out_path.read_text())
+            for _k, _blk in (("sp500_usd", sp500_usd), ("smll", smll), ("idiv", idiv)):
+                if all(_blk.get(c) is None for c in ("cagr12", "cagr36", "cagr60")):
+                    _pb = _prev.get(_k, {})
+                    if any(_pb.get(c) is not None for c in ("cagr12", "cagr36", "cagr60")):
+                        _blk.update(_pb)
+                        print(f"  ↩ {_k}: fetch falhou, usando último valor gravado")
+        except Exception:
+            pass
 
     print(f"\n── NTN-B (Tesouro IPCA+ — âncora de juro real)")
     ntnb = fetch_ntnb()
@@ -2851,12 +2935,52 @@ def main() -> None:
         jensen_alpha[cnpj] = round(ja, 4)
     print(f"\n── Jensen's alpha: {len(jensen_alpha)} fundos calculados")
 
+    # ── Alpha do CAGR vs. cada índice, por janela + inception ────────────────────
+    # Janelas (12/36/60): diferença simples de CAGRs — mesma convenção do alpha
+    # da tabela (calcAlpha no HTML). Inception: CAGR do índice recalculado entre
+    # a inception CVM do fundo e a âncora, no price map do índice — mesma
+    # convenção do alphaVsIbov/ibovCagrInception existentes. None quando o
+    # histórico do índice não alcança a inception do fundo (UI mostra '—').
+    _idx_maps = {
+        "ibov":   (ibov,       ibov_price_map),
+        "sp_usd": (sp500_usd,  sp_usd_map),
+        "sp_brl": (sp500,      sp_brl_map),
+        "smll":   (smll,       smll_map),
+        "idiv":   (idiv,       idiv_map),
+    }
+    _n_alpha = 0
+    for r in results:
+        if r.get("error"): continue
+        try:
+            _inc_date = datetime.date.fromisoformat(r["inceptionDate"]) if r.get("inceptionDate") else None
+        except Exception:
+            _inc_date = None
+        _al = {}
+        for _key, (_blk, _pm) in _idx_maps.items():
+            _a = {}
+            for _w, _o in (("cagr12", "a12"), ("cagr36", "a36"), ("cagr60", "a60")):
+                _fv, _bv = r.get(_w), (_blk or {}).get(_w)
+                _a[_o] = round(_fv - _bv, 4) if (_fv is not None and _bv is not None) else None
+            _inc = None
+            if _inc_date and r.get("cagrInception") is not None and _pm:
+                _bci = index_cagr_between(_pm, _inc_date, anchor)
+                if _bci is not None:
+                    _inc = round(r["cagrInception"] - _bci, 4)
+            _a["inc"] = _inc
+            _al[_key] = _a
+        r["alphas"] = _al
+        _n_alpha += 1
+    print(f"── Matriz de alphas vs índices: {_n_alpha} fundos")
+
     data_out = {
         "generatedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "anchorDate":  anchor.isoformat(),
         "ibov":        ibov,
         "cdi":         cdi_final,
         "sp500":       sp500,
+        "sp500_usd":   sp500_usd,
+        "smll":        smll,
+        "idiv":        idiv,
         "ntnb":        ntnb,
         "ipca_focus":  ipca_focus,
         "fund_betas":  fund_betas,
