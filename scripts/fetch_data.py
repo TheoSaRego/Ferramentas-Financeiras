@@ -436,10 +436,12 @@ def fetch_ibov(anchor: datetime.date, a12: datetime.date, a36: datetime.date, a6
 
 
 def fetch_cdi(anchor: datetime.date, a12: datetime.date, a36: datetime.date, a60: datetime.date) -> dict:
-    # Busca 84 meses (7 anos) de histórico para cobrir o backfill de metricsHistory:
-    # compute_metrics_history calcula CDI 60M a partir de ref_dates de 12 meses atrás,
-    # precisando de dados até anchor - 60M - 12M = anchor - 72M. 84M dá margem.
-    _y, _m = anchor.year, anchor.month - 84
+    # Busca 156 meses (13 anos) de histórico. Antes eram 84 (7a), suficiente pro
+    # metricsHistory mas NÃO pro alphaVsCdi desde inception: o Organon (inception
+    # 2014) ficava fora da janela → cdiCagrInception=None → alphaVsCdi=None →
+    # o decay monitor do alocador nunca disparava pro maior fundo. 156M cobre
+    # todos os inceptions relevantes (2013+). Custo: ~3.300 linhas diárias do BCB.
+    _y, _m = anchor.year, anchor.month - 156
     while _m <= 0: _m += 12; _y -= 1
     import calendar as _cal
     _d = min(anchor.day, _cal.monthrange(_y, _m)[1])
