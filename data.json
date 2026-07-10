@@ -1,43 +1,43 @@
 {
-  "generatedAt": "2026-07-10T01:23:08.701005+00:00",
-  "anchorDate": "2026-07-01",
+  "generatedAt": "2026-07-10T17:27:38.428367+00:00",
+  "anchorDate": "2026-07-08",
   "ibov": {
-    "cagr12": 23.04880404721863,
-    "cagr36": 13.2709102413763,
-    "cagr60": 6.4409266797529785
+    "cagr12": 22.522650634804563,
+    "cagr36": 12.785784327350779,
+    "cagr60": 6.352586541120586
   },
   "cdi": {
-    "cagr12": 14.787612378096782,
-    "cagr36": 12.863293780469153,
-    "cagr60": 12.158577947139303
+    "cagr12": 14.772688771918352,
+    "cagr36": 12.866567079713542,
+    "cagr60": 12.199395942794776
   },
   "sp500": {
-    "cagr12": 33.63680950492607,
-    "cagr36": 29.370677943869183,
-    "cagr60": 20.69783825983409
+    "cagr12": 33.0193236765989,
+    "cagr36": 29.873086783145688,
+    "cagr60": 20.735167054485927
   },
   "sp500_usd": {
-    "cagr12": 20.75159859306961,
-    "cagr36": 18.88989579070053,
-    "cagr60": 11.616605464009556,
+    "cagr12": 20.20927899637426,
+    "cagr36": 19.34814131480904,
+    "cagr60": 11.610507126957081,
     "source": "^GSPC"
   },
   "smll": {
-    "cagr12": -1.6222742969039694,
-    "cagr36": -0.6395881563423411,
-    "cagr60": -6.337056841471844,
+    "cagr12": -2.94451139037456,
+    "cagr36": -2.1442338622390866,
+    "cagr60": -6.361375972036754,
     "source": "SMAL11.SA"
   },
   "idiv": {
-    "cagr12": 21.810693154463134,
-    "cagr36": 16.32904016843131,
-    "cagr60": 12.276109270757175,
+    "cagr12": 21.20806701055593,
+    "cagr36": 16.14000939718887,
+    "cagr60": 12.384376111075746,
     "source": "DIVO11.SA"
   },
   "ntnb": {
     "ntnb_rate_long": 7.6896,
     "ntnb_rate_mid": 8.303,
-    "ntnb_fetched_at": "2026-07-10T00:41:04.981812+00:00",
+    "ntnb_fetched_at": "2026-07-10T17:19:11.617362+00:00",
     "ntnb_titles": [
       {
         "nome": "NTN-B",
@@ -125,442 +125,1893 @@
   },
   "fund_betas": {
     "22.232.927/0001-90": {
-      "beta_ibov": 0.8344,
-      "beta_sp500": -0.0136,
-      "alpha_ann": 6.47,
-      "r2": 0.5452,
-      "n_obs": 857
+      "beta_ibov": 0.8367,
+      "beta_sp500": -0.0127,
+      "alpha_ann": 5.58,
+      "r2": 0.546,
+      "n_obs": 860
     },
     "17.400.251/0001-66": {
-      "beta_ibov": 0.9816,
-      "beta_sp500": -0.0125,
-      "alpha_ann": 5.36,
-      "r2": 0.5959,
-      "n_obs": 857
+      "beta_ibov": 0.9823,
+      "beta_sp500": -0.0123,
+      "alpha_ann": 5.03,
+      "r2": 0.5965,
+      "n_obs": 860
     },
     "18.302.338/0001-63": {
-      "beta_ibov": 0.8179,
-      "beta_sp500": -0.0323,
-      "alpha_ann": 13.87,
-      "r2": 0.4539,
-      "n_obs": 857
+      "beta_ibov": 0.8171,
+      "beta_sp500": -0.0327,
+      "alpha_ann": 14.08,
+      "r2": 0.4528,
+      "n_obs": 860
     },
     "37.495.383/0001-26": {
-      "beta_ibov": 0.5005,
-      "beta_sp500": 0.1721,
-      "alpha_ann": 5.13,
-      "r2": 0.4191,
-      "n_obs": 857
+      "beta_ibov": 0.5001,
+      "beta_sp500": 0.1717,
+      "alpha_ann": 5.09,
+      "r2": 0.4188,
+      "n_obs": 860
     },
     "42.698.666/0001-05": {
-      "beta_ibov": 0.2502,
-      "beta_sp500": -0.01,
-      "alpha_ann": 14.9,
-      "r2": 0.2207,
-      "n_obs": 857
+      "beta_ibov": 0.2497,
+      "beta_sp500": -0.0105,
+      "alpha_ann": 14.91,
+      "r2": 0.2197,
+      "n_obs": 860
     },
     "24.623.392/0001-03": {
-      "beta_ibov": 0.8711,
-      "beta_sp500": -0.0319,
-      "alpha_ann": 7.18,
-      "r2": 0.656,
-      "n_obs": 857
+      "beta_ibov": 0.869,
+      "beta_sp500": -0.0327,
+      "alpha_ann": 7.91,
+      "r2": 0.653,
+      "n_obs": 860
     },
     "28.747.685/0001-53": {
-      "beta_ibov": 0.9235,
-      "beta_sp500": 0.1222,
-      "alpha_ann": 6.66,
-      "r2": 0.5253,
-      "n_obs": 857
+      "beta_ibov": 0.9256,
+      "beta_sp500": 0.1227,
+      "alpha_ann": 5.86,
+      "r2": 0.5212,
+      "n_obs": 860
     },
     "10.500.884/0001-05": {
-      "beta_ibov": 0.8822,
-      "beta_sp500": -0.0228,
-      "alpha_ann": 3.86,
-      "r2": 0.8206,
-      "n_obs": 857
+      "beta_ibov": 0.8834,
+      "beta_sp500": -0.0224,
+      "alpha_ann": 3.36,
+      "r2": 0.8204,
+      "n_obs": 860
     },
     "35.744.790/0001-02": {
-      "beta_ibov": 0.041,
-      "beta_sp500": 0.1124,
-      "alpha_ann": 28.63,
-      "r2": 0.0446,
-      "n_obs": 857
+      "beta_ibov": 0.0407,
+      "beta_sp500": 0.1116,
+      "alpha_ann": 28.18,
+      "r2": 0.0435,
+      "n_obs": 860
     },
     "38.954.217/0001-03": {
-      "beta_ibov": 0.9799,
+      "beta_ibov": 0.9805,
       "beta_sp500": -0.0124,
-      "alpha_ann": 4.79,
-      "r2": 0.7283,
-      "n_obs": 857
+      "alpha_ann": 4.4,
+      "r2": 0.7281,
+      "n_obs": 860
     },
     "32.073.525/0001-43": {
-      "beta_ibov": 0.7167,
-      "beta_sp500": 0.018,
-      "alpha_ann": 5.75,
-      "r2": 0.7099,
-      "n_obs": 857
+      "beta_ibov": 0.7157,
+      "beta_sp500": 0.0174,
+      "alpha_ann": 6.05,
+      "r2": 0.7082,
+      "n_obs": 860
     },
     "21.689.246/0001-92": {
-      "beta_ibov": 0.3209,
-      "beta_sp500": 0.5605,
-      "alpha_ann": 11.85,
-      "r2": 0.4278,
-      "n_obs": 857
+      "beta_ibov": 0.321,
+      "beta_sp500": 0.5601,
+      "alpha_ann": 11.54,
+      "r2": 0.4269,
+      "n_obs": 860
     },
     "14.438.229/0001-17": {
-      "beta_ibov": 0.7413,
-      "beta_sp500": 0.0352,
-      "alpha_ann": -2.87,
-      "r2": 0.6178,
-      "n_obs": 857
+      "beta_ibov": 0.741,
+      "beta_sp500": 0.035,
+      "alpha_ann": -2.76,
+      "r2": 0.618,
+      "n_obs": 860
     },
     "17.397.315/0001-17": {
-      "beta_ibov": 0.5661,
-      "beta_sp500": -0.0456,
-      "alpha_ann": 15.12,
-      "r2": 0.6483,
-      "n_obs": 857
+      "beta_ibov": 0.5656,
+      "beta_sp500": -0.0459,
+      "alpha_ann": 15.25,
+      "r2": 0.6479,
+      "n_obs": 860
     },
     "46.351.969/0001-08": {
-      "beta_ibov": 0.2614,
-      "beta_sp500": 0.576,
-      "alpha_ann": 13.07,
-      "r2": 0.4526,
-      "n_obs": 857
+      "beta_ibov": 0.2603,
+      "beta_sp500": 0.575,
+      "alpha_ann": 13.16,
+      "r2": 0.4502,
+      "n_obs": 860
     },
     "15.334.585/0001-53": {
-      "beta_ibov": 0.9704,
-      "beta_sp500": -0.0192,
-      "alpha_ann": 6.61,
+      "beta_ibov": 0.9699,
+      "beta_sp500": -0.0195,
+      "alpha_ann": 6.69,
       "r2": 0.8413,
-      "n_obs": 857
+      "n_obs": 860
     },
     "47.511.351/0001-20": {
-      "beta_ibov": 0.4276,
-      "beta_sp500": 0.3543,
-      "alpha_ann": 10.77,
-      "r2": 0.4359,
-      "n_obs": 857
+      "beta_ibov": 0.4274,
+      "beta_sp500": 0.3539,
+      "alpha_ann": 10.65,
+      "r2": 0.4345,
+      "n_obs": 860
     },
     "52.116.227/0001-09": {
-      "beta_ibov": 0.1225,
-      "beta_sp500": 0.0244,
-      "alpha_ann": 12.63,
-      "r2": 0.254,
-      "n_obs": 667
+      "beta_ibov": 0.1229,
+      "beta_sp500": 0.0243,
+      "alpha_ann": 12.43,
+      "r2": 0.2527,
+      "n_obs": 670
     },
     "47.612.105/0001-65": {
-      "beta_ibov": 0.2862,
-      "beta_sp500": 0.1155,
-      "alpha_ann": 14.28,
-      "r2": 0.2352,
-      "n_obs": 857
+      "beta_ibov": 0.2856,
+      "beta_sp500": 0.1149,
+      "alpha_ann": 14.32,
+      "r2": 0.2332,
+      "n_obs": 860
     },
     "29.726.133/0001-21": {
-      "beta_ibov": 0.1762,
-      "beta_sp500": 0.0586,
-      "alpha_ann": 7.89,
-      "r2": 0.2007,
-      "n_obs": 857
+      "beta_ibov": 0.1766,
+      "beta_sp500": 0.0588,
+      "alpha_ann": 7.8,
+      "r2": 0.2016,
+      "n_obs": 860
     },
     "35.828.684/0001-07": {
-      "beta_ibov": 0.0425,
-      "beta_sp500": -0.0033,
-      "alpha_ann": 13.06,
-      "r2": 0.0372,
-      "n_obs": 857
+      "beta_ibov": 0.0428,
+      "beta_sp500": -0.0031,
+      "alpha_ann": 12.99,
+      "r2": 0.0377,
+      "n_obs": 860
     },
     "16.876.874/0001-47": {
-      "beta_ibov": 0.8241,
+      "beta_ibov": 0.8239,
       "beta_sp500": -0.0169,
-      "alpha_ann": 8.2,
-      "r2": 0.6966,
-      "n_obs": 857
+      "alpha_ann": 8.31,
+      "r2": 0.6964,
+      "n_obs": 860
     },
     "52.239.457/0001-57": {
-      "beta_ibov": 0.0529,
+      "beta_ibov": 0.0532,
       "beta_sp500": 0.0008,
-      "alpha_ann": 13.27,
-      "r2": 0.1875,
-      "n_obs": 667
+      "alpha_ann": 13.15,
+      "r2": 0.1867,
+      "n_obs": 670
     },
     "51.253.495/0001-00": {
       "beta_ibov": 0.0001,
       "beta_sp500": -0.0,
-      "alpha_ann": 14.07,
-      "r2": 0.0001,
-      "n_obs": 708
+      "alpha_ann": 14.08,
+      "r2": 0.0,
+      "n_obs": 711
     },
     "52.969.671/0001-69": {
       "beta_ibov": 0.0106,
       "beta_sp500": -0.0037,
-      "alpha_ann": 13.76,
-      "r2": 0.0082,
-      "n_obs": 627
+      "alpha_ann": 13.74,
+      "r2": 0.0083,
+      "n_obs": 630
     },
     "07.013.315/0001-12": {
-      "beta_ibov": 0.557,
-      "beta_sp500": -0.0107,
-      "alpha_ann": 11.0,
-      "r2": 0.3732,
-      "n_obs": 857
+      "beta_ibov": 0.5565,
+      "beta_sp500": -0.0112,
+      "alpha_ann": 11.04,
+      "r2": 0.3728,
+      "n_obs": 860
     },
     "14.812.722/0001-55": {
-      "beta_ibov": 0.0251,
-      "beta_sp500": 0.0468,
-      "alpha_ann": 13.75,
-      "r2": 0.0326,
-      "n_obs": 857
+      "beta_ibov": 0.0248,
+      "beta_sp500": 0.0465,
+      "alpha_ann": 13.78,
+      "r2": 0.0321,
+      "n_obs": 860
     },
     "48.997.077/0001-04": {
-      "beta_ibov": 0.0395,
-      "beta_sp500": 0.0371,
-      "alpha_ann": 14.02,
-      "r2": 0.0287,
-      "n_obs": 668
+      "beta_ibov": 0.0387,
+      "beta_sp500": 0.0369,
+      "alpha_ann": 14.36,
+      "r2": 0.0281,
+      "n_obs": 671
     },
     "52.217.086/0001-02": {
-      "beta_ibov": 0.2428,
-      "beta_sp500": 0.3426,
-      "alpha_ann": 7.1,
-      "r2": 0.4322,
-      "n_obs": 646
+      "beta_ibov": 0.2429,
+      "beta_sp500": 0.3422,
+      "alpha_ann": 6.8,
+      "r2": 0.4301,
+      "n_obs": 649
     }
   },
-  "jensenAlpha": {},
+  "jensenAlpha": {
+    "22.232.927/0001-90": 13.3565,
+    "17.400.251/0001-66": 14.7608,
+    "18.302.338/0001-63": 0.6619,
+    "37.495.383/0001-26": 3.4186,
+    "42.698.666/0001-05": 7.0542,
+    "24.623.392/0001-03": 4.0517,
+    "28.747.685/0001-53": 2.3793,
+    "10.500.884/0001-05": 0.9654,
+    "35.744.790/0001-02": 5.3889,
+    "38.954.217/0001-03": 0.7357,
+    "32.073.525/0001-43": 7.0532,
+    "21.689.246/0001-92": 9.5568,
+    "14.438.229/0001-17": 7.5527,
+    "17.397.315/0001-17": 3.6423,
+    "46.351.969/0001-08": 19.1607,
+    "15.334.585/0001-53": 0.4169,
+    "47.511.351/0001-20": 7.7249,
+    "52.116.227/0001-09": 2.1003,
+    "47.612.105/0001-65": 9.1634,
+    "29.726.133/0001-21": 1.1812,
+    "35.828.684/0001-07": 0.8406,
+    "16.876.874/0001-47": 0.2441,
+    "52.239.457/0001-57": 1.0459,
+    "51.253.495/0001-00": 1.1281,
+    "52.969.671/0001-69": 0.5956,
+    "07.013.315/0001-12": 0.4127,
+    "14.812.722/0001-55": -0.9146,
+    "48.997.077/0001-04": 3.3361,
+    "52.217.086/0001-02": 8.3339
+  },
   "funds": [
     {
       "name": "Tarpon GT FIF Cotas FIA",
-      "cnpj": "22232927000190",
+      "cnpj": "22.232.927/0001-90",
       "cnpjFmt": "22.232.927/0001-90",
-      "exibicao": "Tarpon GT",
-      "curto": "Tarpon",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 23.9225697,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 30.3767845,
+      "maxQuotaDate": "2026-02-26",
+      "inceptionDate": "2016-01-04",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": -7.1426893893962395,
+      "cagr36": 12.657451695914212,
+      "cagr60": 14.094478250340693,
+      "cagrInception": 26.155510858717477,
+      "ibovCagrInception": 14.2366,
+      "cdiCagrInception": 9.5828,
+      "alphaVsCdi": 16.5727,
+      "alphaVsIbov": 11.9189,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -29.6653,
+          "a36": -0.1283,
+          "a60": 7.7419,
+          "inc": 11.9189
+        },
+        "sp_usd": {
+          "a12": -27.352,
+          "a36": -6.6907,
+          "a60": 2.484,
+          "inc": 12.8444
+        },
+        "sp_brl": {
+          "a12": -40.162,
+          "a36": -17.2156,
+          "a60": -6.6407,
+          "inc": 6.4392
+        },
+        "smll": {
+          "a12": -4.1982,
+          "a36": 14.8017,
+          "a60": 20.4559,
+          "inc": 16.466
+        },
+        "idiv": {
+          "a12": -28.3508,
+          "a36": -3.4826,
+          "a60": 1.7101,
+          "inc": 7.1168
+        }
+      }
     },
     {
       "name": "Organon FIF Cotas FIA",
-      "cnpj": "17400251000166",
+      "cnpj": "17.400.251/0001-66",
       "cnpjFmt": "17.400.251/0001-66",
-      "exibicao": "Organon",
-      "curto": "Organon",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 19.9462509,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 23.4157589,
+      "maxQuotaDate": "2026-02-24",
+      "inceptionDate": "2014-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 2.498725384228928,
+      "cagr36": 10.430295432777648,
+      "cagr60": 14.151364516821573,
+      "cagrInception": 27.54798222960142,
+      "ibovCagrInception": 10.2491,
+      "cdiCagrInception": 9.9669,
+      "alphaVsCdi": 17.5811,
+      "alphaVsIbov": 17.2989,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -20.0239,
+          "a36": -2.3555,
+          "a60": 7.7988,
+          "inc": 17.2989
+        },
+        "sp_usd": {
+          "a12": -17.7106,
+          "a36": -8.9178,
+          "a60": 2.5409,
+          "inc": 15.6443
+        },
+        "sp_brl": {
+          "a12": -30.5206,
+          "a36": -19.4428,
+          "a60": -6.5838,
+          "inc": 8.9044
+        },
+        "smll": {
+          "a12": 5.4432,
+          "a36": 12.5745,
+          "a60": 20.5127,
+          "inc": 23.2975
+        },
+        "idiv": {
+          "a12": -18.7093,
+          "a36": -5.7097,
+          "a60": 1.767,
+          "inc": 16.4084
+        }
+      }
     },
     {
       "name": "Artica Long Term FIA",
-      "cnpj": "18302338000163",
+      "cnpj": "18.302.338/0001-63",
       "cnpjFmt": "18.302.338/0001-63",
-      "exibicao": "Ártica Long Term",
-      "curto": "Ártica",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 19.43126801,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 20.9451521,
+      "maxQuotaDate": "2026-02-24",
+      "inceptionDate": "2020-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 18.772961032423076,
+      "cagr36": 20.605931885518135,
+      "cagr60": 11.144998336516965,
+      "cagrInception": 13.46247052183247,
+      "ibovCagrInception": 5.7494,
+      "cdiCagrInception": 9.9218,
+      "alphaVsCdi": 3.5407,
+      "alphaVsIbov": 7.7131,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -3.7497,
+          "a36": 7.8201,
+          "a60": 4.7924,
+          "inc": 7.7131
+        },
+        "sp_usd": {
+          "a12": -1.4363,
+          "a36": 1.2578,
+          "a60": -0.4655,
+          "inc": -0.1548
+        },
+        "sp_brl": {
+          "a12": -14.2464,
+          "a36": -9.2672,
+          "a60": -9.5902,
+          "inc": -6.9486
+        },
+        "smll": {
+          "a12": 21.7175,
+          "a36": 22.7502,
+          "a60": 17.5064,
+          "inc": 17.6538
+        },
+        "idiv": {
+          "a12": -2.4351,
+          "a36": 4.4659,
+          "a60": -1.2394,
+          "inc": 4.2024
+        }
+      }
     },
     {
       "name": "Genoa Capital Arpa CIC Classe FIM RL",
-      "cnpj": "37495383000126",
+      "cnpj": "37.495.383/0001-26",
       "cnpjFmt": "37.495.383/0001-26",
-      "exibicao": "Genoa Arpa",
-      "curto": "Arpa",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.1835959,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 2.37537952,
+      "maxQuotaDate": "2026-02-20",
+      "inceptionDate": "2021-04-30",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 10.508076743827566,
+      "cagr36": 17.233808964556708,
+      "cagr60": 15.105046596821058,
+      "cagrInception": 16.24477508087201,
+      "ibovCagrInception": 7.2142,
+      "cdiCagrInception": 11.8754,
+      "alphaVsCdi": 4.3694,
+      "alphaVsIbov": 9.0305,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -12.0146,
+          "a36": 4.448,
+          "a60": 8.7525,
+          "inc": 9.0305
+        },
+        "sp_usd": {
+          "a12": -9.7012,
+          "a36": -2.1143,
+          "a60": 3.4945,
+          "inc": 4.3736
+        },
+        "sp_brl": {
+          "a12": -22.5112,
+          "a36": -12.6393,
+          "a60": -5.6301,
+          "inc": -4.4229
+        },
+        "smll": {
+          "a12": 13.4526,
+          "a36": 19.378,
+          "a60": 21.4664,
+          "inc": 21.6085
+        },
+        "idiv": {
+          "a12": -10.7,
+          "a36": 1.0938,
+          "a60": 2.7207,
+          "inc": 3.9078
+        }
+      }
     },
     {
       "name": "Itaú Artax Ultra Multimercado FIF DA CIC RL",
-      "cnpj": "42698666000105",
+      "cnpj": "42.698.666/0001-05",
       "cnpjFmt": "42.698.666/0001-05",
-      "exibicao": "Artax Ultra",
-      "curto": "Artax",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.106135,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 2.123021,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2022-05-31",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 25.040493927323727,
+      "cagr36": 17.949255759726302,
+      "cagr60": null,
+      "cagrInception": 19.900622707933913,
+      "ibovCagrInception": 10.9636,
+      "cdiCagrInception": 13.0441,
+      "alphaVsCdi": 6.8565,
+      "alphaVsIbov": 8.937,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 2.5178,
+          "a36": 5.1635,
+          "a60": null,
+          "inc": 8.937
+        },
+        "sp_usd": {
+          "a12": 4.8312,
+          "a36": -1.3989,
+          "a60": null,
+          "inc": 4.333
+        },
+        "sp_brl": {
+          "a12": -7.9788,
+          "a36": -11.9238,
+          "a60": null,
+          "inc": -6.0565
+        },
+        "smll": {
+          "a12": 27.985,
+          "a36": 20.0935,
+          "a60": null,
+          "inc": 20.7477
+        },
+        "idiv": {
+          "a12": 3.8324,
+          "a36": 1.8092,
+          "a60": null,
+          "inc": 6.0508
+        }
+      }
     },
     {
       "name": "Guepardo Long Bias RV FIM",
-      "cnpj": "24623392000103",
+      "cnpj": "24.623.392/0001-03",
       "cnpjFmt": "24.623.392/0001-03",
-      "exibicao": "Guepardo Long Bias",
-      "curto": "Guepardo",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 7.81424769,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 8.67409213,
+      "maxQuotaDate": "2026-04-15",
+      "inceptionDate": "2017-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 22.58698519697986,
+      "cagr36": 13.337399889826207,
+      "cagr60": 13.678519431669756,
+      "cagrInception": 16.84802395949767,
+      "ibovCagrInception": 11.6974,
+      "cdiCagrInception": 9.1252,
+      "alphaVsCdi": 7.7228,
+      "alphaVsIbov": 5.1507,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 0.0643,
+          "a36": 0.5516,
+          "a60": 7.3259,
+          "inc": 5.1507
+        },
+        "sp_usd": {
+          "a12": 2.3777,
+          "a36": -6.0107,
+          "a60": 2.068,
+          "inc": 3.3342
+        },
+        "sp_brl": {
+          "a12": -10.4323,
+          "a36": -16.5357,
+          "a60": -7.0566,
+          "inc": -2.5789
+        },
+        "smll": {
+          "a12": 25.5315,
+          "a36": 15.4816,
+          "a60": 20.0399,
+          "inc": 9.5475
+        },
+        "idiv": {
+          "a12": 1.3789,
+          "a36": -2.8026,
+          "a60": 1.2941,
+          "inc": 1.7044
+        }
+      }
     },
     {
       "name": "Kapitalo Tarkus FIF Cotas FIA",
-      "cnpj": "28747685000153",
+      "cnpj": "28.747.685/0001-53",
       "cnpjFmt": "28.747.685/0001-53",
-      "exibicao": "Kapitalo Tarkus",
-      "curto": "Tarkus",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 3.4689707,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 4.3298255,
+      "maxQuotaDate": "2026-04-14",
+      "inceptionDate": "2018-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 31.399224851725993,
+      "cagr36": 26.516038359691095,
+      "cagr60": 10.43540663333471,
+      "cagrInception": 15.171085485051861,
+      "ibovCagrInception": 9.6523,
+      "cdiCagrInception": 9.0339,
+      "alphaVsCdi": 6.1372,
+      "alphaVsIbov": 5.5188,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 8.8766,
+          "a36": 13.7303,
+          "a60": 4.0828,
+          "inc": 5.5188
+        },
+        "sp_usd": {
+          "a12": 11.1899,
+          "a36": 7.1679,
+          "a60": -1.1751,
+          "inc": 2.4286
+        },
+        "sp_brl": {
+          "a12": -1.6201,
+          "a36": -3.357,
+          "a60": -10.2998,
+          "inc": -3.3478
+        },
+        "smll": {
+          "a12": 34.3437,
+          "a36": 28.6603,
+          "a60": 16.7968,
+          "inc": 12.0866
+        },
+        "idiv": {
+          "a12": 10.1912,
+          "a36": 10.376,
+          "a60": -1.949,
+          "inc": 1.4607
+        }
+      }
     },
     {
       "name": "Real Investor FIC FIF Ações RL",
-      "cnpj": "10500884000105",
+      "cnpj": "10.500.884/0001-05",
       "cnpjFmt": "10.500.884/0001-05",
-      "exibicao": "Real Investor",
-      "curto": "Real",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 25.47576121,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 31.0097067,
+      "maxQuotaDate": "2026-02-26",
+      "inceptionDate": "2013-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 7.505353306671747,
+      "cagr36": 10.650673213070338,
+      "cagr60": 9.227670663108011,
+      "cagrInception": 13.760578844499394,
+      "ibovCagrInception": 7.7113,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
+      "alphaVsIbov": 6.0493,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -15.0173,
+          "a36": -2.1351,
+          "a60": 2.8751,
+          "inc": 6.0493
+        },
+        "sp_usd": {
+          "a12": -12.7039,
+          "a36": -8.6975,
+          "a60": -2.3828,
+          "inc": 0.9178
+        },
+        "sp_brl": {
+          "a12": -25.514,
+          "a36": -19.2224,
+          "a60": -11.5075,
+          "inc": null
+        },
+        "smll": {
+          "a12": 10.4499,
+          "a36": 12.7949,
+          "a60": 15.589,
+          "inc": 11.3585
+        },
+        "idiv": {
+          "a12": -13.7027,
+          "a36": -5.4893,
+          "a60": -3.1567,
+          "inc": 4.1495
+        }
+      }
     },
     {
       "name": "Gama Schroder Gaia Contour Tech Equity L&S BRL FIF CIC Mult IE RL",
-      "cnpj": "35744790000102",
+      "cnpj": "35.744.790/0001-02",
       "cnpjFmt": "35.744.790/0001-02",
-      "exibicao": "Schroder Tech L&S",
-      "curto": "Schroder",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.9262726,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 3.1481627,
+      "maxQuotaDate": "2026-06-25",
+      "inceptionDate": "2021-01-04",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 32.21493589456188,
+      "cagr36": 30.057814830428885,
+      "cagr60": 19.77989160777216,
+      "cagrInception": 18.25215961389619,
+      "ibovCagrInception": 6.8392,
+      "cdiCagrInception": 11.2919,
+      "alphaVsCdi": 6.9603,
+      "alphaVsIbov": 11.413,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 9.6923,
+          "a36": 17.272,
+          "a60": 13.4273,
+          "inc": 11.413
+        },
+        "sp_usd": {
+          "a12": 12.0057,
+          "a36": 10.7097,
+          "a60": 8.1694,
+          "inc": 4.6104
+        },
+        "sp_brl": {
+          "a12": -0.8044,
+          "a36": 0.1847,
+          "a60": -0.9553,
+          "inc": -3.686
+        },
+        "smll": {
+          "a12": 35.1594,
+          "a36": 32.202,
+          "a60": 26.1413,
+          "inc": 22.4942
+        },
+        "idiv": {
+          "a12": 11.0069,
+          "a36": 13.9178,
+          "a60": 7.3955,
+          "inc": 6.7346
+        }
+      }
     },
     {
       "name": "Patria Long Biased FIF Cotas FIM",
-      "cnpj": "38954217000103",
+      "cnpj": "38.954.217/0001-03",
       "cnpjFmt": "38.954.217/0001-03",
-      "exibicao": "Pátria Long Biased",
-      "curto": "Pátria",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.5044873,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 3.0035117,
+      "maxQuotaDate": "2026-02-20",
+      "inceptionDate": "2021-01-04",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 8.75553120978223,
+      "cagr36": 17.24326956485651,
+      "cagr60": 7.711150586102011,
+      "cagrInception": 13.523104111332596,
+      "ibovCagrInception": 6.8392,
+      "cdiCagrInception": 11.2919,
+      "alphaVsCdi": 2.2312,
+      "alphaVsIbov": 6.6839,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -13.7671,
+          "a36": 4.4575,
+          "a60": 1.3586,
+          "inc": 6.6839
+        },
+        "sp_usd": {
+          "a12": -11.4537,
+          "a36": -2.1049,
+          "a60": -3.8994,
+          "inc": -0.1186
+        },
+        "sp_brl": {
+          "a12": -24.2638,
+          "a36": -12.6298,
+          "a60": -13.024,
+          "inc": -8.415
+        },
+        "smll": {
+          "a12": 11.7,
+          "a36": 19.3875,
+          "a60": 14.0725,
+          "inc": 17.7651
+        },
+        "idiv": {
+          "a12": -12.4525,
+          "a36": 1.1033,
+          "a60": -4.6732,
+          "inc": 2.0056
+        }
+      }
     },
     {
       "name": "Absolute Pace Long Biased FIC FIF Ações RL",
-      "cnpj": "32073525000143",
+      "cnpj": "32.073.525/0001-43",
       "cnpjFmt": "32.073.525/0001-43",
-      "exibicao": "Absolute Pace",
-      "curto": "Pace",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 4.06343942755,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 4.35166113,
+      "maxQuotaDate": "2026-04-20",
+      "inceptionDate": "2019-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 17.51131337193803,
+      "cagr36": 14.940218888659484,
+      "cagr60": 14.530003685137572,
+      "cagrInception": 19.861912930139503,
+      "ibovCagrInception": 8.7279,
+      "cdiCagrInception": 9.3858,
+      "alphaVsCdi": 10.4761,
+      "alphaVsIbov": 11.134,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -5.0113,
+          "a36": 2.1544,
+          "a60": 8.1774,
+          "inc": 11.134
+        },
+        "sp_usd": {
+          "a12": -2.698,
+          "a36": -4.4079,
+          "a60": 2.9195,
+          "inc": 4.2123
+        },
+        "sp_brl": {
+          "a12": -15.508,
+          "a36": -14.9329,
+          "a60": -6.2052,
+          "inc": -2.1054
+        },
+        "smll": {
+          "a12": 20.4558,
+          "a36": 17.0845,
+          "a60": 20.8914,
+          "inc": 17.5658
+        },
+        "idiv": {
+          "a12": -3.6968,
+          "a36": -1.1998,
+          "a60": 2.1456,
+          "inc": 6.7432
+        }
+      }
     },
     {
       "name": "Arbor FIC FIA",
-      "cnpj": "21689246000192",
+      "cnpj": "21.689.246/0001-92",
       "cnpjFmt": "21.689.246/0001-92",
-      "exibicao": "Arbor",
-      "curto": "Arbor",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 8.3563407,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 8.5708964,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2016-01-04",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 12.608545691741213,
+      "cagr36": 25.41778253196416,
+      "cagr60": 12.698015120026618,
+      "cagrInception": 22.397478319685902,
+      "ibovCagrInception": 14.2366,
+      "cdiCagrInception": 9.5828,
+      "alphaVsCdi": 12.8146,
+      "alphaVsIbov": 8.1608,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -9.9141,
+          "a36": 12.632,
+          "a60": 6.3454,
+          "inc": 8.1608
+        },
+        "sp_usd": {
+          "a12": -7.6007,
+          "a36": 6.0696,
+          "a60": 1.0875,
+          "inc": 9.0864
+        },
+        "sp_brl": {
+          "a12": -20.4108,
+          "a36": -4.4553,
+          "a60": -8.0372,
+          "inc": 2.6812
+        },
+        "smll": {
+          "a12": 15.5531,
+          "a36": 27.562,
+          "a60": 19.0594,
+          "inc": 12.708
+        },
+        "idiv": {
+          "a12": -8.5995,
+          "a36": 9.2778,
+          "a60": 0.3136,
+          "inc": 3.3587
+        }
+      }
     },
     {
       "name": "Charles River FIF Ações",
-      "cnpj": "14438229000117",
+      "cnpj": "14.438.229/0001-17",
       "cnpjFmt": "14.438.229/0001-17",
-      "exibicao": "Charles River",
-      "curto": "Charles",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 12.47685003706,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 13.531531010002,
+      "maxQuotaDate": "2026-04-17",
+      "inceptionDate": "2015-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 2.392685320249166,
+      "cagr36": 4.657050782335026,
+      "cagr60": 11.088697585357753,
+      "cagrInception": 20.359395295713067,
+      "ibovCagrInception": 11.5448,
+      "cdiCagrInception": 9.8924,
+      "alphaVsCdi": 10.467,
+      "alphaVsIbov": 8.8146,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -20.13,
+          "a36": -8.1287,
+          "a60": 4.7361,
+          "inc": 8.8146
+        },
+        "sp_usd": {
+          "a12": -17.8166,
+          "a36": -14.6911,
+          "a60": -0.5218,
+          "inc": 8.495
+        },
+        "sp_brl": {
+          "a12": -30.6266,
+          "a36": -25.216,
+          "a60": -9.6465,
+          "inc": 1.8378
+        },
+        "smll": {
+          "a12": 5.3372,
+          "a36": 6.8013,
+          "a60": 17.4501,
+          "inc": 14.0207
+        },
+        "idiv": {
+          "a12": -18.8154,
+          "a36": -11.483,
+          "a60": -1.2957,
+          "inc": 6.138
+        }
+      }
     },
     {
       "name": "SPX Falcon FIF CIC Ações RL",
-      "cnpj": "17397315000117",
+      "cnpj": "17.397.315/0001-17",
       "cnpjFmt": "17.397.315/0001-17",
-      "exibicao": "SPX Falcon",
-      "curto": "Falcon",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 7.2197741,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 7.4214414,
+      "maxQuotaDate": "2026-04-17",
+      "inceptionDate": "2014-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 25.40251531161921,
+      "cagr36": 21.788027149033095,
+      "cagr60": 18.169989519931605,
+      "cagrInception": 16.46319695262468,
+      "ibovCagrInception": 10.2491,
+      "cdiCagrInception": 9.9669,
+      "alphaVsCdi": 6.4963,
+      "alphaVsIbov": 6.2141,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 2.8799,
+          "a36": 9.0022,
+          "a60": 11.8174,
+          "inc": 6.2141
+        },
+        "sp_usd": {
+          "a12": 5.1932,
+          "a36": 2.4399,
+          "a60": 6.5595,
+          "inc": 4.5595
+        },
+        "sp_brl": {
+          "a12": -7.6168,
+          "a36": -8.0851,
+          "a60": -2.5652,
+          "inc": -2.1804
+        },
+        "smll": {
+          "a12": 28.347,
+          "a36": 23.9323,
+          "a60": 24.5314,
+          "inc": 12.2127
+        },
+        "idiv": {
+          "a12": 4.1944,
+          "a36": 5.648,
+          "a60": 5.7856,
+          "inc": 5.3236
+        }
+      }
     },
     {
       "name": "Opportunity Global Equity Real Institucional FIC FIF Ações IE RL",
-      "cnpj": "46351969000108",
+      "cnpj": "46.351.969/0001-08",
       "cnpjFmt": "46.351.969/0001-08",
-      "exibicao": "Opportunity Global",
-      "curto": "Opportunity",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.68671105,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 2.73975619,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2022-12-16",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 26.068437005047997,
+      "cagr36": 29.916776486712806,
+      "cagr60": null,
+      "cagrInception": 32.00627668123379,
+      "ibovCagrInception": 15.2966,
+      "cdiCagrInception": 12.9715,
+      "alphaVsCdi": 19.0348,
+      "alphaVsIbov": 16.7097,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 3.5458,
+          "a36": 17.131,
+          "a60": null,
+          "inc": 16.7097
+        },
+        "sp_usd": {
+          "a12": 5.8592,
+          "a36": 10.5686,
+          "a60": null,
+          "inc": 11.4998
+        },
+        "sp_brl": {
+          "a12": -6.9509,
+          "a36": 0.0437,
+          "a60": null,
+          "inc": 0.7508
+        },
+        "smll": {
+          "a12": 29.0129,
+          "a36": 32.061,
+          "a60": null,
+          "inc": 27.23
+        },
+        "idiv": {
+          "a12": 4.8604,
+          "a36": 13.7768,
+          "a60": null,
+          "inc": 13.6862
+        }
+      }
     },
     {
       "name": "SPX Patriot FIF CIC Ações RL",
-      "cnpj": "15334585000153",
+      "cnpj": "15.334.585/0001-53",
       "cnpjFmt": "15.334.585/0001-53",
-      "exibicao": "SPX Patriot",
-      "curto": "Patriot",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 6.3177919,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 7.0705703,
+      "maxQuotaDate": "2026-02-24",
+      "inceptionDate": "2013-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 23.80245804977601,
+      "cagr36": 17.42202204585903,
+      "cagr60": 11.443917082795686,
+      "cagrInception": 13.205112730952884,
+      "ibovCagrInception": 7.7113,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
+      "alphaVsIbov": 5.4939,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 1.2798,
+          "a36": 4.6362,
+          "a60": 5.0913,
+          "inc": 5.4939
+        },
+        "sp_usd": {
+          "a12": 3.5932,
+          "a36": -1.9261,
+          "a60": -0.1666,
+          "inc": 0.3624
+        },
+        "sp_brl": {
+          "a12": -9.2169,
+          "a36": -12.4511,
+          "a60": -9.2912,
+          "inc": null
+        },
+        "smll": {
+          "a12": 26.747,
+          "a36": 19.5663,
+          "a60": 17.8053,
+          "inc": 10.803
+        },
+        "idiv": {
+          "a12": 2.5944,
+          "a36": 1.282,
+          "a60": -0.9405,
+          "inc": 3.594
+        }
+      }
     },
     {
       "name": "TB FIF Cotas FIA",
-      "cnpj": "47511351000120",
+      "cnpj": "47.511.351/0001-20",
       "cnpjFmt": "47.511.351/0001-20",
-      "exibicao": "TB",
-      "curto": "TB",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 205.4775972,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 213.2054358,
+      "maxQuotaDate": "2026-01-06",
+      "inceptionDate": "2022-08-31",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 8.23576781757862,
+      "cagr36": 18.604031980481817,
+      "cagr60": null,
+      "cagrInception": 20.556896150065263,
+      "ibovCagrInception": 12.2021,
+      "cdiCagrInception": 13.0107,
+      "alphaVsCdi": 7.5462,
+      "alphaVsIbov": 8.3548,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -14.2869,
+          "a36": 5.8182,
+          "a60": null,
+          "inc": 8.3548
+        },
+        "sp_usd": {
+          "a12": -11.9735,
+          "a36": -0.7441,
+          "a60": null,
+          "inc": 2.5561
+        },
+        "sp_brl": {
+          "a12": -24.7836,
+          "a36": -11.2691,
+          "a60": null,
+          "inc": -8.014
+        },
+        "smll": {
+          "a12": 11.1803,
+          "a36": 20.7483,
+          "a60": null,
+          "inc": 20.8621
+        },
+        "idiv": {
+          "a12": -12.9723,
+          "a36": 2.464,
+          "a60": null,
+          "inc": 5.157
+        }
+      }
     },
     {
       "name": "Itaú Janeiro Multimercado FIF DA Classe FIC RL ATIVO",
-      "cnpj": "52116227000109",
+      "cnpj": "52.116.227/0001-09",
       "cnpjFmt": "52.116.227/0001-09",
-      "exibicao": "Itaú Janeiro Multimercado",
-      "curto": "Janeiro MM",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 1.471941,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 1.484503,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2023-09-29",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 12.307994744957384,
+      "cagr36": null,
+      "cagr60": null,
+      "cagrInception": 14.956892188623282,
+      "ibovCagrInception": 14.7336,
+      "cdiCagrInception": 12.8145,
+      "alphaVsCdi": 2.1424,
+      "alphaVsIbov": 0.2233,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -10.2147,
+          "a36": null,
+          "a60": null,
+          "inc": 0.2233
+        },
+        "sp_usd": {
+          "a12": -7.9013,
+          "a36": null,
+          "a60": null,
+          "inc": -7.2748
+        },
+        "sp_brl": {
+          "a12": -20.7113,
+          "a36": null,
+          "a60": null,
+          "inc": -17.9926
+        },
+        "smll": {
+          "a12": 15.2525,
+          "a36": null,
+          "a60": null,
+          "inc": 13.5865
+        },
+        "idiv": {
+          "a12": -8.9001,
+          "a36": null,
+          "a60": null,
+          "inc": -2.2732
+        }
+      }
     },
     {
       "name": "Ace Capital Multicenários FIC FIF Multimercado RL",
-      "cnpj": "47612105000165",
+      "cnpj": "47.612.105/0001-65",
       "cnpjFmt": "47.612.105/0001-65",
-      "exibicao": "Ace Capital Multicenários",
-      "curto": "Ace",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.04759682,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 2.17970569,
+      "maxQuotaDate": "2026-03-02",
+      "inceptionDate": "2022-11-30",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 25.076961463634206,
+      "cagr36": 22.51326723334568,
+      "cagr60": null,
+      "cagrInception": 22.00693703121037,
+      "ibovCagrInception": 12.2641,
+      "cdiCagrInception": 12.995,
+      "alphaVsCdi": 9.0119,
+      "alphaVsIbov": 9.7429,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": 2.5543,
+          "a36": 9.7275,
+          "a60": null,
+          "inc": 9.7429
+        },
+        "sp_usd": {
+          "a12": 4.8677,
+          "a36": 3.1651,
+          "a60": null,
+          "inc": 3.675
+        },
+        "sp_brl": {
+          "a12": -7.9424,
+          "a36": -7.3598,
+          "a60": null,
+          "inc": -6.9069
+        },
+        "smll": {
+          "a12": 28.0215,
+          "a36": 24.6575,
+          "a60": null,
+          "inc": 20.4909
+        },
+        "idiv": {
+          "a12": 3.8689,
+          "a36": 6.3733,
+          "a60": null,
+          "inc": 6.1682
+        }
+      }
     },
     {
       "name": "Kapitalo K10 FIF Cotas FIM",
-      "exibicao": "Kapitalo K10",
-      "curto": "K10",
-      "cnpj": "29726133000121",
+      "cnpj": "29.726.133/0001-21",
       "cnpjFmt": "29.726.133/0001-21",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.720847633653,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 2.857601129233,
+      "maxQuotaDate": "2026-02-26",
+      "inceptionDate": "2019-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 7.6888968611041,
+      "cagr36": 13.113607557673369,
+      "cagr60": 14.6832618291727,
+      "cagrInception": 14.033539931920158,
+      "ibovCagrInception": 8.7279,
+      "cdiCagrInception": 9.3858,
+      "alphaVsCdi": 4.6477,
+      "alphaVsIbov": 5.3056,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -14.8338,
+          "a36": 0.3278,
+          "a60": 8.3307,
+          "inc": 5.3056
+        },
+        "sp_usd": {
+          "a12": -12.5204,
+          "a36": -6.2345,
+          "a60": 3.0728,
+          "inc": -1.616
+        },
+        "sp_brl": {
+          "a12": -25.3304,
+          "a36": -16.7595,
+          "a60": -6.0519,
+          "inc": -7.9337
+        },
+        "smll": {
+          "a12": 10.6334,
+          "a36": 15.2578,
+          "a60": 21.0446,
+          "inc": 11.7374
+        },
+        "idiv": {
+          "a12": -13.5192,
+          "a36": -3.0264,
+          "a60": 2.2989,
+          "inc": 0.9148
+        }
+      }
     },
     {
       "name": "Genoa Capital Radar CIC Classe FIM RL",
-      "exibicao": "Genoa Radar",
-      "curto": "Radar",
-      "cnpj": "35828684000107",
+      "cnpj": "35.828.684/0001-07",
       "cnpjFmt": "35.828.684/0001-07",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 2.0932345,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 2.0956122,
+      "maxQuotaDate": "2026-07-03",
+      "inceptionDate": "2021-01-04",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 14.267914308563622,
+      "cagr36": 12.30898508079601,
+      "cagr60": 14.50311425420212,
+      "cagrInception": 13.70373127165796,
+      "ibovCagrInception": 6.8392,
+      "cdiCagrInception": 11.2919,
+      "alphaVsCdi": 2.4118,
+      "alphaVsIbov": 6.8645,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -8.2547,
+          "a36": -0.4768,
+          "a60": 8.1505,
+          "inc": 6.8645
+        },
+        "sp_usd": {
+          "a12": -5.9414,
+          "a36": -7.0392,
+          "a60": 2.8926,
+          "inc": 0.062
+        },
+        "sp_brl": {
+          "a12": -18.7514,
+          "a36": -17.5641,
+          "a60": -6.2321,
+          "inc": -8.2344
+        },
+        "smll": {
+          "a12": 17.2124,
+          "a36": 14.4532,
+          "a60": 20.8645,
+          "inc": 17.9457
+        },
+        "idiv": {
+          "a12": -6.9402,
+          "a36": -3.831,
+          "a60": 2.1187,
+          "inc": 2.1862
+        }
+      }
     },
     {
       "name": "Witpar FIF Ações",
-      "exibicao": "Witpar",
-      "curto": "Witpar",
-      "cnpj": "16876874000147",
+      "cnpj": "16.876.874/0001-47",
       "cnpjFmt": "16.876.874/0001-47",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 6.2076126516,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 7.5961209921,
+      "maxQuotaDate": "2026-04-13",
+      "inceptionDate": "2019-01-02",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 14.778102212057732,
+      "cagr36": 15.160163318958752,
+      "cagr60": 13.99196940851326,
+      "cagrInception": 13.044074654113324,
+      "ibovCagrInception": 8.7279,
+      "cdiCagrInception": 9.3858,
+      "alphaVsCdi": 3.6582,
+      "alphaVsIbov": 4.3162,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -7.7445,
+          "a36": 2.3744,
+          "a60": 7.6394,
+          "inc": 4.3162
+        },
+        "sp_usd": {
+          "a12": -5.4312,
+          "a36": -4.188,
+          "a60": 2.3815,
+          "inc": -2.6055
+        },
+        "sp_brl": {
+          "a12": -18.2412,
+          "a36": -14.7129,
+          "a60": -6.7432,
+          "inc": -8.9232
+        },
+        "smll": {
+          "a12": 17.7226,
+          "a36": 17.3044,
+          "a60": 20.3533,
+          "inc": 10.748
+        },
+        "idiv": {
+          "a12": -6.43,
+          "a36": -0.9798,
+          "a60": 1.6076,
+          "inc": -0.0747
+        }
+      }
     },
     {
       "name": "Itaú Janeiro RF LP FIF",
-      "exibicao": "Itaú Janeiro RF",
-      "curto": "Janeiro RF",
-      "cnpj": "52239457000157",
+      "cnpj": "52.239.457/0001-57",
       "cnpjFmt": "52.239.457/0001-57",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 1.435,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 1.440622,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2023-09-29",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 13.57017642910645,
+      "cagr36": null,
+      "cagr60": null,
+      "cagrInception": 13.908187805358875,
+      "ibovCagrInception": 14.7336,
+      "cdiCagrInception": 12.8145,
+      "alphaVsCdi": 1.0937,
+      "alphaVsIbov": -0.8254,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -8.9525,
+          "a36": null,
+          "a60": null,
+          "inc": -0.8254
+        },
+        "sp_usd": {
+          "a12": -6.6391,
+          "a36": null,
+          "a60": null,
+          "inc": -8.3235
+        },
+        "sp_brl": {
+          "a12": -19.4491,
+          "a36": null,
+          "a60": null,
+          "inc": -19.0413
+        },
+        "smll": {
+          "a12": 16.5147,
+          "a36": null,
+          "a60": null,
+          "inc": 12.5378
+        },
+        "idiv": {
+          "a12": -7.6379,
+          "a36": null,
+          "a60": null,
+          "inc": -3.3219
+        }
+      }
     },
     {
       "name": "Mapfre Confianza FIF RF Referenciado DI CP",
-      "exibicao": "Mapfre Confianza",
-      "curto": "Mapfre",
-      "cnpj": "51253495000100",
+      "cnpj": "51.253.495/0001-00",
       "cnpjFmt": "51.253.495/0001-00",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 1.46877194,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 1.46877194,
+      "maxQuotaDate": "2026-07-08",
+      "inceptionDate": "2023-08-01",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 15.31722988900881,
+      "cagr36": null,
+      "cagr60": null,
+      "cagrInception": 13.994633166321213,
+      "ibovCagrInception": 12.351,
+      "cdiCagrInception": 12.8532,
+      "alphaVsCdi": 1.1414,
+      "alphaVsIbov": 1.6437,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -7.2054,
+          "a36": null,
+          "a60": null,
+          "inc": 1.6437
+        },
+        "sp_usd": {
+          "a12": -4.892,
+          "a36": null,
+          "a60": null,
+          "inc": -4.24
+        },
+        "sp_brl": {
+          "a12": -17.7021,
+          "a36": null,
+          "a60": null,
+          "inc": -14.6515
+        },
+        "smll": {
+          "a12": 18.2617,
+          "a36": null,
+          "a60": null,
+          "inc": 16.3181
+        },
+        "idiv": {
+          "a12": -5.8908,
+          "a36": null,
+          "a60": null,
+          "inc": -1.7109
+        }
+      }
     },
     {
       "name": "Itaú Artax Infra FIF Incentivado Infra CIC RF CP LP RL",
-      "exibicao": "Artax Infra",
-      "curto": "Artax Infra",
-      "cnpj": "52969671000169",
+      "cnpj": "52.969.671/0001-69",
       "cnpjFmt": "52.969.671/0001-69",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 1.389334,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 1.389334,
+      "maxQuotaDate": "2026-07-08",
+      "inceptionDate": "2023-11-30",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 12.333360840847929,
+      "cagr36": null,
+      "cagr60": null,
+      "cagrInception": 13.461277684653371,
+      "ibovCagrInception": 11.9043,
+      "cdiCagrInception": 12.8761,
+      "alphaVsCdi": 0.5852,
+      "alphaVsIbov": 1.557,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -10.1893,
+          "a36": null,
+          "a60": null,
+          "inc": 1.557
+        },
+        "sp_usd": {
+          "a12": -7.8759,
+          "a36": null,
+          "a60": null,
+          "inc": -7.4108
+        },
+        "sp_brl": {
+          "a12": -20.686,
+          "a36": null,
+          "a60": null,
+          "inc": -18.0813
+        },
+        "smll": {
+          "a12": 15.2779,
+          "a36": null,
+          "a60": null,
+          "inc": 13.7509
+        },
+        "idiv": {
+          "a12": -8.8747,
+          "a36": null,
+          "a60": null,
+          "inc": -1.876
+        }
+      }
     },
     {
       "name": "Polo Norte I Long Short FIC FIM",
-      "exibicao": "Polo Norte L&S",
-      "curto": "Polo Norte",
-      "cnpj": "07013315000112",
+      "cnpj": "07.013.315/0001-12",
       "cnpjFmt": "07.013.315/0001-12",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 14.91390217,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 15.07953322,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2005-01-03",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 11.54874601596343,
+      "cagr36": 13.578396404149707,
+      "cagr60": 10.046632460822646,
+      "cagrInception": 13.234301574315289,
+      "ibovCagrInception": 9.1965,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
+      "alphaVsIbov": 4.0378,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -10.9739,
+          "a36": 0.7926,
+          "a60": 3.694,
+          "inc": 4.0378
+        },
+        "sp_usd": {
+          "a12": -8.6605,
+          "a36": -5.7697,
+          "a60": -1.5639,
+          "inc": null
+        },
+        "sp_brl": {
+          "a12": -21.4706,
+          "a36": -16.2947,
+          "a60": -10.6885,
+          "inc": null
+        },
+        "smll": {
+          "a12": 14.4933,
+          "a36": 15.7226,
+          "a60": 16.408,
+          "inc": null
+        },
+        "idiv": {
+          "a12": -9.6593,
+          "a36": -2.5616,
+          "a60": -2.3377,
+          "inc": null
+        }
+      }
     },
     {
       "name": "AZ Quest Total Return FIC FI Fin Multimercado",
-      "exibicao": "AZ Quest Total Return",
-      "curto": "AZ Quest TR",
-      "cnpj": "14812722000155",
+      "cnpj": "14.812.722/0001-55",
       "cnpjFmt": "14.812.722/0001-55",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 5.1130818,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 5.1329019,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2012-01-23",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 16.22087015600846,
+      "cagr36": 16.673415848391194,
+      "cagr60": 14.560904365452432,
+      "cagrInception": 11.949957723559557,
+      "ibovCagrInception": 7.2092,
+      "cdiCagrInception": null,
+      "alphaVsCdi": null,
+      "alphaVsIbov": 4.7408,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -6.3018,
+          "a36": 3.8876,
+          "a60": 8.2083,
+          "inc": 4.7408
+        },
+        "sp_usd": {
+          "a12": -3.9884,
+          "a36": -2.6747,
+          "a60": 2.9504,
+          "inc": -0.8254
+        },
+        "sp_brl": {
+          "a12": -16.7985,
+          "a36": -13.1997,
+          "a60": -6.1743,
+          "inc": null
+        },
+        "smll": {
+          "a12": 19.1654,
+          "a36": 18.8176,
+          "a60": 20.9223,
+          "inc": 8.2803
+        },
+        "idiv": {
+          "a12": -4.9872,
+          "a36": 0.5334,
+          "a60": 2.1765,
+          "inc": null
+        }
+      }
     },
     {
       "name": "Genoa Capital Sagres I FIF CIC Multimercado RL",
-      "exibicao": "Genoa Sagres",
-      "curto": "Sagres",
-      "cnpj": "48997077000104",
+      "cnpj": "48.997.077/0001-04",
       "cnpjFmt": "48.997.077/0001-04",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 1.5171172,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 1.54042265,
+      "maxQuotaDate": "2026-02-26",
+      "inceptionDate": "2023-09-28",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 13.70756627189278,
+      "cagr36": null,
+      "cagr60": null,
+      "cagrInception": 16.19953141500947,
+      "ibovCagrInception": 15.0151,
+      "cdiCagrInception": 12.8202,
+      "alphaVsCdi": 3.3793,
+      "alphaVsIbov": 1.1844,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -8.8151,
+          "a36": null,
+          "a60": null,
+          "inc": 1.1844
+        },
+        "sp_usd": {
+          "a12": -6.5017,
+          "a36": null,
+          "a60": null,
+          "inc": -5.8886
+        },
+        "sp_brl": {
+          "a12": -19.3118,
+          "a36": null,
+          "a60": null,
+          "inc": -16.6006
+        },
+        "smll": {
+          "a12": 16.6521,
+          "a36": null,
+          "a60": null,
+          "inc": 14.6539
+        },
+        "idiv": {
+          "a12": -7.5005,
+          "a36": null,
+          "a60": null,
+          "inc": -1.1333
+        }
+      }
     },
     {
       "name": "Arbor Hedge Long Biased FIC FIA RL",
-      "exibicao": "Arbor Hedge",
-      "curto": "Arbor Hedge",
-      "cnpj": "52217086000102",
+      "cnpj": "52.217.086/0001-02",
       "cnpjFmt": "52.217.086/0001-02",
-      "error": true
+      "latestDate": "2026-07-08",
+      "latestQuota": 167.5287981,
+      "isDelayed": false,
+      "delayDays": 0,
+      "maxQuota": 170.8469544,
+      "maxQuotaDate": "2026-07-06",
+      "inceptionDate": "2023-10-31",
+      "anchorDate": "2026-07-08",
+      "anchor12m": "2025-07-08",
+      "anchor36m": "2023-07-08",
+      "anchor60m": "2021-07-08",
+      "cagr12": 12.889912087628197,
+      "cagr36": null,
+      "cagr60": null,
+      "cagrInception": 21.18083047927042,
+      "ibovCagrInception": 16.5344,
+      "cdiCagrInception": 12.8412,
+      "alphaVsCdi": 8.3396,
+      "alphaVsIbov": 4.6464,
+      "error": false,
+      "alphas": {
+        "ibov": {
+          "a12": -9.6327,
+          "a36": null,
+          "a60": null,
+          "inc": 4.6464
+        },
+        "sp_usd": {
+          "a12": -7.3194,
+          "a36": null,
+          "a60": null,
+          "inc": -2.8762
+        },
+        "sp_brl": {
+          "a12": -20.1294,
+          "a36": null,
+          "a60": null,
+          "inc": -13.7861
+        },
+        "smll": {
+          "a12": 15.8344,
+          "a36": null,
+          "a60": null,
+          "inc": 16.8541
+        },
+        "idiv": {
+          "a12": -8.3182,
+          "a36": null,
+          "a60": null,
+          "inc": 1.9459
+        }
+      }
     }
   ]
 }
