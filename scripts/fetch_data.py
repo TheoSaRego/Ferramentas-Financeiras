@@ -16,7 +16,7 @@ Fontes:
   - CDI: API Banco Central (série 12)
 """
 
-import os, json, zipfile, io, math, datetime, urllib.request, calendar, socket
+import os, sys, json, zipfile, io, math, datetime, urllib.request, calendar, socket
 from pathlib import Path
 from itertools import combinations
 
@@ -2065,7 +2065,17 @@ def compute_metrics_history(
                 vol_idio_ann = vol_ann * math.sqrt(max(0.0, 1.0 - r2))
                 T_anos       = sc["days"] / 252
                 scale_corr   = math.sqrt(T_anos * max(0.5, 1.0 + 2.0 * rho_bar))
-                r_emp        = cvar * scale_corr * math.sqrt(252)
+                # cvar_resid é None quando não há N_MIN=80 dias de crise na janela
+                # até a ref_date (fundos novos / datas de referência antigas).
+                # Era exatamente isto que derrubava o backfill inteiro com
+                # TypeError (None * float) — engolido pelo try/except do chamador,
+                # razão pela qual o metricsHistory NUNCA foi gravado em nenhum run
+                # saudável. Sem CVaR empírico, o peso vai todo para a teórica.
+                if cvar is None:
+                    w_emp, w_teo = 0.0, 1.0
+                    r_emp = 0.0
+                else:
+                    r_emp = cvar * scale_corr * math.sqrt(252)
                 r_teo        = -(vol_idio_ann * k_idio * scale_corr)
                 r_idio       = w_emp * r_emp + w_teo * r_teo
 
@@ -2789,6 +2799,20 @@ def main() -> None:
             print(f"Não foi possível ler data.json anterior: {e}")
 
     results = [process_fund(f, anchor, prev_max_quotas, ibov_price_map=ibov_price_map, cdi_price_map=cdi_price_map) for f in FUNDS]
+
+    # ── GATE DE SANIDADE ─────────────────────────────────────────────────────
+    # Se a CVM estiver fora do ar (como em 2026-07-09, quando TODOS os zips
+    # mensais falharam), os 29 fundos saem com erro e o workflow commitaria um
+    # data.json vazio por cima do último bom — foi exatamente o que aconteceu.
+    # Regra: menos da metade dos fundos resolvidos → aborta com exit(1). O job
+    # fica VERMELHO, o passo de commit nunca roda, e o site continua servindo o
+    # último data.json saudável. Mesma filosofia do config.json: falhar alto.
+    _ok_funds = [r for r in results if not r.get("error")]
+    if len(_ok_funds) < max(1, len(results) // 2):
+        print(f"\n✗ ABORTANDO: só {len(_ok_funds)}/{len(results)} fundos resolvidos — "
+              f"CVM provavelmente fora do ar. data.json NÃO será escrito; "
+              f"o site mantém o último bom.")
+        sys.exit(1)
 
     # Fronteira eficiente — calculada aqui porque precisa dos retornos esperados
     # (cagr36 de cada fundo), que só existem após process_fund() rodar.
