@@ -2474,6 +2474,80 @@ def fetch_fed_dff(start: datetime.date, anchor: datetime.date) -> dict:
         return price_map
 
 
+def fetch_ptax(start: datetime.date, anchor: datetime.date) -> dict:
+    """Dólar PTAX venda diário (BCB SGS série 1) → {iso: R$/US$}.
+    Mesmo chunking de ≤9 anos do fetch_cdi (limite da API SGS para séries
+    diárias). Devolve {} em falha — quem compõe decide o fallback."""
+    try:
+        data = []
+        _ws = start
+        while _ws <= anchor:
+            _we = min(datetime.date(_ws.year + 9, _ws.month, min(_ws.day, 28)), anchor)
+            url = (f"https://api.bcb.gov.br/dados/serie/bcdata.sgs.1/dados"
+                   f"?formato=json"
+                   f"&dataInicial={_ws.strftime('%d/%m/%Y')}"
+                   f"&dataFinal={_we.strftime('%d/%m/%Y')}")
+            req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                chunk = json.loads(resp.read())
+            if chunk: data.extend(chunk)
+            _ws = _we + datetime.timedelta(days=1)
+        out = {}
+        for entry in data:
+            try:
+                d, m, y = entry["data"].split("/")
+                out[f"{y}-{m}-{d}"] = float(entry["valor"])
+            except (KeyError, ValueError):
+                continue
+        if not out:
+            raise ValueError("PTAX vazia")
+        ds = sorted(out.keys())
+        print(f"  PTAX: {len(out)} cotações ({ds[0]} → {ds[-1]})")
+        return out
+    except Exception as e:
+        print(f"  ✗ PTAX falhou ({e})")
+        return {}
+
+
+def fetch_sp500_dolar(sp_usd_map: dict, anchor: datetime.date,
+                      a12: datetime.date, a36: datetime.date, a60: datetime.date,
+                      fetch_from: datetime.date) -> tuple[dict, dict]:
+    """S&P 500 DOLARIZADO em BRL: converte para dólar na cotação do momento e
+    carrega o câmbio junto — SEM hedge, SEM carry.
+
+        SP_dolar_BRL(t) = S&P_USD(t) × PTAX(t)
+
+    É o retorno em reais de quem compra USD e o índice (na prática, IVVB11),
+    ganhando e perdendo com a variação cambial. Complementa o sp500 hedgeado
+    (SPXR11): mesmos S&P e datas, câmbio no lugar do carry. Ignora spread de
+    conversão e IOF. Devolve (bloco de CAGRs, price map para alpha de inception).
+    """
+    try:
+        if not sp_usd_map:
+            raise ValueError("sp_usd_map ausente")
+        ptax = fetch_ptax(fetch_from, anchor)
+        if not ptax:
+            raise ValueError("PTAX indisponível")
+        import bisect
+        fx_dates = sorted(ptax.keys())
+        def _le(ds):
+            i = bisect.bisect_right(fx_dates, ds)
+            return ptax[fx_dates[i-1]] if i else None
+        m = {}
+        for ds in sorted(sp_usd_map.keys()):
+            fx = _le(ds)
+            if sp_usd_map[ds] and fx:
+                m[ds] = sp_usd_map[ds] * fx
+        blk = _index_block(m, anchor, a12, a36, a60)
+        vals = {k: f"{v:.2f}%" if isinstance(v, float) else "N/D" for k, v in blk.items()}
+        print(f"  S&P500 dolarizado (câmbio, sem hedge) 12M={vals['cagr12']} 36M={vals['cagr36']} "
+              f"60M={vals['cagr60']} · mapa desde {sorted(m.keys())[0] if m else '—'}")
+        return blk, m
+    except Exception as e:
+        print(f"  ✗ S&P500 dolarizado falhou: {e}")
+        return {"cagr12": None, "cagr36": None, "cagr60": None}, {}
+
+
 def _yahoo_chart_map(ticker: str, start: datetime.date, end: datetime.date) -> dict:
     """Mapa {date_iso: close} via chart API do Yahoo. Levanta exceção em falha —
     quem chama decide o fallback."""
@@ -2875,6 +2949,9 @@ def main() -> None:
     print(f"\n── S&P 500 (USD nominal)")
     sp500_usd, sp_usd_map = fetch_index_simple("S&P 500 USD", ["%5EGSPC"], anchor, a12, a36, a60, datetime.date(2008, 1, 1))
 
+    print(f"\n── S&P 500 dolarizado (USD→BRL na PTAX, sem hedge)")
+    sp500_dolar, sp_dolar_map = fetch_sp500_dolar(sp_usd_map, anchor, a12, a36, a60, datetime.date(2008, 1, 1))
+
     print(f"\n── SMLL (small caps B3)")
     smll, smll_map = fetch_index_simple("SMLL", ["%5ESMLL", "SMAL11.SA"], anchor, a12, a36, a60, datetime.date(2008, 1, 1))
 
@@ -2887,7 +2964,7 @@ def main() -> None:
     if out_path.exists():
         try:
             _prev = json.loads(out_path.read_text())
-            for _k, _blk in (("sp500_usd", sp500_usd), ("smll", smll), ("idiv", idiv)):
+            for _k, _blk in (("sp500_usd", sp500_usd), ("sp500_dolar", sp500_dolar), ("smll", smll), ("idiv", idiv)):
                 if all(_blk.get(c) is None for c in ("cagr12", "cagr36", "cagr60")):
                     _pb = _prev.get(_k, {})
                     if any(_pb.get(c) is not None for c in ("cagr12", "cagr36", "cagr60")):
@@ -2996,11 +3073,12 @@ def main() -> None:
     # Fallback: base CVM quando o fundo não tem meta. None quando o histórico do
     # índice não alcança a inception (UI mostra '—').
     _idx_maps = {
-        "ibov":   (ibov,       ibov_price_map),
-        "sp_usd": (sp500_usd,  sp_usd_map),
-        "sp_brl": (sp500,      sp_brl_map),
-        "smll":   (smll,       smll_map),
-        "idiv":   (idiv,       idiv_map),
+        "ibov":     (ibov,        ibov_price_map),
+        "sp_usd":   (sp500_usd,   sp_usd_map),
+        "sp_dolar": (sp500_dolar, sp_dolar_map),
+        "sp_brl":   (sp500,       sp_brl_map),
+        "smll":     (smll,        smll_map),
+        "idiv":     (idiv,        idiv_map),
     }
     _n_alpha = 0
     for r in results:
@@ -3046,6 +3124,7 @@ def main() -> None:
         "cdi":         cdi_final,
         "sp500":       sp500,
         "sp500_usd":   sp500_usd,
+        "sp500_dolar": sp500_dolar,
         "smll":        smll,
         "idiv":        idiv,
         "ntnb":        ntnb,
