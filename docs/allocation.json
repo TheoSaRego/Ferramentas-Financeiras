@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T04:12:32.936826+00:00",
+  "generatedAt": "2026-07-12T04:32:07.869617+00:00",
   "asof": "2026-07-10",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -204,12 +204,12 @@
       "selic": 14.25,
       "ipca": 4.64,
       "real_cdi": 9.325,
-      "ibov_dd": -10.465586412761695,
+      "ibov_dd": -10.465777697236945,
       "fund_dd": -9.973093383337684,
       "breadth_pct": 60.589999999999996,
       "mm200_pct": 51.949999999999996,
       "fg": 10.8,
-      "ibov": 177866.38,
+      "ibov": 177866.0,
       "regime": "neutral",
       "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
@@ -298,12 +298,8 @@
   },
   "decay_flags": [
     {
-      "level": "baixo",
-      "msg": "Organon: alfa vs CDI 60m +2.0pp — positivo mas fino; acompanhar."
-    },
-    {
       "level": "medio",
-      "msg": "Ártica: alfa vs CDI 60m -1.1pp NEGATIVO — janela de revisão (ciclo × erosão)."
+      "msg": "Ártica: alfa vs CDI 60m -0.9pp NEGATIVO — janela de revisão (ciclo × erosão)."
     }
   ]
 }
