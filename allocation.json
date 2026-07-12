@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-10T22:44:55.775374+00:00",
+  "generatedAt": "2026-07-12T04:12:32.936826+00:00",
   "asof": "2026-07-10",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -26,8 +26,8 @@
         "items": [
           {
             "key": "erp",
-            "score": null,
-            "read": "ERP n/d",
+            "score": 5.5,
+            "read": "ERP real -0.4pp — juro real levem. superior",
             "weight": 0.22
           },
           {
@@ -178,7 +178,7 @@
     "br_src": {
       "pl": "manual (override)",
       "dy": "manual (override)",
-      "selic": "indisponível",
+      "selic": "BCB SGS 432",
       "ipca": "BCB SGS 13522",
       "ibov_dd": "ibov_price.json",
       "fund_dd": "planilha",
@@ -201,9 +201,9 @@
       "pl": 11.15,
       "ey": 8.968609865470851,
       "dy": 4.83,
-      "selic": null,
+      "selic": 14.25,
       "ipca": 4.64,
-      "real_cdi": null,
+      "real_cdi": 9.325,
       "ibov_dd": -10.465586412761695,
       "fund_dd": -9.973093383337684,
       "breadth_pct": 60.589999999999996,
@@ -229,15 +229,15 @@
       "fed": 3.62,
       "us_cpi": 4.25,
       "infl_exp": 2.24,
-      "carry": null,
+      "carry": 10.629999999999999,
       "sp_cur": 7575.39,
       "sp_ath": 7609.78
     }
   },
   "carry": {
-    "selic": null,
+    "selic": 14.25,
     "fed": 3.62,
-    "diff": null,
+    "diff": 10.629999999999999,
     "nota": "Carry do hedge do SPXR11 ≈ Selic − Fed. Em BRL, SPXR11 ≈ retorno do S&P (USD) + carry. Vs CDI o carry quase se anula (excesso ≈ S&P USD − Fed), por isso não entra no score — é exibido como contexto da posição."
   },
   "weights": {

@@ -159,18 +159,25 @@
     grid-template-columns: 1fr 1.4fr 1fr;
     border-top: 2px solid var(--accent);
   }
-  /* matriz de alphas vs índices — bloco discreto de largura total no painel */
+  /* matriz de alphas vs índices — bloco discreto de largura total no painel.
+     table-layout fixo com larguras explícitas: a coluna de índice ancora à
+     esquerda e as quatro janelas se distribuem até a borda direita do painel,
+     sem sobra de espaço. */
   .alpha-matrix-wrap { grid-column: 1 / -1; border-top: 1px dashed var(--border); }
-  .alpha-matrix { width: 100%; border-collapse: collapse; font-family: 'Courier New', monospace; font-size: 0.68rem; }
-  .alpha-matrix th { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
-    font-weight: normal; text-align: right; padding: 2px 8px 4px; border-bottom: 1px dashed var(--border); }
-  .alpha-matrix th:first-child, .alpha-matrix td:first-child { text-align: left; padding-left: 0; }
-  .alpha-matrix td { text-align: right; padding: 3.5px 8px; white-space: nowrap; }
+  .alpha-matrix { width: 100%; table-layout: fixed; border-collapse: collapse;
+    font-family: 'Courier New', monospace; font-size: 0.72rem; }
+  .alpha-matrix col.am-idx { width: 30%; }
+  .alpha-matrix col.am-w   { width: 17.5%; }
+  .alpha-matrix th { font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
+    font-weight: normal; text-align: right; padding: 0 0 5px; border-bottom: 1px solid var(--border); }
+  .alpha-matrix th:first-child, .alpha-matrix td:first-child { text-align: left; }
+  .alpha-matrix td { text-align: right; padding: 5px 0; white-space: nowrap; }
   .alpha-matrix td:first-child { color: var(--muted); }
   .alpha-matrix tbody tr:not(:first-child) td { border-top: 1px dotted color-mix(in srgb, var(--border) 55%, transparent); }
+  .alpha-matrix tbody tr:hover td { background: color-mix(in srgb, var(--border) 18%, transparent); }
   .am-pos { color: var(--green); }
   .am-neg { color: var(--red); }
-  .am-na  { color: var(--muted); opacity: 0.6; }
+  .am-na  { color: var(--muted); opacity: 0.55; }
 
   .detail-col {
     padding: 0.9rem 1.2rem;
@@ -4215,8 +4222,9 @@ function buildAlphaMatrix(f) {
   }
   if (!any) return '';
   return `<div class="detail-col alpha-matrix-wrap">
-    <div class="detail-col-header" data-tip="Excesso de CAGR do fundo sobre cada índice, em pp/ano.&#10;12M/36M/60M: diferença dos CAGRs nas janelas da tabela.&#10;Início: índice recalculado entre a inception do fundo (CVM) e a data de referência — comparação no período exato do fundo.&#10;'—' = histórico do índice não alcança a inception do fundo.">Alpha do CAGR vs. índices <span style="text-transform:none;letter-spacing:0;opacity:0.75">· pp/ano</span></div>
+    <div class="detail-col-header" data-tip="Excesso de CAGR do fundo sobre cada índice, em pp/ano.&#10;12M/36M/60M: diferença dos CAGRs nas janelas da tabela.&#10;Início: mesma base do cartão Desempenho (início das operações do fundo) — o índice é recalculado exatamente no mesmo período.&#10;'—' = histórico do índice não alcança o início do fundo.">Alpha do CAGR vs. índices <span style="text-transform:none;letter-spacing:0;opacity:0.75">· pp/ano</span></div>
     <table class="alpha-matrix">
+      <colgroup><col class="am-idx"><col class="am-w"><col class="am-w"><col class="am-w"><col class="am-w"></colgroup>
       <thead><tr><th>índice</th><th>12M</th><th>36M</th><th>60M</th><th>início</th></tr></thead>
       <tbody>${body}</tbody>
     </table>
