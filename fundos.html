@@ -168,8 +168,9 @@
     font-family: 'Courier New', monospace; font-size: 0.72rem; }
   .alpha-matrix col.am-idx { width: 30%; }
   .alpha-matrix col.am-w   { width: 17.5%; }
-  .alpha-matrix th { font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
-    font-weight: normal; text-align: right; padding: 0 0 5px; border-bottom: 1px solid var(--border); }
+  .alpha-matrix thead th { font-size: 0.56rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted);
+    font-weight: normal; text-align: right; padding: 0 0 5px; border-bottom: 1px solid var(--border);
+    background: transparent; cursor: default; }
   .alpha-matrix th:first-child, .alpha-matrix td:first-child { text-align: left; }
   .alpha-matrix td { text-align: right; padding: 5px 0; white-space: nowrap; }
   .alpha-matrix td:first-child { color: var(--muted); }
@@ -4466,7 +4467,7 @@ function render() {
       <td>${fmtPctGU(cagrInception(f), f)}</td>
       <td>${fmtTenure(f.cnpjFmt)}</td>
     </tr>
-    <tr class="detail-row"><td colspan="6">${buildDetailPanel(f, isExp)}</td></tr>`;
+    <tr class="detail-row"><td colspan="7">${buildDetailPanel(f, isExp)}</td></tr>`;
   });
 
   if (!sortingByCagr) {
