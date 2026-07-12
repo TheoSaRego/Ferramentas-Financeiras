@@ -203,6 +203,36 @@ def cagr(start: float, end: float, years: float) -> float | None:
     return (math.pow(end / start, 1.0 / years) - 1) * 100
 
 
+# FUND_META em Python — espelho exato do JS (inception, initialQuota, tipo, trib)
+FUND_META_PY: dict[str, dict] = {
+    "22.232.927/0001-90": {"inception":"2010-07-12","initialQuota":1.2136, "tipo":"Long Only",    "trib":"RV"},
+    "17.400.251/0001-66": {"inception":"2013-02-22","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
+    "18.302.338/0001-63": {"inception":"2013-06-27","initialQuota":0.7647, "tipo":"Long Only",    "trib":"RV"},
+    "37.495.383/0001-26": {"inception":"2021-04-30","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
+    "42.698.666/0001-05": {"inception":"2022-05-31","initialQuota":1.0000, "tipo":"Multimercado", "trib":"RV"},
+    "24.623.392/0001-03": {"inception":"2016-07-11","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
+    "28.747.685/0001-53": {"inception":"2017-11-06","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
+    "10.500.884/0001-05": {"inception":"2012-02-29","initialQuota":3.6300, "tipo":"Long Only",    "trib":"RV"},
+    "35.744.790/0001-02": {"inception":"2020-04-01","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
+    "38.954.217/0001-03": {"inception":"2020-10-30","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
+    "32.073.525/0001-43": {"inception":"2018-12-27","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
+    "21.689.246/0001-92": {"inception":"2015-03-23","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
+    "14.438.229/0001-17": {"inception":"2011-11-07","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
+    "17.397.315/0001-17": {"inception":"2012-09-17","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
+    "46.351.969/0001-08": {"inception":"2022-12-16","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
+    "15.334.585/0001-53": {"inception":"2013-01-02","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
+    "47.511.351/0001-20": {"inception":"2022-08-31","initialQuota":100.00, "tipo":"Long Only",    "trib":"RV"},
+    "52.116.227/0001-09": {"inception":"2023-09-29","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
+    "47.612.105/0001-65": {"inception":"2022-11-30","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
+    "29.726.133/0001-21": {"inception":"2018-05-16","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
+    "35.828.684/0001-07": {"inception":"2020-06-30","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
+    "16.876.874/0001-47": {"inception":"2019-01-02","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
+    "52.239.457/0001-57": {"inception":"2023-09-29","initialQuota":1.0000, "tipo":"Renda Fixa - Pós-fixado Global","trib":"TR"},
+    "51.253.495/0001-00": {"inception":"2023-08-01","initialQuota":1.0000, "tipo":"Renda Fixa - Crédito Privado",  "trib":"TR"},
+    "52.969.671/0001-69": {"inception":"2023-11-30","initialQuota":1.0000, "tipo":"Renda Fixa - Debêntures Incentivadas","trib":"Isento"},
+}
+
+
 def quota_on_or_before(target_date: datetime.date, fund: dict) -> dict | None:
     ts = target_date.isoformat()
     y, m = target_date.year, target_date.month
@@ -436,12 +466,13 @@ def fetch_ibov(anchor: datetime.date, a12: datetime.date, a36: datetime.date, a6
 
 
 def fetch_cdi(anchor: datetime.date, a12: datetime.date, a36: datetime.date, a60: datetime.date) -> dict:
-    # Busca 156 meses (13 anos) de histórico. Antes eram 84 (7a), suficiente pro
-    # metricsHistory mas NÃO pro alphaVsCdi desde inception: o Organon (inception
-    # 2014) ficava fora da janela → cdiCagrInception=None → alphaVsCdi=None →
-    # o decay monitor do alocador nunca disparava pro maior fundo. 156M cobre
-    # todos os inceptions relevantes (2013+). Custo: ~3.300 linhas diárias do BCB.
-    _y, _m = anchor.year, anchor.month - 156
+    # Busca 200 meses (~16,7 anos) de histórico — cobre a inception META mais
+    # antiga (Tarpon 2010-07), permitindo alfa vs CDI e o mapa S&P-hedge desde
+    # o início real de todos os fundos. Histórico: 84M (7a) não alcançava nem o
+    # Organon (2014, CVM) → alphaVsCdi=None → decay monitor cego; 156M cobria a
+    # base CVM mas não a base meta do painel. Custo: ~4.300 linhas diárias do BCB,
+    # em janelas de 9 anos (limite da API SGS para séries diárias).
+    _y, _m = anchor.year, anchor.month - 200
     while _m <= 0: _m += 12; _y -= 1
     import calendar as _cal
     _d = min(anchor.day, _cal.monthrange(_y, _m)[1])
@@ -1524,34 +1555,7 @@ def compute_metrics_history(
             "w_cdi": w_cdi, "horizonte": h,
         }
 
-    # FUND_META em Python — espelho exato do JS (inception, initialQuota, tipo, trib)
-    FUND_META_PY: dict[str, dict] = {
-        "22.232.927/0001-90": {"inception":"2010-07-12","initialQuota":1.2136, "tipo":"Long Only",    "trib":"RV"},
-        "17.400.251/0001-66": {"inception":"2013-02-22","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
-        "18.302.338/0001-63": {"inception":"2013-06-27","initialQuota":0.7647, "tipo":"Long Only",    "trib":"RV"},
-        "37.495.383/0001-26": {"inception":"2021-04-30","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
-        "42.698.666/0001-05": {"inception":"2022-05-31","initialQuota":1.0000, "tipo":"Multimercado", "trib":"RV"},
-        "24.623.392/0001-03": {"inception":"2016-07-11","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
-        "28.747.685/0001-53": {"inception":"2017-11-06","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
-        "10.500.884/0001-05": {"inception":"2012-02-29","initialQuota":3.6300, "tipo":"Long Only",    "trib":"RV"},
-        "35.744.790/0001-02": {"inception":"2020-04-01","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
-        "38.954.217/0001-03": {"inception":"2020-10-30","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
-        "32.073.525/0001-43": {"inception":"2018-12-27","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
-        "21.689.246/0001-92": {"inception":"2015-03-23","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
-        "14.438.229/0001-17": {"inception":"2011-11-07","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
-        "17.397.315/0001-17": {"inception":"2012-09-17","initialQuota":1.0000, "tipo":"Long Biased",  "trib":"RV"},
-        "46.351.969/0001-08": {"inception":"2022-12-16","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
-        "15.334.585/0001-53": {"inception":"2013-01-02","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
-        "47.511.351/0001-20": {"inception":"2022-08-31","initialQuota":100.00, "tipo":"Long Only",    "trib":"RV"},
-        "52.116.227/0001-09": {"inception":"2023-09-29","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
-        "47.612.105/0001-65": {"inception":"2022-11-30","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
-        "29.726.133/0001-21": {"inception":"2018-05-16","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
-        "35.828.684/0001-07": {"inception":"2020-06-30","initialQuota":1.0000, "tipo":"Multimercado", "trib":"TR"},
-        "16.876.874/0001-47": {"inception":"2019-01-02","initialQuota":1.0000, "tipo":"Long Only",    "trib":"RV"},
-        "52.239.457/0001-57": {"inception":"2023-09-29","initialQuota":1.0000, "tipo":"Renda Fixa - Pós-fixado Global","trib":"TR"},
-        "51.253.495/0001-00": {"inception":"2023-08-01","initialQuota":1.0000, "tipo":"Renda Fixa - Crédito Privado",  "trib":"TR"},
-        "52.969.671/0001-69": {"inception":"2023-11-30","initialQuota":1.0000, "tipo":"Renda Fixa - Debêntures Incentivadas","trib":"Isento"},
-    }
+    # FUND_META_PY agora é constante de módulo (ver topo) — usada também na matriz de alphas.
 
     # Port fiel de cagrInception(f) — usa cota inicial e cota na data de referência
     def cagr_inception_py(cnpj: str, latest_quota: float | None,
@@ -2410,11 +2414,17 @@ def fetch_fed_dff(start: datetime.date, anchor: datetime.date) -> dict:
             except ValueError: continue
         return out
     try:
-        req = urllib.request.Request(csv_url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            rates = _parse_csv(resp.read().decode("utf-8"))
+        rates = None
+        for _try, _to in enumerate((30, 60, 90), 1):
+            try:
+                req = urllib.request.Request(csv_url, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req, timeout=_to) as resp:
+                    rates = _parse_csv(resp.read().decode("utf-8"))
+                if rates: break
+            except Exception as _rex:
+                print(f"  Fed DFF tentativa {_try}/3 falhou ({_rex})")
         if not rates:
-            raise ValueError("FRED DFF vazio")
+            raise ValueError("FRED DFF vazio após 3 tentativas")
         # fator acumulado: cada dia compõe (1 + taxa_anual/100/360).
         # DFF é taxa overnight anualizada; aplicamos por dia-calendário (forward-fill
         # implícito: dias sem cotação herdam a última taxa via varredura contínua).
@@ -2433,20 +2443,34 @@ def fetch_fed_dff(start: datetime.date, anchor: datetime.date) -> dict:
         print(f"  Fed DFF: {len(rates)} cotações, fator acumulado de {all_days[0]} a {anchor.isoformat()}")
         return price_map
     except Exception as ex:
-        print(f"  ✗ Fed DFF falhou ({ex}) — usando fallback de taxa Fed constante")
-        # Fallback: Fed constante (último nível conhecido ~ informado no config do alocador).
-        # Mantém o benchmark vivo mesmo sem FRED. FED_FALLBACK pode vir do ambiente.
+        print(f"  ✗ Fed DFF falhou ({ex}) — usando fallback HISTÓRICO (médias anuais)")
+        # Fallback com médias ANUAIS históricas da DFF, não uma constante.
+        # A constante (3,6%) foi calibrada para janelas de 5 anos; aplicada a 13
+        # anos ela reescreve a história (Fed real ficou em ~0-2% de 2013 a 2021)
+        # e distorceu o carry do S&P hedgeado em ~2pp/ano nas janelas longas —
+        # detectado na auditoria da matriz de alphas (jul/2026). Estas são as
+        # médias anuais efetivas da DFF; o ano corrente pode ser sobrescrito
+        # via FED_FALLBACK no ambiente.
+        FED_ANNUAL_AVG = {
+            2008: 1.93, 2009: 0.16, 2010: 0.18, 2011: 0.10, 2012: 0.14,
+            2013: 0.11, 2014: 0.09, 2015: 0.13, 2016: 0.40, 2017: 1.00,
+            2018: 1.83, 2019: 2.16, 2020: 0.36, 2021: 0.08, 2022: 1.68,
+            2023: 5.03, 2024: 5.15, 2025: 4.33, 2026: 3.60,
+        }
         try:
-            fed_const = float(os.environ.get("FED_FALLBACK", "3.6"))
+            FED_ANNUAL_AVG[anchor.year] = float(os.environ.get("FED_FALLBACK", FED_ANNUAL_AVG.get(anchor.year, 3.6)))
         except ValueError:
-            fed_const = 3.6
+            pass
+        _last_known = FED_ANNUAL_AVG[max(FED_ANNUAL_AVG)]
         acc = 1.0; price_map = {}
-        cur = start; fed_daily = 1 + (fed_const / 100.0) / 360.0
+        cur = start
         while cur <= anchor:
-            acc *= fed_daily
+            fed_y = FED_ANNUAL_AVG.get(cur.year, _last_known)
+            acc *= 1 + (fed_y / 100.0) / 360.0
             price_map[cur.isoformat()] = acc
             cur += datetime.timedelta(days=1)
-        print(f"  Fed fallback constante {fed_const}%/ano de {start.isoformat()} a {anchor.isoformat()}")
+        print(f"  Fed fallback histórico de {start.isoformat()} a {anchor.isoformat()} "
+              f"({FED_ANNUAL_AVG.get(start.year, _last_known)}% → {FED_ANNUAL_AVG.get(anchor.year, _last_known)}%)")
         return price_map
 
 
@@ -2843,8 +2867,9 @@ def main() -> None:
 
     print(f"\n── S&P 500 (SPXR11 / hedge cambial — carry CDI−Fed, sem câmbio)")
     # fetch longo: o mapa BRL-hedge alimenta o alpha desde inception por fundo.
-    # Cobertura limitada pelo CDI (156 meses) — inceptions anteriores ficam '—'.
-    _idx_from = datetime.date(max(2008, anchor.year - 13), 1, 1)
+    # Cobertura limitada pela interseção S&P × CDI (200 meses) × Fed — alcança a
+    # inception meta mais antiga (2010-07); anteriores ficam '—'.
+    _idx_from = datetime.date(2008, 1, 1)
     sp500, sp_brl_map = fetch_sp500(anchor, a12, a36, a60, cdi_price_map, fetch_from=_idx_from)
 
     print(f"\n── S&P 500 (USD nominal)")
@@ -2961,10 +2986,15 @@ def main() -> None:
 
     # ── Alpha do CAGR vs. cada índice, por janela + inception ────────────────────
     # Janelas (12/36/60): diferença simples de CAGRs — mesma convenção do alpha
-    # da tabela (calcAlpha no HTML). Inception: CAGR do índice recalculado entre
-    # a inception CVM do fundo e a âncora, no price map do índice — mesma
-    # convenção do alphaVsIbov/ibovCagrInception existentes. None quando o
-    # histórico do índice não alcança a inception do fundo (UI mostra '—').
+    # da tabela (calcAlpha no HTML).
+    # Inception: usa a MESMA base do cartão "Retorno desde o início" do painel —
+    # FUND_META_PY (initialQuota na data de início das operações), não a inception
+    # CVM. Misturar as duas bases no mesmo painel induzia leituras erradas (ex.:
+    # painel mostrando 28%aa/13a do Ártica ao lado de um alpha calculado sobre a
+    # base CVM 2020 → parecia implicar S&P hedge de 35%aa). O índice é recalculado
+    # entre a inception meta e a latestDate DO FUNDO (mesmo período exato).
+    # Fallback: base CVM quando o fundo não tem meta. None quando o histórico do
+    # índice não alcança a inception (UI mostra '—').
     _idx_maps = {
         "ibov":   (ibov,       ibov_price_map),
         "sp_usd": (sp500_usd,  sp_usd_map),
@@ -2975,10 +3005,23 @@ def main() -> None:
     _n_alpha = 0
     for r in results:
         if r.get("error"): continue
-        try:
-            _inc_date = datetime.date.fromisoformat(r["inceptionDate"]) if r.get("inceptionDate") else None
-        except Exception:
-            _inc_date = None
+        # base de inception: meta (painel) → fallback CVM
+        _meta = FUND_META_PY.get(r.get("cnpjFmt") or "", {})
+        _inc_date, _fi_cagr = None, None
+        _end_iso = r.get("latestDate")
+        if _meta.get("inception") and _meta.get("initialQuota") and r.get("latestQuota") and _end_iso:
+            try:
+                _inc_date = datetime.date.fromisoformat(_meta["inception"])
+                _fi_cagr  = cagr(_meta["initialQuota"], r["latestQuota"],
+                                 years_apart(_meta["inception"], _end_iso))
+            except Exception:
+                _inc_date, _fi_cagr = None, None
+        if _inc_date is None or _fi_cagr is None:
+            try:
+                _inc_date = datetime.date.fromisoformat(r["inceptionDate"]) if r.get("inceptionDate") else None
+            except Exception:
+                _inc_date = None
+            _fi_cagr = r.get("cagrInception")
         _al = {}
         for _key, (_blk, _pm) in _idx_maps.items():
             _a = {}
@@ -2986,15 +3029,15 @@ def main() -> None:
                 _fv, _bv = r.get(_w), (_blk or {}).get(_w)
                 _a[_o] = round(_fv - _bv, 4) if (_fv is not None and _bv is not None) else None
             _inc = None
-            if _inc_date and r.get("cagrInception") is not None and _pm:
-                _bci = index_cagr_between(_pm, _inc_date, anchor)
+            if _inc_date and _fi_cagr is not None and _pm and _end_iso:
+                _bci = index_cagr_between(_pm, _inc_date, datetime.date.fromisoformat(_end_iso))
                 if _bci is not None:
-                    _inc = round(r["cagrInception"] - _bci, 4)
+                    _inc = round(_fi_cagr - _bci, 4)
             _a["inc"] = _inc
             _al[_key] = _a
         r["alphas"] = _al
         _n_alpha += 1
-    print(f"── Matriz de alphas vs índices: {_n_alpha} fundos")
+    print(f"── Matriz de alphas vs índices: {_n_alpha} fundos (início = base FUND_META/painel)")
 
     data_out = {
         "generatedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
