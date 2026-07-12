@@ -3485,6 +3485,7 @@ let fundBetas    = {};
 let jensenAlphaMap = {};
 let sp500        = { cagr12: null, cagr36: null, cagr60: null };
 let sp500usd     = { cagr12: null, cagr36: null, cagr60: null };   // S&P nominal, USD
+let sp500dolar   = { cagr12: null, cagr36: null, cagr60: null };   // S&P em BRL via câmbio, sem hedge
 let smll         = { cagr12: null, cagr36: null, cagr60: null };   // small caps B3
 let idiv         = { cagr12: null, cagr36: null, cagr60: null };   // dividendos B3
 let cdi          = { cagr12: null, cagr36: null, cagr60: null };
@@ -4204,11 +4205,12 @@ function buildAlphaMatrix(f) {
   const A = f.alphas;
   if (!A) return '';
   const rows = [
-    ['ibov',   'Ibovespa'],
-    ['smll',   'SMLL'],
-    ['idiv',   'IDIV'],
-    ['sp_usd', 'S&P 500 (USD)'],
-    ['sp_brl', 'S&P 500 (BRL · hedge)'],
+    ['ibov',     'Ibovespa'],
+    ['smll',     'SMLL'],
+    ['idiv',     'IDIV'],
+    ['sp_usd',   'S&P 500 (USD)'],
+    ['sp_dolar', 'S&P 500 (BRL · dolarizado)'],
+    ['sp_brl',   'S&P 500 (BRL · hedge)'],
   ];
   const fmt = v => v == null
     ? '<span class="am-na">—</span>'
@@ -4421,6 +4423,7 @@ function render() {
     if (smll[key]     != null) merged.push({ isFund:false, sortVal: smll[key],     row: buildIndexStrip('SMLL · small caps', smll, idxSourceNote(smll)) });
     if (idiv[key]     != null) merged.push({ isFund:false, sortVal: idiv[key],     row: buildIndexStrip('IDIV · dividendos', idiv, idxSourceNote(idiv)) });
     if (sp500usd[key] != null) merged.push({ isFund:false, sortVal: sp500usd[key], row: buildIndexStrip('S&P 500 · USD', sp500usd, 'nominal, sem câmbio e sem hedge') });
+    if (sp500dolar[key] != null) merged.push({ isFund:false, sortVal: sp500dolar[key], row: buildIndexStrip('S&P 500 · dolarizado', sp500dolar, 'USD→BRL na PTAX · ganha e perde com o câmbio · sem hedge') });
   }
   merged.sort((a, z) => sortDir * (z.sortVal - a.sortVal));
 
@@ -4471,6 +4474,7 @@ function render() {
     html += buildIndexStrip('SMLL · small caps', smll, idxSourceNote(smll));
     html += buildIndexStrip('IDIV · dividendos', idiv, idxSourceNote(idiv));
     html += buildIndexStrip('S&P 500 · USD', sp500usd, 'nominal, sem câmbio e sem hedge');
+    html += buildIndexStrip('S&P 500 · dolarizado', sp500dolar, 'USD→BRL na PTAX · ganha e perde com o câmbio · sem hedge');
     html += buildCdiRow();
     html += buildSP500Row();
   }
@@ -4609,6 +4613,7 @@ async function load() {
     if (data.cdi)         cdi        = data.cdi;
     if (data.sp500)       sp500      = data.sp500;
     if (data.sp500_usd)   sp500usd   = data.sp500_usd;
+    if (data.sp500_dolar) sp500dolar = data.sp500_dolar;
     if (data.smll)        smll       = data.smll;
     if (data.idiv)        idiv       = data.idiv;
     if (data.ntnb)        ntnb       = data.ntnb;
