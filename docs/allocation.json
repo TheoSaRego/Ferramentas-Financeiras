@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T18:06:00.589742+00:00",
+  "generatedAt": "2026-07-13T18:06:48.815526+00:00",
   "asof": "2026-07-13",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -15,7 +15,7 @@
     "alvo_sp": 0.25
   },
   "brasil_signal": {
-    "score": 5.91,
+    "score": 5.58,
     "conf": "ALTA",
     "label": "NEUTRO",
     "cor": "#b07d0a",
@@ -26,8 +26,8 @@
         "items": [
           {
             "key": "erp",
-            "score": 7,
-            "read": "ERP real +0.2pp — bolsa levem. acima",
+            "score": 5.5,
+            "read": "ERP real -0.4pp — juro real levem. superior",
             "weight": 0.22
           },
           {
@@ -157,29 +157,29 @@
     }
   },
   "decision": {
-    "tranche": 4200.0,
-    "piso": 0.098525,
+    "tranche": 1700.0,
+    "piso": 0.10594999999999999,
     "cashpct": 0.2,
-    "gap": 0.10147500000000001,
-    "want": 45700.0,
-    "aloc_brasil": 4200.0,
+    "gap": 0.09405000000000002,
+    "want": 42300.0,
+    "aloc_brasil": 1700.0,
     "aloc_sp": 0.0,
     "rodadas": 1,
-    "base": 0.067025,
+    "base": 0.07444999999999999,
     "res_brasil": 0.0,
     "res_sp": 0.0315,
-    "tgt_brasil": 0.67610625,
-    "tgt_sp": 0.22536875,
+    "tgt_brasil": 0.6705375,
+    "tgt_sp": 0.2235125,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
-    "desc": "caixa-alvo 10% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
+    "desc": "caixa-alvo 11% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
   },
   "inputs": {
     "br_src": {
       "pl": "manual (override)",
       "dy": "manual (override)",
       "selic": "BCB SGS 432",
-      "ipca": "data.json (Focus)",
+      "ipca": "BCB SGS 13522",
       "ibov_dd": "ibov_price.json",
       "fund_dd": "planilha",
       "breadth": "breadth.json",
@@ -202,8 +202,8 @@
       "ey": 8.968609865470851,
       "dy": 4.83,
       "selic": 14.25,
-      "ipca": 5.16,
-      "real_cdi": 8.805,
+      "ipca": 4.64,
+      "real_cdi": 9.325,
       "ibov_dd": -11.453369375355516,
       "fund_dd": -7.743953810256899,
       "breadth_pct": 50.11,
@@ -224,13 +224,13 @@
       "ey": 3.067484662576687,
       "dy": 1.03,
       "real_us": 2.32,
-      "sp_dd": -1.09,
+      "sp_dd": -1.1,
       "fg": 44,
       "fed": 3.62,
       "us_cpi": 4.25,
       "infl_exp": 2.24,
       "carry": 10.629999999999999,
-      "sp_cur": 7526.53,
+      "sp_cur": 7526.17,
       "sp_ath": 7609.78
     }
   },
