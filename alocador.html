@@ -956,7 +956,7 @@ function fillFromAllocation(a){ if(!a) return;
   if(ds){
     const flags=(a.decay_flags||[]).filter(f=>f.level!=='ok' && f.msg.indexOf('concentração')<0);
     if(flags.length){
-      ds.innerHTML='<div class="dhd">monitor dos fundos · alfa 60m vs CDI · calculado no servidor</div>'
+      ds.innerHTML='<div class="dhd">monitor dos fundos · alfa 60m vs benchmark de estilo · calculado no servidor</div>'
         +flags.map(f=>'<span class="dl">'+f.msg+'</span>').join('');
       ds.style.display='';
     } else ds.style.display='none';
