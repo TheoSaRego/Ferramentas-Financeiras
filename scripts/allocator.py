@@ -245,7 +245,9 @@ def fetch_cnn_fng(default=None):
 SP_ATH_FILE = DOCS / "sp_ath.json"
 
 def fetch_sp_price():
-    """Preço mais recente do ^GSPC via yfinance download (mais robusto que .info)."""
+    """Preço mais recente do ^GSPC via yfinance download (mais robusto que .info).
+    PREÇO de propósito: drawdown e ATH são conceitos de preço ("caiu X% do topo"),
+    não de retorno total — ^SP500TR não faz drawdown como o mercado entende."""
     import yfinance as yf
     try:
         g = yf.download("^GSPC", period="5d", auto_adjust=True, progress=False, threads=False)
