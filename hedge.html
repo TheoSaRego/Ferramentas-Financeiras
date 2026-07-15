@@ -7,7 +7,7 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg:#f7f6f2; --surface:#ffffff; --surface-2:#faf9f6; --border:rgba(0,0,0,0.08);
+    --bg:#f7f6f2; --surface:#ffffff; --surface-2:#faf9f6; --border:rgba(0,0,0,0.08); --border-str:rgba(0,0,0,0.14);
     --text:#1a1916; --muted:#7a7870;
     --green:#1a7a52; --green-light:#e8f5ee;
     --blue:#1a4a8a;  --blue-light:#e8eef8;
@@ -16,7 +16,7 @@
     --accent:#e05c2a;
   }
   [data-theme=dark] {
-    --bg:#141412; --surface:#1e1d1a; --surface-2:#191817; --border:rgba(255,255,255,0.09);
+    --bg:#141412; --surface:#1e1d1a; --surface-2:#191817; --border:rgba(255,255,255,0.09); --border-str:rgba(255,255,255,0.16);
     --text:#e8e6e0; --muted:#7a7870;
     --green:#2db87a; --green-light:#0d2e1e;
     --blue:#4d8fd4;  --blue-light:#0d1e33;
@@ -29,7 +29,6 @@
     min-height:100vh; padding:2rem 1.5rem 4rem; max-width:880px; margin:0 auto;
     transition:background .2s,color .2s;
   }
-  /* top bar */
   .top-bar { display:flex; justify-content:space-between; align-items:center;
     margin-bottom:2.5rem; padding-bottom:1rem; border-bottom:1px solid var(--border); }
   .wordmark { font-family:'Courier New',monospace; font-size:.72rem; color:var(--muted);
@@ -41,7 +40,6 @@
     background:transparent; color:var(--muted); cursor:pointer; transition:all .15s;
     white-space:nowrap; text-decoration:none; }
   .back-link:hover,.theme-btn:hover { border-color:var(--text); color:var(--text); }
-  /* module header */
   .module-tag { font-family:'Courier New',monospace; font-size:.62rem; text-transform:uppercase;
     letter-spacing:.1em; color:var(--muted); margin-bottom:.5rem; }
   .module-title { font-size:1.9rem; font-weight:normal; letter-spacing:-.025em;
@@ -49,69 +47,81 @@
   .module-meta { font-family:'Courier New',monospace; font-size:.72rem; color:var(--muted);
     margin-bottom:1.5rem; }
   .lede { font-family:'Courier New',monospace; font-size:.78rem; line-height:1.7;
-    color:var(--muted); margin-bottom:2.5rem; max-width:600px; }
+    color:var(--muted); margin-bottom:1.75rem; max-width:600px; }
   .lede b { color:var(--text); font-weight:normal; }
-  /* sections */
-  h2.sec { font-size:1.15rem; font-weight:normal; letter-spacing:-.02em; margin:0 0 .3rem;
-    padding-top:2.25rem; }
-  .sub { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted);
-    margin-bottom:1.4rem; line-height:1.5; }
   .tip { border-bottom:1px dotted var(--muted); cursor:help; }
+  /* start-date selector */
+  .startbar { background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:.9rem 1.1rem; margin-bottom:2rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+  .startbar .lbl { font-family:'Courier New',monospace; font-size:.62rem; text-transform:uppercase;
+    letter-spacing:.08em; color:var(--muted); }
+  .startbar .opts { display:flex; gap:.3rem; flex-wrap:wrap; }
+  .sbtn { background:none; border:1px solid var(--border); color:var(--muted);
+    font-family:'Courier New',monospace; font-size:.66rem; padding:5px 12px; border-radius:16px;
+    cursor:pointer; transition:all .13s; white-space:nowrap; }
+  .sbtn:hover, .sbtn.on { border-color:var(--accent); color:var(--accent); background:rgba(224,92,42,0.06); }
+  [data-theme=dark] .sbtn:hover, [data-theme=dark] .sbtn.on { background:rgba(240,112,64,0.10); }
+  .startbar .from { font-family:'Courier New',monospace; font-size:.62rem; color:var(--muted); margin-left:auto; }
+  /* sections */
+  h2.sec { font-size:1.15rem; font-weight:normal; letter-spacing:-.02em; margin:0 0 .3rem; padding-top:2.25rem; }
+  .sub { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted); margin-bottom:1.4rem; line-height:1.5; }
   /* stat cards */
   .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1rem; }
   .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.15rem; }
-  .stat .lbl { font-family:'Courier New',monospace; font-size:.58rem; text-transform:uppercase;
-    letter-spacing:.07em; color:var(--muted); margin-bottom:.5rem; }
+  .stat .lbl { font-family:'Courier New',monospace; font-size:.58rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:.5rem; }
   .stat .val { font-size:1.7rem; letter-spacing:-.02em; line-height:1; }
   .stat .val.g { color:var(--green); } .stat .val.b { color:var(--blue); }
   .stat .sub { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); margin-top:.45rem; line-height:1.4; }
   /* tables */
   .tbl-wrap { overflow-x:auto; margin-bottom:.5rem; }
   table { width:100%; border-collapse:collapse; font-size:.85rem; }
-  thead th { font-family:'Courier New',monospace; font-size:.58rem; text-transform:uppercase;
-    letter-spacing:.06em; color:var(--muted); font-weight:normal; text-align:right;
-    padding:0 .7rem .7rem; border-bottom:1px solid var(--border); white-space:nowrap; }
+  thead th { font-family:'Courier New',monospace; font-size:.58rem; text-transform:uppercase; letter-spacing:.06em;
+    color:var(--muted); font-weight:normal; text-align:right; padding:0 .7rem .7rem; border-bottom:1px solid var(--border); white-space:nowrap; }
   thead th:first-child { text-align:left; }
-  tbody td { text-align:right; padding:.6rem .7rem; border-bottom:1px solid var(--border);
-    font-variant-numeric:tabular-nums; }
+  tbody td { text-align:right; padding:.6rem .7rem; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
   tbody td:first-child { text-align:left; color:var(--text); }
   tbody tr:last-child td { border-bottom:none; }
   tbody tr:hover td { background:var(--surface-2); }
   .num-g { color:var(--green); } .num-b { color:var(--blue); }
   .delta-pos { color:var(--green); } .delta-neg { color:var(--muted); }
-  .win { font-family:'Courier New',monospace; font-size:.56rem; letter-spacing:.04em;
-    padding:3px 9px; border-radius:20px; display:inline-block; }
+  .win { font-family:'Courier New',monospace; font-size:.56rem; letter-spacing:.04em; padding:3px 9px; border-radius:20px; display:inline-block; }
   .win.SPXR { background:var(--green-light); color:var(--green); }
   .win.SPXI { background:var(--blue-light); color:var(--blue); }
   /* charts */
-  .card { background:var(--surface); border:1px solid var(--border); border-radius:14px;
-    padding:1.35rem 1.35rem 1.15rem; margin-bottom:1.5rem; }
-  .legend { display:flex; gap:1.4rem; font-family:'Courier New',monospace; font-size:.65rem;
-    color:var(--muted); margin-bottom:1rem; flex-wrap:wrap; }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:1.35rem 1.35rem 1.15rem; margin-bottom:1.5rem; }
+  .chart-head { display:flex; justify-content:space-between; align-items:center; gap:.75rem; margin-bottom:1rem; flex-wrap:wrap; }
+  .legend { display:flex; gap:1.4rem; font-family:'Courier New',monospace; font-size:.65rem; color:var(--muted); flex-wrap:wrap; }
   .legend span { display:inline-flex; align-items:center; gap:7px; }
   .legend i { width:14px; height:3px; border-radius:2px; display:inline-block; }
-  .legend i.dash { background:none !important;
-    border-top:2px dashed var(--muted); height:0; }
+  .legend i.dash { background:none !important; border-top:2px dashed var(--muted); height:0; }
+  .range-row { display:flex; gap:.3rem; align-items:center; flex-wrap:wrap; }
+  .rbtn { background:none; border:1px solid var(--border); color:var(--muted); font-family:'Courier New',monospace;
+    font-size:.62rem; padding:4px 10px; border-radius:14px; cursor:pointer; transition:all .13s; }
+  .rbtn:hover, .rbtn.on { border-color:var(--accent); color:var(--accent); background:rgba(224,92,42,0.06); }
+  [data-theme=dark] .rbtn:hover, [data-theme=dark] .rbtn.on { background:rgba(240,112,64,0.10); }
+  .zoom-reset { background:transparent; border:1px solid var(--border-str); color:var(--muted);
+    font-family:'Courier New',monospace; font-size:.6rem; padding:4px 10px; border-radius:14px; cursor:pointer;
+    transition:all .13s; display:none; }
+  .zoom-reset.visible { display:inline-block; }
+  .zoom-reset:hover { border-color:var(--accent); color:var(--accent); }
   .seg { display:inline-flex; border:1px solid var(--border); border-radius:20px; overflow:hidden; margin-bottom:1rem; }
-  .seg button { font-family:'Courier New',monospace; font-size:.64rem; padding:5px 14px;
-    border:none; background:transparent; color:var(--muted); cursor:pointer; transition:all .13s; }
+  .seg button { font-family:'Courier New',monospace; font-size:.64rem; padding:5px 14px; border:none; background:transparent; color:var(--muted); cursor:pointer; transition:all .13s; }
   .seg button.on { background:var(--text); color:var(--bg); }
-  .chart-host { position:relative; width:100%; }
+  .chart-host { position:relative; width:100%; height:320px; }
+  .chart-host canvas { width:100% !important; }
+  .chart-hint { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); margin-top:.5rem; text-align:right; }
   /* callout */
-  .callout { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted);
-    line-height:1.65; background:var(--surface); border:1px solid var(--border);
-    border-left:2px solid var(--green); border-radius:0 10px 10px 0; padding:.9rem 1.1rem; margin:0 0 1.5rem; }
+  .callout { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted); line-height:1.65;
+    background:var(--surface); border:1px solid var(--border); border-left:2px solid var(--green); border-radius:0 10px 10px 0; padding:.9rem 1.1rem; margin:0 0 1.5rem; }
   .callout b { color:var(--text); font-weight:normal; }
-  .foot-src { font-family:'Courier New',monospace; font-size:.6rem; color:var(--muted);
-    margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--border); line-height:1.8; }
-  /* floating tooltip — mesmo padrão do alocador */
-  #g-tip { position:fixed; background:var(--text); color:var(--bg);
-    font-family:'Courier New',monospace; font-size:.60rem; padding:9px 13px; border-radius:6px;
-    white-space:pre-line; word-break:break-word; width:max-content; max-width:280px;
-    pointer-events:none; opacity:0; transform:translateY(4px);
-    transition:opacity .13s ease, transform .13s ease; z-index:99999; line-height:1.72;
+  .foot-src { font-family:'Courier New',monospace; font-size:.6rem; color:var(--muted); margin-top:3rem; padding-top:1.2rem; border-top:1px solid var(--border); line-height:1.8; }
+  /* floating tooltip */
+  #g-tip { position:fixed; background:var(--text); color:var(--bg); font-family:'Courier New',monospace; font-size:.60rem;
+    padding:9px 13px; border-radius:6px; white-space:pre-line; word-break:break-word; width:max-content; max-width:280px;
+    pointer-events:none; opacity:0; transform:translateY(4px); transition:opacity .13s ease, transform .13s ease; z-index:99999; line-height:1.72;
     box-shadow:0 4px 20px rgba(0,0,0,0.28); }
   #g-tip.visible { opacity:1; transform:translateY(0); }
+  [data-tip] { cursor:help; }
   @media (max-width:640px){ .stats{grid-template-columns:1fr 1fr;} .module-title{font-size:1.6rem;} }
 </style>
 </head>
@@ -133,60 +143,75 @@
 <p class="lede">
   Um brasileiro no S&amp;P escolhe entre <b>SPXR11</b> <span class="tip" data-tip="Hedge cambial: neutraliza o dólar e, pela paridade de juros, embolsa o diferencial Selic − Fed (o 'carry'). Retorno ≈ S&P em dólar + carry, sem câmbio.">(hedge cambial)</span>
   e <b>SPXI11</b> <span class="tip" data-tip="Exposição cambial: S&P puro traduzido em reais. Ganha quando o dólar sobe contra o real, perde quando o real aprecia.">(exposição ao dólar)</span>.
-  Este estudo mede quem venceu em todas as janelas do século XXI, com retorno total.
+  Este estudo mede quem venceu em cada janela, com retorno total.
 </p>
+
+<div class="startbar">
+  <span class="lbl" data-tip="Recomeça TODO o estudo — janelas, taxa de vitória, distribuição e tese — a partir desta data. Os primeiros anos do século tiveram carry Selic−Fed altíssimo (Selic 19–26%); excluí-los testa se a vantagem do hedge persiste num regime de juros mais normal.">início do estudo</span>
+  <div class="opts" id="startOpts"></div>
+  <span class="from" id="startFrom"></span>
+</div>
 
 <div class="stats" id="stats"></div>
 <div class="callout" id="thesis"></div>
 
 <h2 class="sec">Janelas terminando hoje</h2>
-<div class="sub" id="sub-ending">CAGR anualizado até o fim da série.</div>
+<div class="sub">CAGR anualizado até o fim da série.</div>
 <div class="tbl-wrap" id="tbl-ending"></div>
 
 <h2 class="sec">A evolução dos dois índices</h2>
-<div class="sub">Base 100 em jan/2000.</div>
+<div class="sub">Rebaseado a 100 na data de início. Botões para o período; scroll para zoom, shift+drag para navegar.</div>
 <div class="card">
-  <div class="legend">
-    <span><i style="background:var(--green)"></i>SPXR11 · hedge + carry</span>
-    <span><i style="background:var(--blue)"></i>SPXI11 · dolarizado</span>
-    <span><i class="dash"></i>S&amp;P em dólar</span>
+  <div class="chart-head">
+    <div class="legend">
+      <span><i style="background:var(--green)"></i>SPXR11 · hedge + carry</span>
+      <span><i style="background:var(--blue)"></i>SPXI11 · dolarizado</span>
+      <span><i class="dash"></i>S&amp;P em dólar</span>
+    </div>
+    <div class="range-row" id="rangeRow">
+      <button class="rbtn" onclick="setRange(36,this)">3A</button>
+      <button class="rbtn" onclick="setRange(60,this)">5A</button>
+      <button class="rbtn" onclick="setRange(120,this)">10A</button>
+      <button class="rbtn on" onclick="setRange(null,this)">Máx</button>
+      <button class="zoom-reset" id="zoomReset" onclick="resetZoom()">↺ resetar zoom</button>
+    </div>
   </div>
   <div class="seg">
     <button class="on" id="sc-log" onclick="setScale('logarithmic',this)">log</button>
     <button id="sc-lin" onclick="setScale('linear',this)">linear</button>
   </div>
-  <div class="chart-host"><canvas id="chartIdx" height="300" role="img" aria-label="Evolução de SPXR, SPXI e S&P em dólar desde 2000"></canvas></div>
+  <div class="chart-host"><canvas id="chartIdx" role="img" aria-label="Evolução de SPXR, SPXI e S&P em dólar"></canvas></div>
+  <div class="chart-hint">scroll para zoom · shift+drag para navegar</div>
 </div>
 
 <h2 class="sec">Todas as janelas móveis</h2>
-<div class="sub">Cada mês de início possível. A <span class="tip" data-tip="Fração das janelas históricas em que o hedge (SPXR) terminou acima do dolarizado (SPXI). Quanto mais longo o horizonte, mais o carry domina o câmbio.">taxa de vitória</span> do hedge por horizonte é o teste decisivo.</div>
+<div class="sub">Cada mês de início possível dentro do recorte. A <span class="tip" data-tip="Fração das janelas em que o hedge (SPXR) terminou acima do dolarizado (SPXI). Muda bastante com a data de início: os anos de carry alto inflam a vantagem do hedge.">taxa de vitória</span> do hedge por horizonte é o teste decisivo.</div>
 <div class="tbl-wrap" id="tbl-rolling"></div>
 <div class="callout" id="note-rolling"></div>
 
 <h2 class="sec">Distribuição do CAGR</h2>
-<div class="sub">Percentis do retorno anualizado nas janelas móveis — o <span class="tip" data-tip="O menor CAGR observado em todas as janelas daquele horizonte: o pior caso histórico. É aqui que o hedge mais se separa do dolarizado.">piso</span> importa mais que a média.</div>
+<div class="sub">Percentis do retorno anualizado nas janelas móveis — o <span class="tip" data-tip="O menor CAGR observado em todas as janelas daquele horizonte: o pior caso histórico dentro do recorte escolhido.">piso</span> importa mais que a média.</div>
 <div class="seg" id="dist-seg"></div>
 <div class="card">
-  <div class="legend">
+  <div class="legend" style="margin-bottom:1rem;">
     <span><i style="background:var(--green)"></i>SPXR11</span>
     <span><i style="background:var(--blue)"></i>SPXI11</span>
   </div>
-  <div class="chart-host"><canvas id="chartDist" height="260" role="img" aria-label="Distribuição de percentis do CAGR"></canvas></div>
+  <div class="chart-host" style="height:260px;"><canvas id="chartDist" role="img" aria-label="Distribuição de percentis do CAGR"></canvas></div>
 </div>
 
 <h2 class="sec">Janelas históricas fixas</h2>
-<div class="sub">Regimes específicos. Onde o dolarizado venceu, houve choque cambial ou real muito valorizado no início.</div>
+<div class="sub">Regimes específicos (independentes da data de início). Onde o dolarizado venceu, houve choque cambial ou real muito valorizado no início.</div>
 <div class="tbl-wrap" id="tbl-fixed"></div>
 
 <div class="foot-src" id="src"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-/* fallback de CDN: se o cdnjs falhar, tenta jsDelivr antes de desistir */
-if (typeof Chart === 'undefined') {
-  document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>');
-}
+if (typeof Chart === 'undefined') { document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>'); }
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-zoom/2.0.1/chartjs-plugin-zoom.min.js"></script>
 <script>
 /* theme */
 const saved=localStorage.getItem('theme');
@@ -199,7 +224,7 @@ function toggleTheme(){
 }
 function cssv(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim();}
 
-/* floating tooltip — padrão do alocador */
+/* floating tooltip */
 (function(){
   const tip=document.getElementById('g-tip'); let activeEl=null;
   function show(el,e){ const t=el.getAttribute('data-tip'); if(!t||!t.trim())return; tip.textContent=t; tip.classList.add('visible'); move(e); activeEl=el; }
@@ -211,121 +236,237 @@ function cssv(n){return getComputedStyle(document.documentElement).getPropertyVa
   addEventListener('mousemove',move); addEventListener('scroll',hide,true);
 })();
 
-let DATA=null, chartIdx=null, chartDist=null, curScale='logarithmic', curDist=10;
+/* ══ state ══ */
+let RAW=null;           // full JSON
+let startMonth=null;    // current study start (e.g. '2000-01')
+let curScale='logarithmic', curDist=10, curRangeMonths=null;
+let chartIdx=null, chartDist=null;
+const baseFont={family:"'Courier New', monospace",size:10};
 
-fetch('hedge_study.json').then(r=>r.json()).then(d=>{DATA=d; render();})
-  .catch(e=>{document.getElementById('meta').textContent='erro ao carregar hedge_study.json';});
+/* ══ window math (ported from Python, parametrized by startMonth) ══ */
+const ym=(s)=>{const[y,m]=s.split('-').map(Number);return y*12+(m-1);};
+function ymAdd(s,k){const t=ym(s)+k;return `${String(Math.floor(t/12)).padStart(4,'0')}-${String(t%12+1).padStart(2,'0')}`;}
+function yrsBetween(a,b){return (ym(b)-ym(a))/12;}
+function cagr(S,a,b){if(!(a in S)||!(b in S))return null;const y=yrsBetween(a,b);return y>0?Math.pow(S[b]/S[a],1/y)-1:null;}
+function totalRet(S,a,b){return (a in S&&b in S)?S[b]/S[a]-1:null;}
 
-function fmt(x,d=1){return (x>0?'':'')+x.toFixed(d);}
+function monthsFrom(start){ return RAW.series.months.filter(m=>m>=start); }
 
-function render(){
-  const m=DATA.meta;
-  document.getElementById('meta').textContent=`${m.inicio} → ${m.fim} · ${m.meses} meses · atualizado ${m.gerado.slice(0,10)}`;
+/* rebase a series to 100 at `start` */
+function rebase(series, months, start){
+  const b0=series[start]; const out={};
+  months.forEach(m=>{ out[m]=series[m]/b0*100; });
+  return out;
+}
 
-  const s10=DATA.dist['10'];
+function computeAll(start){
+  const S=RAW.series;
+  const months=monthsFrom(start);
+  const END=months[months.length-1];
+  const SPXI=S.SPXI, SPXR=S.SPXR;   // ratios are base-invariant → use raw for CAGR/win
+
+  // ending windows (from END going back), but not before start
+  const ending=[];
+  [1,2,3,5,7,10,15,20,26].forEach(n=>{
+    const st=ymAdd(END,-12*n);
+    if(st<start) return;
+    const ci=cagr(SPXI,st,END), cr=cagr(SPXR,st,END);
+    if(ci==null) return;
+    ending.push({n,inicio:st,spxi:ci*100,spxr:cr*100,delta:(cr-ci)*100,win:cr>ci?'SPXR':'SPXI'});
+  });
+
+  // rolling win-rate + distribution
+  const rolling=[], dist={};
+  [1,3,5,7,10,15,20].forEach(n=>{
+    let wins=0; const diffs=[], ciL=[], crL=[];
+    for(let i=0;i<months.length;i++){
+      const a=months[i], b=ymAdd(a,12*n);
+      if(!(b in SPXR)) break;
+      const ci=cagr(SPXI,a,b), cr=cagr(SPXR,a,b);
+      if(ci==null||cr==null) continue;
+      diffs.push((cr-ci)*100); ciL.push(ci*100); crL.push(cr*100);
+      if(cr>ci) wins++;
+    }
+    if(!diffs.length) return;
+    const mean=arr=>arr.reduce((s,x)=>s+x,0)/arr.length;
+    const med=arr=>{const s=[...arr].sort((a,b)=>a-b);const m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;};
+    rolling.push({n,janelas:diffs.length,spxr_vence:wins,pct:Math.round(100*wins/diffs.length),
+      delta_medio:mean(diffs),delta_mediana:med(diffs)});
+    const pctl=(arr,p)=>{const s=[...arr].sort((a,b)=>a-b);return s[Math.floor(p*(s.length-1))];};
+    dist[n]={spxi:{min:pctl(ciL,0),p10:pctl(ciL,.1),p25:pctl(ciL,.25),mediana:pctl(ciL,.5),p75:pctl(ciL,.75),p90:pctl(ciL,.9),max:pctl(ciL,1)},
+             spxr:{min:pctl(crL,0),p10:pctl(crL,.1),p25:pctl(crL,.25),mediana:pctl(crL,.5),p75:pctl(crL,.75),p90:pctl(crL,.9),max:pctl(crL,1)}};
+  });
+
+  // carry & fx over the window (annualized) — recomputed from index ratios:
+  // SPXR/SPXI ratio isolates the FX vs carry difference. Simpler: derive from series.
+  const yrs=yrsBetween(start,END);
+  const fxDesv=Math.pow(S.FX[END]/S.FX[start],1/yrs)-1;
+  // carry a.a.: SPXR/TR_USD ratio growth = carry; TR_USD is S&P in USD (base100 at 2000)
+  const carryTot=(S.SPXR[END]/S.SPXR[start])/(S.TR_USD[END]/S.TR_USD[start]);
+  const carryAA=Math.pow(carryTot,1/yrs)-1;
+
+  // max drawdown within window (rebased doesn't matter for dd)
+  const mdd=(series)=>{let peak=-1,dd=0;months.forEach(m=>{peak=Math.max(peak,series[m]);dd=Math.min(dd,series[m]/peak-1);});return dd*100;};
+
+  return {months,END,start,ending,rolling,dist,
+    meta:{yrs,carryAA:carryAA*100,fxDesv:fxDesv*100,fxIni:S.FX[start],fxFim:S.FX[END]},
+    dd:{spxr:mdd(SPXR),spxi:mdd(SPXI)}};
+}
+
+/* ══ load ══ */
+fetch('hedge_study.json').then(r=>r.json()).then(d=>{RAW=d; boot();})
+  .catch(()=>{document.getElementById('meta').textContent='erro ao carregar hedge_study.json';});
+
+function boot(){
+  // start options: século XXI + rolling N-year starts, snapped to available months
+  const allMonths=RAW.series.months, first=allMonths[0], last=allMonths[allMonths.length-1];
+  const opts=[{lbl:'Século XXI',start:first}];
+  [20,15,10,7,5].forEach(n=>{
+    let st=ymAdd(last,-12*n);
+    if(st<first) st=first;
+    if(st!==first || n===5) opts.push({lbl:n+' anos',start:st});
+  });
+  // de-dupe by start
+  const seen=new Set(), uniq=[];
+  opts.forEach(o=>{if(!seen.has(o.start)){seen.add(o.start);uniq.push(o);}});
+  window._startOpts=uniq;
+  document.getElementById('startOpts').innerHTML=uniq.map((o,i)=>
+    `<button class="sbtn ${i===0?'on':''}" data-start="${o.start}" onclick="setStart('${o.start}',this)">${o.lbl}</button>`).join('');
+  startMonth=first;
+  // fixed windows table is start-independent → render once
+  renderFixed();
+  renderDynamic();
+  window._redraw=()=>{drawIdx();drawDist();};
+  if(typeof Chart==='undefined'){
+    document.querySelectorAll('.chart-host').forEach(h=>h.innerHTML='<div style="font-family:\'Courier New\',monospace;font-size:.7rem;color:var(--muted);padding:2rem 0;text-align:center;">não foi possível carregar a biblioteca de gráficos</div>');
+  } else {
+    requestAnimationFrame(()=>requestAnimationFrame(()=>window._redraw()));
+  }
+}
+
+function setStart(s,btn){
+  startMonth=s; curRangeMonths=null;
+  document.querySelectorAll('#startOpts .sbtn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  // reset range buttons to Máx
+  document.querySelectorAll('#rangeRow .rbtn').forEach(b=>b.classList.remove('on'));
+  document.querySelector('#rangeRow .rbtn:nth-child(4)')?.classList.add('on');
+  renderDynamic();
+  requestAnimationFrame(()=>window._redraw());
+}
+
+const fmt=(x,d=1)=>x.toFixed(d);
+
+function renderDynamic(){
+  const R=computeAll(startMonth);
+  window._R=R;
+  const m=RAW.meta;
+  document.getElementById('meta').textContent=`${R.start} → ${R.END} · ${R.months.length} meses · atualizado ${m.gerado.slice(0,10)}`;
+  document.getElementById('startFrom').textContent=`recorte: ${R.start} → ${R.END}`;
+
+  const s10=R.dist[10]||R.dist[Math.max(...Object.keys(R.dist).map(Number))];
+  const r20=R.rolling.find(x=>x.n===20), rmax=R.rolling[R.rolling.length-1];
+  const longWin=r20||rmax;
   document.getElementById('stats').innerHTML=[
-    {lbl:'Carry Selic−Fed',val:m.carry_aa_pct+'%',cls:'g',sub:'ao ano · o motor do hedge',tip:'Diferencial médio de juros Selic − Fed capturado pelo hedge, ao ano, de 2000 a hoje.'},
-    {lbl:'Real desvalorizou',val:m.fx_desval_aa_pct+'%',cls:'b',sub:'ao ano · '+m.fx_ini+'→'+m.fx_fim,tip:'Ritmo de desvalorização do real frente ao dólar no período — o que o dolarizado captura.'},
-    {lbl:'SPXR vence em 20a',val:'100%',cls:'g',sub:'de todas as janelas',tip:'Em 20 anos, o hedge superou o dolarizado em todas as janelas históricas do século.'},
-    {lbl:'Piso 10a do hedge',val:s10.spxr.min+'%',cls:'g',sub:'pior caso · dolarizado '+s10.spxi.min+'%',tip:'Menor CAGR de 10 anos já observado. O hedge nunca teve década ruim; o dolarizado teve.'},
+    {lbl:'Carry Selic−Fed',val:fmt(R.meta.carryAA,1)+'%',cls:'g',sub:'ao ano · o motor do hedge',tip:'Diferencial médio de juros Selic − Fed capturado pelo hedge, ao ano, no recorte escolhido.'},
+    {lbl:'Real desvalorizou',val:fmt(R.meta.fxDesv,1)+'%',cls:'b',sub:'ao ano · '+R.meta.fxIni.toFixed(2)+'→'+R.meta.fxFim.toFixed(2),tip:'Ritmo de desvalorização do real no recorte — o que o dolarizado captura.'},
+    {lbl:`SPXR vence em ${longWin.n}a`,val:longWin.pct+'%',cls:longWin.pct>=50?'g':'b',sub:'das janelas do recorte',tip:'Fração das janelas do horizonte mais longo disponível em que o hedge superou o dolarizado.'},
+    {lbl:'Piso 10a do hedge',val:(s10?fmt(s10.spxr.min,1):'—')+'%',cls:'g',sub:s10?'pior caso · dolariz. '+fmt(s10.spxi.min,1)+'%':'—',tip:'Menor CAGR de 10 anos no recorte. Compare o piso do hedge com o do dolarizado.'},
   ].map(x=>`<div class="stat" data-tip="${x.tip}"><div class="lbl">${x.lbl}</div><div class="val ${x.cls}">${x.val}</div><div class="sub">${x.sub}</div></div>`).join('');
 
   document.getElementById('thesis').innerHTML=
-    `No Brasil, o hedge cambial <b>não é um custo de seguro — é uma fonte de retorno</b>. O carry Selic−Fed (${m.carry_aa_pct}% a.a.) foi mais que o dobro da desvalorização do real (${m.fx_desval_aa_pct}% a.a.): o hedge foi pago para não correr risco cambial, e o pagamento superou o prêmio do dólar.`;
+    `No recorte ${R.start}→${R.END}, o carry Selic−Fed rendeu <b>${fmt(R.meta.carryAA,1)}% a.a.</b> contra uma desvalorização do real de <b>${fmt(R.meta.fxDesv,1)}% a.a.</b> `+
+    (R.meta.carryAA>R.meta.fxDesv
+      ? `O carry superou o câmbio: o hedge foi pago para não correr risco cambial, e o pagamento venceu o prêmio do dólar.`
+      : `Aqui o câmbio superou o carry — regime em que o dolarizado tende a competir melhor.`);
 
   // ending
   document.getElementById('tbl-ending').innerHTML=table(
     ['Janela','Início','SPXI %aa','SPXR %aa','Δ aa','Vencedor'],
-    DATA.ending.map(r=>[
-      r.n+' anos', r.inicio,
-      `<span class="num-b">${fmt(r.spxi)}</span>`,
-      `<span class="num-g">${fmt(r.spxr)}</span>`,
+    R.ending.map(r=>[r.n+' anos',r.inicio,
+      `<span class="num-b">${fmt(r.spxi)}</span>`,`<span class="num-g">${fmt(r.spxr)}</span>`,
       `<span class="${r.delta>=0?'delta-pos':'delta-neg'}">${r.delta>0?'+':''}${fmt(r.delta)}</span>`,
       `<span class="win ${r.win}">${r.win}</span>`]));
 
   // rolling
   document.getElementById('tbl-rolling').innerHTML=table(
     ['Horizonte','Janelas','SPXR vence','% vitórias','Δ médio aa','Δ mediana'],
-    DATA.rolling.map(r=>[
-      r.n+' anos', r.janelas, r.spxr_vence,
-      `<span class="num-g">${r.pct}%</span>`,
-      '+'+fmt(r.delta_medio), '+'+fmt(r.delta_mediana)]));
-  const r20=DATA.rolling.find(x=>x.n===20),r5=DATA.rolling.find(x=>x.n===5);
+    R.rolling.map(r=>[r.n+' anos',r.janelas,r.spxr_vence,
+      `<span class="${r.pct>=50?'num-g':'num-b'}">${r.pct}%</span>`,
+      (r.delta_medio>=0?'+':'')+fmt(r.delta_medio),(r.delta_mediana>=0?'+':'')+fmt(r.delta_mediana)]));
+  const r5=R.rolling.find(x=>x.n===5);
   document.getElementById('note-rolling').innerHTML=
-    `Quanto mais longo o horizonte, mais o hedge domina. O câmbio reverte à média em torno de uma tendência de ~${m.fx_desval_aa_pct}%/ano, enquanto o carry de ~${m.carry_aa_pct}%/ano <b>acumula sem reverter</b>: em 5 anos o SPXR vence ${r5.pct}% das vezes; em 20 anos, ${r20.pct}%.`;
-
-  // fixed
-  document.getElementById('tbl-fixed').innerHTML=table(
-    ['Janela','Anos','SPXI tot','SPXR tot','SPXI aa','SPXR aa','Vencedor'],
-    DATA.fixed.map(r=>[
-      r.a+'→'+r.b, r.anos,
-      r.spxi_tot+'%', r.spxr_tot+'%',
-      `<span class="num-b">${fmt(r.spxi_aa)}</span>`,
-      `<span class="num-g">${fmt(r.spxr_aa)}</span>`,
-      `<span class="win ${r.win}">${r.win}</span>`]));
+    `Quanto mais longo o horizonte, mais o carry composto domina o ruído do câmbio. Neste recorte: em 5 anos o SPXR vence ${r5?r5.pct:'—'}% das vezes`+
+    (longWin?`; em ${longWin.n} anos, ${longWin.pct}%.`:'.')+
+    ` <b>Mude a data de início acima</b> para ver como os anos de carry alto (2000–2007) inflam a vantagem.`;
 
   // dist segmented control
-  document.getElementById('dist-seg').innerHTML=[1,3,5,7,10,15,20].filter(n=>DATA.dist[n])
+  const dks=Object.keys(R.dist).map(Number);
+  if(!R.dist[curDist]) curDist=dks[dks.length-1];
+  document.getElementById('dist-seg').innerHTML=[1,3,5,7,10,15,20].filter(n=>R.dist[n])
     .map(n=>`<button class="${n===curDist?'on':''}" data-n="${n}" onclick="setDist(${n},this)">${n}a</button>`).join('');
 
   document.getElementById('src').innerHTML=
-    'fontes · '+DATA.meta.fontes.join(' · ')+'<br>'+
-    'drawdown máximo mensal — SPXR '+DATA.drawdown.spxr+'% · SPXI '+DATA.drawdown.spxi+'% · '+
-    'S&amp;P com retorno total (dividendos reinvestidos) · carry acumulado '+m.carry_acum_pct+'%';
+    'fontes · '+RAW.meta.fontes.join(' · ')+'<br>drawdown máximo mensal no recorte — SPXR '+fmt(R.dd.spxr,1)+'% · SPXI '+fmt(R.dd.spxi,1)+'% · S&amp;P com retorno total (dividendos reinvestidos)';
+}
 
-  // draw charts after layout is settled (fixes 0-height first paint)
-  window._redraw=()=>{drawIdx();drawDist();};
-  if(typeof Chart==='undefined'){
-    document.querySelectorAll('.chart-host').forEach(h=>{
-      h.innerHTML='<div style="font-family:\'Courier New\',monospace;font-size:.7rem;color:var(--muted);padding:2rem 0;text-align:center;">não foi possível carregar a biblioteca de gráficos — verifique a conexão e recarregue</div>';
-    });
-  } else {
-    requestAnimationFrame(()=>requestAnimationFrame(()=>window._redraw()));
-  }
+function renderFixed(){
+  document.getElementById('tbl-fixed').innerHTML=table(
+    ['Janela','Anos','SPXI tot','SPXR tot','SPXI aa','SPXR aa','Vencedor'],
+    RAW.fixed.map(r=>[r.a+'→'+r.b,r.anos,r.spxi_tot+'%',r.spxr_tot+'%',
+      `<span class="num-b">${fmt(r.spxi_aa)}</span>`,`<span class="num-g">${fmt(r.spxr_aa)}</span>`,
+      `<span class="win ${r.win}">${r.win}</span>`]));
 }
 
 function table(head,rows){
-  return '<table><thead><tr>'+head.map(h=>`<th>${h}</th>`).join('')+
-    '</tr></thead><tbody>'+rows.map(r=>'<tr>'+r.map(c=>`<td>${c}</td>`).join('')+'</tr>').join('')+
-    '</tbody></table>';
+  return '<table><thead><tr>'+head.map(h=>`<th>${h}</th>`).join('')+'</tr></thead><tbody>'+
+    rows.map(r=>'<tr>'+r.map(c=>`<td>${c}</td>`).join('')+'</tr>').join('')+'</tbody></table>';
 }
 
-function setScale(sc,btn){curScale=sc;document.getElementById('sc-log').classList.toggle('on',sc==='logarithmic');document.getElementById('sc-lin').classList.toggle('on',sc==='linear');drawIdx();}
+function setScale(sc){curScale=sc;document.getElementById('sc-log').classList.toggle('on',sc==='logarithmic');document.getElementById('sc-lin').classList.toggle('on',sc==='linear');drawIdx();}
 function setDist(n,btn){curDist=n;document.querySelectorAll('#dist-seg button').forEach(b=>b.classList.toggle('on',+b.dataset.n===n));drawDist();}
+function setRange(months,btn){curRangeMonths=months;document.querySelectorAll('#rangeRow .rbtn').forEach(b=>b.classList.remove('on'));btn.classList.add('on');document.getElementById('zoomReset').classList.remove('visible');drawIdx();}
+function resetZoom(){curRangeMonths=null;document.querySelectorAll('#rangeRow .rbtn').forEach(b=>b.classList.remove('on'));document.querySelector('#rangeRow .rbtn:nth-child(4)')?.classList.add('on');document.getElementById('zoomReset').classList.remove('visible');drawIdx();}
+function showZoomReset(){document.getElementById('zoomReset').classList.add('visible');}
 
-const gridClr=()=>cssv('--border');
-const mutedClr=()=>cssv('--muted');
-const baseFont={family:"'Courier New', monospace",size:10};
+const gridClr=()=>cssv('--border'), mutedClr=()=>cssv('--muted');
 
 function drawIdx(){
-  const S=DATA.series, months=S.months, ctx=document.getElementById('chartIdx');
+  const R=window._R; if(!R||typeof Chart==='undefined')return;
+  // apply range window (last N months of the recorte)
+  let months=R.months;
+  if(curRangeMonths){ months=months.slice(Math.max(0,months.length-curRangeMonths)); }
+  const start=months[0];
+  const SPXR=rebase(RAW.series.SPXR,months,start);
+  const SPXI=rebase(RAW.series.SPXI,months,start);
+  const USD =rebase(RAW.series.TR_USD,months,start);
+  const ctx=document.getElementById('chartIdx');
   if(chartIdx){chartIdx.destroy();chartIdx=null;}
   chartIdx=new Chart(ctx,{type:'line',
     data:{labels:months,datasets:[
-      {label:'SPXR11',data:months.map(m=>S.SPXR[m]),borderColor:cssv('--green'),borderWidth:2,pointRadius:0,tension:.08},
-      {label:'SPXI11',data:months.map(m=>S.SPXI[m]),borderColor:cssv('--blue'),borderWidth:2,pointRadius:0,tension:.08},
-      {label:'S&P USD',data:months.map(m=>S.TR_USD[m]),borderColor:mutedClr(),borderWidth:1.3,borderDash:[5,4],pointRadius:0,tension:.08},
+      {label:'SPXR11',data:months.map(m=>SPXR[m]),borderColor:cssv('--green'),borderWidth:2,pointRadius:0,tension:.08},
+      {label:'SPXI11',data:months.map(m=>SPXI[m]),borderColor:cssv('--blue'),borderWidth:2,pointRadius:0,tension:.08},
+      {label:'S&P USD',data:months.map(m=>USD[m]),borderColor:mutedClr(),borderWidth:1.3,borderDash:[5,4],pointRadius:0,tension:.08},
     ]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},
-        tooltip:{backgroundColor:cssv('--text'),titleColor:cssv('--bg'),bodyColor:cssv('--bg'),
-          titleFont:baseFont,bodyFont:baseFont,padding:10,cornerRadius:6,displayColors:true,
-          callbacks:{label:c=>' '+c.dataset.label+': '+Math.round(c.parsed.y)}}},
+        tooltip:{backgroundColor:cssv('--text'),titleColor:cssv('--bg'),bodyColor:cssv('--bg'),titleFont:baseFont,bodyFont:baseFont,padding:10,cornerRadius:6,displayColors:true,
+          callbacks:{label:c=>' '+c.dataset.label+': '+Math.round(c.parsed.y)}},
+        zoom:{zoom:{wheel:{enabled:true},pinch:{enabled:true},mode:'x',onZoom:showZoomReset},
+              pan:{enabled:true,mode:'x',modifierKey:'shift',onPan:showZoomReset}}},
       scales:{
-        y:{type:curScale,ticks:{color:mutedClr(),font:baseFont,callback:v=>v>=1000?(v/1000)+'k':v},
-           grid:{color:gridClr()},border:{display:false}},
-        x:{ticks:{color:mutedClr(),font:baseFont,maxTicksLimit:9,autoSkip:true,
-           callback:function(v){const l=this.getLabelForValue(v);return l?l.slice(0,4):'';}},
-           grid:{display:false},border:{color:gridClr()}}}}});
+        y:{type:curScale,ticks:{color:mutedClr(),font:baseFont,callback:v=>v>=1000?(v/1000)+'k':v},grid:{color:gridClr()},border:{display:false}},
+        x:{ticks:{color:mutedClr(),font:baseFont,maxTicksLimit:9,autoSkip:true,maxRotation:0,
+           callback:function(v){const l=this.getLabelForValue(v);return l?l.slice(0,4):'';}},grid:{display:false},border:{color:gridClr()}}}}});
 }
 
 function drawDist(){
-  const d=DATA.dist[curDist]; if(!d)return;
+  const R=window._R; if(!R||typeof Chart==='undefined')return;
+  const d=R.dist[curDist]; if(!d)return;
   const ctx=document.getElementById('chartDist');
   if(chartDist){chartDist.destroy();chartDist=null;}
-  const labels=['mín','p10','p25','mediana','p75','p90','máx'];
-  const keys=['min','p10','p25','mediana','p75','p90','max'];
+  const labels=['mín','p10','p25','mediana','p75','p90','máx'], keys=['min','p10','p25','mediana','p75','p90','max'];
   chartDist=new Chart(ctx,{type:'bar',
     data:{labels,datasets:[
       {label:'SPXR11',data:keys.map(k=>d.spxr[k]),backgroundColor:cssv('--green'),borderRadius:4,maxBarThickness:34},
@@ -333,16 +474,13 @@ function drawDist(){
     ]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,
       plugins:{legend:{display:false},
-        tooltip:{backgroundColor:cssv('--text'),titleColor:cssv('--bg'),bodyColor:cssv('--bg'),
-          titleFont:baseFont,bodyFont:baseFont,padding:10,cornerRadius:6,
-          callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y+'% aa'}}},
+        tooltip:{backgroundColor:cssv('--text'),titleColor:cssv('--bg'),bodyColor:cssv('--bg'),titleFont:baseFont,bodyFont:baseFont,padding:10,cornerRadius:6,
+          callbacks:{label:c=>' '+c.dataset.label+': '+c.parsed.y.toFixed(1)+'% aa'}}},
       scales:{
-        y:{ticks:{color:mutedClr(),font:baseFont,callback:v=>v+'%'},grid:{color:gridClr()},border:{display:false},
-           title:{display:true,text:'CAGR anualizado',color:mutedClr(),font:baseFont}},
+        y:{ticks:{color:mutedClr(),font:baseFont,callback:v=>v+'%'},grid:{color:gridClr()},border:{display:false},title:{display:true,text:'CAGR anualizado',color:mutedClr(),font:baseFont}},
         x:{ticks:{color:mutedClr(),font:baseFont},grid:{display:false},border:{color:gridClr()}}}}});
 }
 
-/* keep charts sized on window resize */
 let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(window._redraw)window._redraw();},150);});
 </script>
 </body>
