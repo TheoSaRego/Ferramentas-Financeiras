@@ -141,13 +141,14 @@
 <div class="module-meta" id="meta">carregando…</div>
 
 <p class="lede">
-  Um brasileiro no S&amp;P escolhe entre <b>SPXR11</b> <span class="tip" data-tip="Hedge cambial: neutraliza o dólar e, pela paridade de juros, embolsa o diferencial Selic − Fed (o 'carry'). Retorno ≈ S&P em dólar + carry, sem câmbio.">(hedge cambial)</span>
-  e <b>SPXI11</b> <span class="tip" data-tip="Exposição cambial: S&P puro traduzido em reais. Ganha quando o dólar sobe contra o real, perde quando o real aprecia.">(exposição ao dólar)</span>.
-  Este estudo mede quem venceu em cada janela, com retorno total.
+  Duas formas de um brasileiro investir no S&amp;P 500: <b>SPXR11</b> <span class="tip" data-tip="Hedge cambial. Neutraliza o câmbio e, pela paridade de juros, rende o diferencial Selic − Fed (o 'carry'). Retorno ≈ S&P em dólar + carry, sem o efeito do dólar.">(hedge cambial)</span>
+  troca o dólar pelo carry de juros; <b>SPXI11</b> <span class="tip" data-tip="Exposição cambial. É o S&P traduzido em reais: sobe quando o dólar sobe contra o real, cai quando o real se valoriza.">(exposição ao dólar)</span>
+  mantém a variação do dólar. Qual rende mais depende do período — este estudo compara os dois em todas as
+  janelas históricas, com retorno total (dividendos reinvestidos). Escolha a data de início e veja o resultado.
 </p>
 
 <div class="startbar">
-  <span class="lbl" data-tip="Recomeça TODO o estudo — janelas, taxa de vitória, distribuição e tese — a partir desta data. Os primeiros anos do século tiveram carry Selic−Fed altíssimo (Selic 19–26%); excluí-los testa se a vantagem do hedge persiste num regime de juros mais normal.">início do estudo</span>
+  <span class="lbl" data-tip="Recomeça todo o estudo — janelas, taxa de vitória, distribuição e resumo — a partir desta data. Como a Selic caiu muito ao longo do século (de ~19% em 2000 para faixas menores depois), o carry médio muda conforme o ponto de partida, e com ele o resultado da comparação.">início do estudo</span>
   <div class="opts" id="startOpts"></div>
   <span class="from" id="startFrom"></span>
 </div>
@@ -156,7 +157,7 @@
 <div class="callout" id="thesis"></div>
 
 <h2 class="sec">Janelas terminando hoje</h2>
-<div class="sub">CAGR anualizado até o fim da série.</div>
+<div class="sub">Retorno anualizado (CAGR) de cada estratégia, do ponto de partida até hoje. A coluna Δ mostra quantos pontos ao ano o SPXR fez a mais (ou a menos) que o SPXI.</div>
 <div class="tbl-wrap" id="tbl-ending"></div>
 
 <h2 class="sec">A evolução dos dois índices</h2>
@@ -185,12 +186,12 @@
 </div>
 
 <h2 class="sec">Todas as janelas móveis</h2>
-<div class="sub">Cada mês de início possível dentro do recorte. A <span class="tip" data-tip="Fração das janelas em que o hedge (SPXR) terminou acima do dolarizado (SPXI). Muda bastante com a data de início: os anos de carry alto inflam a vantagem do hedge.">taxa de vitória</span> do hedge por horizonte é o teste decisivo.</div>
+<div class="sub">Cada mês de início possível dentro do recorte. A <span class="tip" data-tip="Fração das janelas em que o SPXR (hedge) terminou acima do SPXI (dolarizado). Acima de 50%, o hedge venceu na maioria das janelas daquele horizonte; abaixo, o dolarizado venceu.">taxa de vitória</span> mostra, para cada horizonte, com que frequência cada estratégia saiu na frente.</div>
 <div class="tbl-wrap" id="tbl-rolling"></div>
 <div class="callout" id="note-rolling"></div>
 
 <h2 class="sec">Distribuição do CAGR</h2>
-<div class="sub">Percentis do retorno anualizado nas janelas móveis — o <span class="tip" data-tip="O menor CAGR observado em todas as janelas daquele horizonte: o pior caso histórico dentro do recorte escolhido.">piso</span> importa mais que a média.</div>
+<div class="sub">Percentis do retorno anualizado nas janelas móveis. As barras da esquerda (mín, p10) são o <span class="tip" data-tip="O menor CAGR observado em todas as janelas daquele horizonte — o pior momento possível para ter entrado, dentro do recorte escolhido.">piso</span>: o pior caso de cada estratégia. As da direita (p90, máx) são o teto.</div>
 <div class="seg" id="dist-seg"></div>
 <div class="card">
   <div class="legend" style="margin-bottom:1rem;">
@@ -201,7 +202,7 @@
 </div>
 
 <h2 class="sec">Janelas históricas fixas</h2>
-<div class="sub">Regimes específicos (independentes da data de início). Onde o dolarizado venceu, houve choque cambial ou real muito valorizado no início.</div>
+<div class="sub">Períodos históricos escolhidos a dedo (não mudam com a barra de início), para ver regimes distintos lado a lado. Repare no padrão: o SPXI costuma vencer em janelas que pegam um choque de desvalorização do real (2000–02, 2011–15, 2020–21); o SPXR vence quando o real fica estável ou se valoriza e o carry se acumula.</div>
 <div class="tbl-wrap" id="tbl-fixed"></div>
 
 <div class="foot-src" id="src"></div>
@@ -367,18 +368,28 @@ function renderDynamic(){
   const s10=R.dist[10]||R.dist[Math.max(...Object.keys(R.dist).map(Number))];
   const r20=R.rolling.find(x=>x.n===20), rmax=R.rolling[R.rolling.length-1];
   const longWin=r20||rmax;
+  // which strategy carry vs fx favors, described neutrally
+  const carryWins=R.meta.carryAA>R.meta.fxDesv;
   document.getElementById('stats').innerHTML=[
-    {lbl:'Carry Selic−Fed',val:fmt(R.meta.carryAA,1)+'%',cls:'g',sub:'ao ano · o motor do hedge',tip:'Diferencial médio de juros Selic − Fed capturado pelo hedge, ao ano, no recorte escolhido.'},
-    {lbl:'Real desvalorizou',val:fmt(R.meta.fxDesv,1)+'%',cls:'b',sub:'ao ano · '+R.meta.fxIni.toFixed(2)+'→'+R.meta.fxFim.toFixed(2),tip:'Ritmo de desvalorização do real no recorte — o que o dolarizado captura.'},
-    {lbl:`SPXR vence em ${longWin.n}a`,val:longWin.pct+'%',cls:longWin.pct>=50?'g':'b',sub:'das janelas do recorte',tip:'Fração das janelas do horizonte mais longo disponível em que o hedge superou o dolarizado.'},
-    {lbl:'Piso 10a do hedge',val:(s10?fmt(s10.spxr.min,1):'—')+'%',cls:'g',sub:s10?'pior caso · dolariz. '+fmt(s10.spxi.min,1)+'%':'—',tip:'Menor CAGR de 10 anos no recorte. Compare o piso do hedge com o do dolarizado.'},
+    {lbl:'Carry Selic−Fed',val:fmt(R.meta.carryAA,1)+'%',cls:'g',sub:'ao ano · favorece o SPXR',tip:'Diferencial médio de juros Selic − Fed no recorte, ao ano. É o retorno extra que o SPXR (hedge) ganha só pela diferença de juros, sem depender do câmbio.'},
+    {lbl:'Ganho cambial (SPXI)',val:(R.meta.fxDesv>=0?'+':'−')+fmt(Math.abs(R.meta.fxDesv),1)+'%',cls:'b',sub:'ao ano · '+R.meta.fxIni.toFixed(2)+'→'+R.meta.fxFim.toFixed(2),tip:'Quanto a variação do dólar somou (ou subtraiu) ao SPXI, ao ano, no recorte. Positivo = real perdeu valor (dólar subiu), somando ao dolarizado. Negativo = real se valorizou, tirando do dolarizado. É o equivalente cambial ao carry do SPXR.'},
+    {lbl:`Quem venceu em ${longWin.n}a`,val:longWin.pct>=50?'SPXR':'SPXI',cls:longWin.pct>=50?'g':'b',sub:`em ${Math.max(longWin.pct,100-longWin.pct)}% das janelas`,tip:'No maior horizonte disponível neste recorte, qual estratégia terminou na frente com mais frequência, e em que proporção das janelas.'},
+    {lbl:'Piso em 10 anos',val:(s10?(s10.spxr.min>=s10.spxi.min?'SPXR':'SPXI'):'—'),cls:s10&&s10.spxr.min>=s10.spxi.min?'g':'b',sub:s10?`melhor pior-caso: ${fmt(Math.max(s10.spxr.min,s10.spxi.min),1)}% vs ${fmt(Math.min(s10.spxr.min,s10.spxi.min),1)}%`:'—',tip:'Qual estratégia teve o melhor pior-caso (maior CAGR mínimo) nas janelas de 10 anos do recorte. O piso mede a proteção contra o pior momento de entrada.'},
   ].map(x=>`<div class="stat" data-tip="${x.tip}"><div class="lbl">${x.lbl}</div><div class="val ${x.cls}">${x.val}</div><div class="sub">${x.sub}</div></div>`).join('');
 
+  // fxDesv POSITIVO = real desvalorizou (dólar subiu) = ganho que o SPXI captura.
+  const carryAA=R.meta.carryAA, fxGain=R.meta.fxDesv;
+  const realMoveTxt = fxGain>=0 ? `o real perdeu <b>${fmt(fxGain,1)}% ao ano</b> para o dólar` : `o real ganhou <b>${fmt(-fxGain,1)}% ao ano</b> do dólar`;
+  const gap=Math.abs(carryAA-fxGain);
   document.getElementById('thesis').innerHTML=
-    `No recorte ${R.start}→${R.END}, o carry Selic−Fed rendeu <b>${fmt(R.meta.carryAA,1)}% a.a.</b> contra uma desvalorização do real de <b>${fmt(R.meta.fxDesv,1)}% a.a.</b> `+
-    (R.meta.carryAA>R.meta.fxDesv
-      ? `O carry superou o câmbio: o hedge foi pago para não correr risco cambial, e o pagamento venceu o prêmio do dólar.`
-      : `Aqui o câmbio superou o carry — regime em que o dolarizado tende a competir melhor.`);
+    `A comparação se resume a duas forças, ambas medidas em ganho ao ano. O <b>SPXR</b> embolsa o carry de juros: <b>${fmt(carryAA,1)}%</b>. `+
+    `O <b>SPXI</b> embolsa a variação do dólar: aqui ${realMoveTxt}, `+
+    ((fxGain>=0)
+      ? `o que ${fxGain>0?'soma ao':'não ajuda o'} retorno do dolarizado. `
+      : `o que subtrai do retorno do dolarizado. `)+
+    (carryAA>fxGain
+      ? `Como o carry (${fmt(carryAA,1)}%) superou o ganho cambial (${fmt(fxGain,1)}%), o SPXR tende a render mais nas janelas longas deste recorte — diferença de ~${fmt(gap,1)} ponto ao ano.`
+      : `Como o ganho cambial (${fmt(fxGain,1)}%) superou o carry (${fmt(carryAA,1)}%), o SPXI tende a render mais neste recorte — diferença de ~${fmt(gap,1)} ponto ao ano.`);
 
   // ending
   document.getElementById('tbl-ending').innerHTML=table(
@@ -395,10 +406,18 @@ function renderDynamic(){
       `<span class="${r.pct>=50?'num-g':'num-b'}">${r.pct}%</span>`,
       (r.delta_medio>=0?'+':'')+fmt(r.delta_medio),(r.delta_mediana>=0?'+':'')+fmt(r.delta_mediana)]));
   const r5=R.rolling.find(x=>x.n===5);
+  const shortR=R.rolling[0], longR=R.rolling[R.rolling.length-1];
+  const trendUp=longR.pct>shortR.pct+8;   // hedge ganha força no longo prazo
+  const trendDown=longR.pct<shortR.pct-8; // dolarizado ganha força no longo prazo
+  const leader=longWin.pct>=50?'SPXR (hedge)':'SPXI (dolarizado)';
+  let mech;
+  if(trendUp) mech=`Neste recorte, o SPXR ganha força quanto mais longo o horizonte: o carry se acumula todo ano, enquanto a variação do dólar tende a reverter ao longo do tempo.`;
+  else if(trendDown) mech=`Neste recorte, o SPXI ganha força quanto mais longo o horizonte: as desvalorizações do real deste período foram grandes o suficiente para o dólar superar o carry acumulado.`;
+  else mech=`Neste recorte, as duas estratégias ficam parelhas nos diferentes horizontes — nem o carry nem o câmbio domina de forma clara.`;
   document.getElementById('note-rolling').innerHTML=
-    `Quanto mais longo o horizonte, mais o carry composto domina o ruído do câmbio. Neste recorte: em 5 anos o SPXR vence ${r5?r5.pct:'—'}% das vezes`+
-    (longWin?`; em ${longWin.n} anos, ${longWin.pct}%.`:'.')+
-    ` <b>Mude a data de início acima</b> para ver como os anos de carry alto (2000–2007) inflam a vantagem.`;
+    `Em ${shortR.n} ${shortR.n>1?'anos':'ano'} o SPXR vence ${shortR.pct}% das janelas; em ${longR.n} anos, ${longR.pct}%. ${mech} `+
+    `O horizonte mais longo do recorte é dominado pelo <b>${leader}</b>. `+
+    `Compare recortes diferentes na barra de início: períodos que começam com a Selic muito alta dão mais carry ao SPXR; períodos que pegam um choque de desvalorização do real favorecem o SPXI.`;
 
   // dist segmented control
   const dks=Object.keys(R.dist).map(Number);
