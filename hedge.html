@@ -65,14 +65,14 @@
   /* sections */
   h2.sec { font-size:1.15rem; font-weight:normal; letter-spacing:-.02em; margin:0 0 .3rem; padding-top:2.25rem; }
   .sub { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted); margin-bottom:1.4rem; line-height:1.5; }
-  /* stat cards */
+  /* stat cards — grid with fixed rows so all elements align across cards */
   .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1rem; }
   .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.15rem;
-    display:flex; flex-direction:column; min-height:118px; }
-  .stat .lbl { font-family:'Courier New',monospace; font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:auto; line-height:1.4; }
-  .stat .val { font-size:1.75rem; letter-spacing:-.02em; line-height:1; margin:.55rem 0 .4rem; }
+    display:grid; grid-template-rows:auto 1fr auto; row-gap:.5rem; min-height:140px; }
+  .stat .lbl { font-family:'Courier New',monospace; font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); line-height:1.4; }
+  .stat .val { font-size:1.75rem; letter-spacing:-.02em; line-height:1; align-self:center; }
   .stat .val.g { color:var(--green); } .stat .val.b { color:var(--blue); }
-  .stat .sub { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); line-height:1.45; min-height:2.1em; }
+  .stat .sub { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); line-height:1.45; }
   /* tables — cleaner, lighter, more editorial */
   .tbl-wrap { overflow-x:auto; margin-bottom:.5rem; }
   table { width:100%; border-collapse:collapse; font-size:.9rem; }
@@ -392,7 +392,7 @@ function renderDynamic(){
     {lbl:'Carry Selic−Fed',val:fmt(R.meta.carryAA,1)+'%',cls:'g',sub:'ao ano · favorece o SPXR',tip:'Diferencial médio de juros Selic − Fed no recorte, ao ano. É o retorno extra que o SPXR (hedge) ganha só pela diferença de juros, sem depender do câmbio.'},
     {lbl:'Ganho cambial (SPXI)',val:(R.meta.fxDesv>=0?'+':'−')+fmt(Math.abs(R.meta.fxDesv),1)+'%',cls:'b',sub:'ao ano · '+R.meta.fxIni.toFixed(2)+'→'+R.meta.fxFim.toFixed(2),tip:'Quanto a variação do dólar somou (ou subtraiu) ao SPXI, ao ano, no recorte. Positivo = real perdeu valor (dólar subiu), somando ao dolarizado. Negativo = real se valorizou, tirando do dolarizado. É o equivalente cambial ao carry do SPXR.'},
     {lbl:`Quem venceu em ${longWin.n}a`,val:longWin.pct>=50?'SPXR':'SPXI',cls:longWin.pct>=50?'g':'b',sub:`em ${Math.max(longWin.pct,100-longWin.pct)}% das janelas`,tip:'No maior horizonte disponível neste recorte, qual estratégia terminou na frente com mais frequência, e em que proporção das janelas.'},
-    {lbl:'Piso em 10 anos',val:(s10?(s10.spxr.min>=s10.spxi.min?'SPXR':'SPXI'):'—'),cls:s10&&s10.spxr.min>=s10.spxi.min?'g':'b',sub:s10?`melhor pior-caso · ${fmt(Math.max(s10.spxr.min,s10.spxi.min),1)}% vs ${fmt(Math.min(s10.spxr.min,s10.spxi.min),1)}%`:'—',tip:'Qual estratégia teve o melhor pior-caso (maior CAGR mínimo) nas janelas de 10 anos do recorte. O piso mede a proteção contra o pior momento de entrada.'},
+    {lbl:'Piso em 10 anos',val:(s10?(s10.spxr.min>=s10.spxi.min?'SPXR':'SPXI'):'—'),cls:s10&&s10.spxr.min>=s10.spxi.min?'g':'b',sub:s10?`pior-caso ${fmt(Math.max(s10.spxr.min,s10.spxi.min),1)}% vs ${fmt(Math.min(s10.spxr.min,s10.spxi.min),1)}%`:'—',tip:'Qual estratégia teve o melhor pior-caso (maior CAGR mínimo) nas janelas de 10 anos do recorte. O piso mede a proteção contra o pior momento de entrada.'},
   ].map(x=>`<div class="stat" data-tip="${x.tip}"><div class="lbl">${x.lbl}</div><div class="val ${x.cls}">${x.val}</div><div class="sub">${x.sub}</div></div>`).join('');
 
   // fxDesv POSITIVO = real desvalorizou (dólar subiu) = ganho que o SPXI captura.
