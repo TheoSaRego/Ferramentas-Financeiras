@@ -65,14 +65,14 @@
   /* sections */
   h2.sec { font-size:1.15rem; font-weight:normal; letter-spacing:-.02em; margin:0 0 .3rem; padding-top:2.25rem; }
   .sub { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted); margin-bottom:1.4rem; line-height:1.5; }
-  /* stat cards — grid with fixed rows so all elements align across cards */
-  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1rem; }
-  .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.15rem;
-    display:grid; grid-template-rows:auto 1fr auto; row-gap:.5rem; min-height:140px; }
-  .stat .lbl { font-family:'Courier New',monospace; font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); line-height:1.4; }
-  .stat .val { font-size:1.75rem; letter-spacing:-.02em; line-height:1; align-self:center; }
+  /* stat cards — compact, fixed rhythm (no elastic gap) */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1rem; align-items:stretch; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.15rem 1.15rem 1.2rem;
+    display:flex; flex-direction:column; }
+  .stat .lbl { font-family:'Courier New',monospace; font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); line-height:1.4; height:1.4em; }
+  .stat .val { font-size:1.85rem; letter-spacing:-.02em; line-height:1; margin:.85rem 0 .7rem; }
   .stat .val.g { color:var(--green); } .stat .val.b { color:var(--blue); }
-  .stat .sub { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); line-height:1.45; }
+  .stat .sub { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); line-height:1.4; margin-top:auto; }
   /* tables — cleaner, lighter, more editorial */
   .tbl-wrap { overflow-x:auto; margin-bottom:.5rem; }
   table { width:100%; border-collapse:collapse; font-size:.9rem; }
