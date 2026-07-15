@@ -67,24 +67,26 @@
   .sub { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted); margin-bottom:1.4rem; line-height:1.5; }
   /* stat cards */
   .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:.75rem; margin-bottom:1rem; }
-  .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.15rem; }
-  .stat .lbl { font-family:'Courier New',monospace; font-size:.58rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:.5rem; }
-  .stat .val { font-size:1.7rem; letter-spacing:-.02em; line-height:1; }
+  .stat { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:1.1rem 1.15rem;
+    display:flex; flex-direction:column; min-height:118px; }
+  .stat .lbl { font-family:'Courier New',monospace; font-size:.57rem; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); margin-bottom:auto; line-height:1.4; }
+  .stat .val { font-size:1.75rem; letter-spacing:-.02em; line-height:1; margin:.55rem 0 .4rem; }
   .stat .val.g { color:var(--green); } .stat .val.b { color:var(--blue); }
-  .stat .sub { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); margin-top:.45rem; line-height:1.4; }
-  /* tables */
+  .stat .sub { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); line-height:1.45; min-height:2.1em; }
+  /* tables — cleaner, lighter, more editorial */
   .tbl-wrap { overflow-x:auto; margin-bottom:.5rem; }
-  table { width:100%; border-collapse:collapse; font-size:.85rem; }
-  thead th { font-family:'Courier New',monospace; font-size:.58rem; text-transform:uppercase; letter-spacing:.06em;
-    color:var(--muted); font-weight:normal; text-align:right; padding:0 .7rem .7rem; border-bottom:1px solid var(--border); white-space:nowrap; }
+  table { width:100%; border-collapse:collapse; font-size:.9rem; }
+  thead th { font-family:'Courier New',monospace; font-size:.57rem; text-transform:uppercase; letter-spacing:.07em;
+    color:var(--muted); font-weight:normal; text-align:right; padding:0 .8rem .85rem; border-bottom:1.5px solid var(--border-str); white-space:nowrap; }
   thead th:first-child { text-align:left; }
-  tbody td { text-align:right; padding:.6rem .7rem; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; }
-  tbody td:first-child { text-align:left; color:var(--text); }
+  tbody td { text-align:right; padding:.72rem .8rem; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums; letter-spacing:-.01em; }
+  tbody td:first-child { text-align:left; color:var(--text); font-family:'Courier New',monospace; font-size:.74rem; color:var(--muted); }
   tbody tr:last-child td { border-bottom:none; }
   tbody tr:hover td { background:var(--surface-2); }
   .num-g { color:var(--green); } .num-b { color:var(--blue); }
+  .num-lead { font-weight:normal; } /* winner side slightly emphasized via color only */
   .delta-pos { color:var(--green); } .delta-neg { color:var(--muted); }
-  .win { font-family:'Courier New',monospace; font-size:.56rem; letter-spacing:.04em; padding:3px 9px; border-radius:20px; display:inline-block; }
+  .win { font-family:'Courier New',monospace; font-size:.55rem; letter-spacing:.05em; padding:3px 10px; border-radius:20px; display:inline-block; }
   .win.SPXR { background:var(--green-light); color:var(--green); }
   .win.SPXI { background:var(--blue-light); color:var(--blue); }
   /* charts */
@@ -110,6 +112,18 @@
   .chart-host { position:relative; width:100%; height:320px; }
   .chart-host canvas { width:100% !important; }
   .chart-hint { font-family:'Courier New',monospace; font-size:.58rem; color:var(--muted); margin-top:.5rem; text-align:right; }
+  /* measure tooltip (click-drag) */
+  .measure-tip { display:none; position:absolute; background:var(--surface); border:1px solid var(--border-str);
+    border-radius:8px; padding:.5rem .85rem; font-family:'Courier New',monospace; font-size:.72rem; color:var(--text);
+    pointer-events:none; z-index:50; box-shadow:0 4px 16px rgba(0,0,0,.14); white-space:nowrap; }
+  .measure-tip .mt-date { color:var(--muted); font-size:.62rem; margin-bottom:.3rem; }
+  .measure-tip .mt-row { display:flex; justify-content:space-between; gap:1.2rem; font-size:.78rem; line-height:1.5; }
+  .measure-tip .mt-row .k { color:var(--muted); }
+  .measure-tip .mt-g { color:var(--green); } .measure-tip .mt-b { color:var(--blue); }
+  .rebase-btn { background:transparent; border:1px solid var(--border); color:var(--muted); font-family:'Courier New',monospace;
+    font-size:.62rem; padding:4px 10px; border-radius:14px; cursor:pointer; transition:all .13s; }
+  .rebase-btn:hover { border-color:var(--accent); color:var(--accent); }
+  .rebase-btn.on { border-color:var(--accent); color:var(--accent); background:rgba(224,92,42,0.06); }
   /* callout */
   .callout { font-family:'Courier New',monospace; font-size:.7rem; color:var(--muted); line-height:1.65;
     background:var(--surface); border:1px solid var(--border); border-left:2px solid var(--green); border-radius:0 10px 10px 0; padding:.9rem 1.1rem; margin:0 0 1.5rem; }
@@ -161,7 +175,7 @@
 <div class="tbl-wrap" id="tbl-ending"></div>
 
 <h2 class="sec">A evolução dos dois índices</h2>
-<div class="sub">Rebaseado a 100 na data de início. Botões para o período; scroll para zoom, shift+drag para navegar.</div>
+<div class="sub">Rebaseado a 100 no início do trecho visível. Botões para o período; arraste para medir a rentabilidade de um intervalo.</div>
 <div class="card">
   <div class="chart-head">
     <div class="legend">
@@ -174,6 +188,7 @@
       <button class="rbtn" onclick="setRange(60,this)">5A</button>
       <button class="rbtn" onclick="setRange(120,this)">10A</button>
       <button class="rbtn on" onclick="setRange(null,this)">Máx</button>
+      <button class="rebase-btn on" id="rebaseBtn" onclick="toggleRebase(this)" data-tip="Reajusta as duas linhas para começarem em 100 no início do trecho que você está vendo. Ligado, a comparação visual é sempre justa a partir da borda esquerda. Desligado, a base fica no início do recorte inteiro.">rebase 100 ✓</button>
       <button class="zoom-reset" id="zoomReset" onclick="resetZoom()">↺ resetar zoom</button>
     </div>
   </div>
@@ -181,8 +196,11 @@
     <button class="on" id="sc-log" onclick="setScale('logarithmic',this)">log</button>
     <button id="sc-lin" onclick="setScale('linear',this)">linear</button>
   </div>
-  <div class="chart-host"><canvas id="chartIdx" role="img" aria-label="Evolução de SPXR, SPXI e S&P em dólar"></canvas></div>
-  <div class="chart-hint">scroll para zoom · shift+drag para navegar</div>
+  <div class="chart-host">
+    <canvas id="chartIdx" role="img" aria-label="Evolução de SPXR, SPXI e S&P em dólar"></canvas>
+    <div class="measure-tip" id="idxMeasure"></div>
+  </div>
+  <div class="chart-hint">arraste para medir · scroll para zoom · shift+drag para navegar</div>
 </div>
 
 <h2 class="sec">Todas as janelas móveis</h2>
@@ -240,7 +258,7 @@ function cssv(n){return getComputedStyle(document.documentElement).getPropertyVa
 /* ══ state ══ */
 let RAW=null;           // full JSON
 let startMonth=null;    // current study start (e.g. '2000-01')
-let curScale='logarithmic', curDist=10, curRangeMonths=null;
+let curScale='logarithmic', curDist=10, curRangeMonths=null, rebaseVisible=true;
 let chartIdx=null, chartDist=null;
 const baseFont={family:"'Courier New', monospace",size:10};
 
@@ -374,7 +392,7 @@ function renderDynamic(){
     {lbl:'Carry Selic−Fed',val:fmt(R.meta.carryAA,1)+'%',cls:'g',sub:'ao ano · favorece o SPXR',tip:'Diferencial médio de juros Selic − Fed no recorte, ao ano. É o retorno extra que o SPXR (hedge) ganha só pela diferença de juros, sem depender do câmbio.'},
     {lbl:'Ganho cambial (SPXI)',val:(R.meta.fxDesv>=0?'+':'−')+fmt(Math.abs(R.meta.fxDesv),1)+'%',cls:'b',sub:'ao ano · '+R.meta.fxIni.toFixed(2)+'→'+R.meta.fxFim.toFixed(2),tip:'Quanto a variação do dólar somou (ou subtraiu) ao SPXI, ao ano, no recorte. Positivo = real perdeu valor (dólar subiu), somando ao dolarizado. Negativo = real se valorizou, tirando do dolarizado. É o equivalente cambial ao carry do SPXR.'},
     {lbl:`Quem venceu em ${longWin.n}a`,val:longWin.pct>=50?'SPXR':'SPXI',cls:longWin.pct>=50?'g':'b',sub:`em ${Math.max(longWin.pct,100-longWin.pct)}% das janelas`,tip:'No maior horizonte disponível neste recorte, qual estratégia terminou na frente com mais frequência, e em que proporção das janelas.'},
-    {lbl:'Piso em 10 anos',val:(s10?(s10.spxr.min>=s10.spxi.min?'SPXR':'SPXI'):'—'),cls:s10&&s10.spxr.min>=s10.spxi.min?'g':'b',sub:s10?`melhor pior-caso: ${fmt(Math.max(s10.spxr.min,s10.spxi.min),1)}% vs ${fmt(Math.min(s10.spxr.min,s10.spxi.min),1)}%`:'—',tip:'Qual estratégia teve o melhor pior-caso (maior CAGR mínimo) nas janelas de 10 anos do recorte. O piso mede a proteção contra o pior momento de entrada.'},
+    {lbl:'Piso em 10 anos',val:(s10?(s10.spxr.min>=s10.spxi.min?'SPXR':'SPXI'):'—'),cls:s10&&s10.spxr.min>=s10.spxi.min?'g':'b',sub:s10?`melhor pior-caso · ${fmt(Math.max(s10.spxr.min,s10.spxi.min),1)}% vs ${fmt(Math.min(s10.spxr.min,s10.spxi.min),1)}%`:'—',tip:'Qual estratégia teve o melhor pior-caso (maior CAGR mínimo) nas janelas de 10 anos do recorte. O piso mede a proteção contra o pior momento de entrada.'},
   ].map(x=>`<div class="stat" data-tip="${x.tip}"><div class="lbl">${x.lbl}</div><div class="val ${x.cls}">${x.val}</div><div class="sub">${x.sub}</div></div>`).join('');
 
   // fxDesv POSITIVO = real desvalorizou (dólar subiu) = ganho que o SPXI captura.
@@ -450,30 +468,48 @@ function showZoomReset(){document.getElementById('zoomReset').classList.add('vis
 
 const gridClr=()=>cssv('--border'), mutedClr=()=>cssv('--muted');
 
+function toggleRebase(btn){ rebaseVisible=!rebaseVisible; btn.classList.toggle('on',rebaseVisible); btn.textContent=rebaseVisible?'rebase 100 ✓':'rebase 100'; drawIdx(); }
+
+// re-rebase the visible portion to 100 without destroying the chart (used after zoom/pan)
+function rebaseToVisible(){
+  if(!chartIdx || !rebaseVisible) return;
+  const xs=chartIdx.scales.x; const labels=chartIdx.data.labels;
+  const lo=Math.max(0, Math.ceil(xs.min)); // first fully-visible index
+  const startLbl=labels[lo]; if(!startLbl) return;
+  const src=window._idxSrc; if(!src) return;
+  const b={SPXR:src.SPXR[startLbl],SPXI:src.SPXI[startLbl],USD:src.USD[startLbl]};
+  chartIdx.data.datasets[0].data=labels.map(m=>src.SPXR[m]/b.SPXR*100);
+  chartIdx.data.datasets[1].data=labels.map(m=>src.SPXI[m]/b.SPXI*100);
+  chartIdx.data.datasets[2].data=labels.map(m=>src.USD[m]/b.USD*100);
+  chartIdx.update('none');
+}
+
 function drawIdx(){
   const R=window._R; if(!R||typeof Chart==='undefined')return;
-  // apply range window (last N months of the recorte)
   let months=R.months;
   if(curRangeMonths){ months=months.slice(Math.max(0,months.length-curRangeMonths)); }
   const start=months[0];
-  const SPXR=rebase(RAW.series.SPXR,months,start);
-  const SPXI=rebase(RAW.series.SPXI,months,start);
-  const USD =rebase(RAW.series.TR_USD,months,start);
+  // keep raw (base-invariant) series for this slice so we can re-rebase on zoom
+  const rawS={SPXR:{},SPXI:{},USD:{}};
+  months.forEach(m=>{ rawS.SPXR[m]=RAW.series.SPXR[m]; rawS.SPXI[m]=RAW.series.SPXI[m]; rawS.USD[m]=RAW.series.TR_USD[m]; });
+  window._idxSrc=rawS;
+  const b0={SPXR:rawS.SPXR[start],SPXI:rawS.SPXI[start],USD:rawS.USD[start]};
+  const D=(k)=>months.map(m=>rawS[k][m]/b0[k]*100);
   const ctx=document.getElementById('chartIdx');
   if(chartIdx){chartIdx.destroy();chartIdx=null;}
   chartIdx=new Chart(ctx,{type:'line',
     data:{labels:months,datasets:[
-      {label:'SPXR11',data:months.map(m=>SPXR[m]),borderColor:cssv('--green'),borderWidth:2,pointRadius:0,tension:.08},
-      {label:'SPXI11',data:months.map(m=>SPXI[m]),borderColor:cssv('--blue'),borderWidth:2,pointRadius:0,tension:.08},
-      {label:'S&P USD',data:months.map(m=>USD[m]),borderColor:mutedClr(),borderWidth:1.3,borderDash:[5,4],pointRadius:0,tension:.08},
+      {label:'SPXR11',data:D('SPXR'),borderColor:cssv('--green'),borderWidth:2,pointRadius:0,tension:.08},
+      {label:'SPXI11',data:D('SPXI'),borderColor:cssv('--blue'),borderWidth:2,pointRadius:0,tension:.08},
+      {label:'S&P USD',data:D('USD'),borderColor:mutedClr(),borderWidth:1.3,borderDash:[5,4],pointRadius:0,tension:.08},
     ]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,
       interaction:{mode:'index',intersect:false},
       plugins:{legend:{display:false},
         tooltip:{backgroundColor:cssv('--text'),titleColor:cssv('--bg'),bodyColor:cssv('--bg'),titleFont:baseFont,bodyFont:baseFont,padding:10,cornerRadius:6,displayColors:true,
           callbacks:{label:c=>' '+c.dataset.label+': '+Math.round(c.parsed.y)}},
-        zoom:{zoom:{wheel:{enabled:true},pinch:{enabled:true},mode:'x',onZoom:showZoomReset},
-              pan:{enabled:true,mode:'x',modifierKey:'shift',onPan:showZoomReset}}},
+        zoom:{zoom:{wheel:{enabled:true},pinch:{enabled:true},mode:'x',onZoom:showZoomReset,onZoomComplete:rebaseToVisible},
+              pan:{enabled:true,mode:'x',modifierKey:'shift',onPan:showZoomReset,onPanComplete:rebaseToVisible}}},
       scales:{
         y:{type:curScale,ticks:{color:mutedClr(),font:baseFont,callback:v=>v>=1000?(v/1000)+'k':v},grid:{color:gridClr()},border:{display:false}},
         x:{ticks:{color:mutedClr(),font:baseFont,maxTicksLimit:9,autoSkip:true,maxRotation:0,
@@ -501,6 +537,75 @@ function drawDist(){
 }
 
 let rt; addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(()=>{if(window._redraw)window._redraw();},150);});
+
+/* ══ medição clique+drag: rentabilidade de SPXR e SPXI no intervalo ══ */
+(function setupMeasure(){
+  const canvas=document.getElementById('chartIdx');
+  const tip=document.getElementById('idxMeasure');
+  if(!canvas||!tip) return;
+  const overlay=document.createElement('canvas');
+  overlay.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;';
+  canvas.parentNode.appendChild(overlay);
+  function resize(){ overlay.width=canvas.offsetWidth; overlay.height=canvas.offsetHeight; }
+  resize(); new ResizeObserver(resize).observe(canvas);
+
+  let measuring=false, dragged=false, pinned=false, startIdx=null, startPx=null;
+
+  function snap(px){
+    if(!chartIdx) return null;
+    const xs=chartIdx.scales.x, n=chartIdx.data.labels.length;
+    let idx=Math.round(xs.getValueForPixel(px));
+    idx=Math.max(0,Math.min(n-1,idx));
+    return {idx, label:chartIdx.data.labels[idx], px:xs.getPixelForValue(idx)};
+  }
+  function drawBand(a,b){
+    const c=overlay.getContext('2d'); c.clearRect(0,0,overlay.width,overlay.height);
+    if(!a||!b||!chartIdx) return;
+    const ca=chartIdx.chartArea; if(!ca) return;
+    const x1=Math.min(a.px,b.px), x2=Math.max(a.px,b.px);
+    // color by SPXR return sign over the interval
+    const src=window._idxSrc; const r=src? src.SPXR[b.label]/src.SPXR[a.label]-1 : 0;
+    const pos=r>=0;
+    c.save(); c.beginPath(); c.rect(ca.left,ca.top,ca.right-ca.left,ca.bottom-ca.top); c.clip();
+    c.fillStyle=pos?'rgba(26,122,82,.10)':'rgba(184,50,50,.10)';
+    c.strokeStyle=pos?'rgba(26,122,82,.35)':'rgba(184,50,50,.35)';
+    c.lineWidth=1; c.fillRect(x1,ca.top,x2-x1,ca.bottom-ca.top); c.strokeRect(x1,ca.top,x2-x1,ca.bottom-ca.top);
+    [a,b].forEach(s=>{ c.beginPath(); c.moveTo(s.px,ca.top); c.lineTo(s.px,ca.bottom); c.strokeStyle=pos?'rgba(26,122,82,.5)':'rgba(184,50,50,.5)'; c.stroke(); });
+    c.restore();
+  }
+  function ret(series,a,b){ const s=window._idxSrc; if(!s) return null; return (s[series][b]/s[series][a]-1)*100; }
+  function yrsBetweenLbl(a,b){ const [ya,ma]=a.split('-').map(Number),[yb,mb]=b.split('-').map(Number); return ((yb*12+mb)-(ya*12+ma))/12; }
+
+  canvas.addEventListener('mousedown',e=>{
+    if(e.shiftKey) return;
+    if(pinned){ pinned=false; tip.style.display='none'; overlay.getContext('2d').clearRect(0,0,overlay.width,overlay.height); return; }
+    const rect=canvas.getBoundingClientRect(); const s=snap(e.clientX-rect.left);
+    if(!s) return; startIdx=s.idx; startPx=s.px; measuring=true; dragged=false;
+  });
+  addEventListener('mousemove',e=>{
+    if(!measuring) return; dragged=true;
+    if(chartIdx&&chartIdx.tooltip){ chartIdx.tooltip.setActiveElements([],{x:0,y:0}); chartIdx.update('none'); }
+    const rect=canvas.getBoundingClientRect(); const curX=e.clientX-rect.left, curY=e.clientY-rect.top;
+    const a=snap(startPx), b=snap(curX); drawBand(a,b);
+    if(!a||!b||a.label===b.label) return;
+    const lo=a.idx<b.idx?a:b, hi=a.idx<b.idx?b:a;
+    const rR=ret('SPXR',lo.label,hi.label), rI=ret('SPXI',lo.label,hi.label);
+    const yy=yrsBetweenLbl(lo.label,hi.label);
+    const aa=(r)=>yy>0?((Math.pow(1+r/100,1/yy)-1)*100):r;
+    const lead=rR>=rI?'SPXR':'SPXI';
+    tip.innerHTML=
+      `<div class="mt-date">${lo.label} → ${hi.label} · ${yy.toFixed(1)} anos</div>`+
+      `<div class="mt-row"><span class="k">SPXR</span><span class="mt-g">${rR>=0?'+':''}${rR.toFixed(0)}% · ${aa(rR)>=0?'+':''}${aa(rR).toFixed(1)}%aa</span></div>`+
+      `<div class="mt-row"><span class="k">SPXI</span><span class="mt-b">${rI>=0?'+':''}${rI.toFixed(0)}% · ${aa(rI)>=0?'+':''}${aa(rI).toFixed(1)}%aa</span></div>`+
+      `<div class="mt-row"><span class="k">vantagem</span><span>${lead} +${Math.abs(aa(rR)-aa(rI)).toFixed(1)}pp aa</span></div>`;
+    const tipW=tip.offsetWidth||190; let tx=curX+16; if(tx+tipW>canvas.offsetWidth) tx=curX-tipW-16;
+    tip.style.left=Math.max(4,tx)+'px'; tip.style.top=Math.max(4,curY-70)+'px'; tip.style.display='block';
+  });
+  addEventListener('mouseup',()=>{
+    if(!measuring) return; measuring=false;
+    if(dragged){ pinned=true; } else { tip.style.display='none'; overlay.getContext('2d').clearRect(0,0,overlay.width,overlay.height); }
+  });
+})();
 </script>
 </body>
 </html>
