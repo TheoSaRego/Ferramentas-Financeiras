@@ -4423,8 +4423,8 @@ function render() {
     if (sp500[key] != null) merged.push({ isFund:false, sortVal: sp500[key], row: buildSP500Row() });
     if (smll[key]     != null) merged.push({ isFund:false, sortVal: smll[key],     row: buildIndexStrip('SMLL · small caps', smll, idxSourceNote(smll)) });
     if (idiv[key]     != null) merged.push({ isFund:false, sortVal: idiv[key],     row: buildIndexStrip('IDIV · dividendos', idiv, idxSourceNote(idiv)) });
-    if (sp500usd[key] != null) merged.push({ isFund:false, sortVal: sp500usd[key], row: buildIndexStrip('S&P 500 · USD', sp500usd, 'nominal, sem câmbio e sem hedge') });
-    if (sp500dolar[key] != null) merged.push({ isFund:false, sortVal: sp500dolar[key], row: buildIndexStrip('S&P 500 · dolarizado', sp500dolar, 'USD→BRL na PTAX · ganha e perde com o câmbio · sem hedge') });
+    if (sp500usd[key] != null) merged.push({ isFund:false, sortVal: sp500usd[key], row: buildIndexStrip('S&P 500 · USD', sp500usd, 'retorno total (dividendos reinvestidos), sem câmbio e sem hedge') });
+    if (sp500dolar[key] != null) merged.push({ isFund:false, sortVal: sp500dolar[key], row: buildIndexStrip('S&P 500 · dolarizado', sp500dolar, 'retorno total × PTAX · ganha e perde com o câmbio · sem hedge') });
   }
   merged.sort((a, z) => sortDir * (z.sortVal - a.sortVal));
 
@@ -4474,8 +4474,8 @@ function render() {
     html += buildIbovRow();
     html += buildIndexStrip('SMLL · small caps', smll, idxSourceNote(smll));
     html += buildIndexStrip('IDIV · dividendos', idiv, idxSourceNote(idiv));
-    html += buildIndexStrip('S&P 500 · USD', sp500usd, 'nominal, sem câmbio e sem hedge');
-    html += buildIndexStrip('S&P 500 · dolarizado', sp500dolar, 'USD→BRL na PTAX · ganha e perde com o câmbio · sem hedge');
+    html += buildIndexStrip('S&P 500 · USD', sp500usd, 'retorno total (dividendos reinvestidos), sem câmbio e sem hedge');
+    html += buildIndexStrip('S&P 500 · dolarizado', sp500dolar, 'retorno total × PTAX · ganha e perde com o câmbio · sem hedge');
     html += buildCdiRow();
     html += buildSP500Row();
   }
