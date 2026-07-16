@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T18:37:56.793246+00:00",
+  "generatedAt": "2026-07-16T20:51:37.897655+00:00",
   "asof": "2026-07-16",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -73,13 +73,13 @@
           {
             "key": "breadth",
             "score": 6,
-            "read": "43% composto — abaixo do meio",
+            "read": "44% composto — abaixo do meio",
             "weight": 0.1
           },
           {
             "key": "mm200",
             "score": 7,
-            "read": "31% > MM200 — fraqueza técnica",
+            "read": "32% > MM200 — fraqueza técnica",
             "weight": 0.04
           }
         ]
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-1.1% — no topo/ATH",
+            "read": "-1.0% — no topo/ATH",
             "weight": 0.2
           }
         ]
@@ -204,12 +204,12 @@
       "selic": 14.25,
       "ipca": 4.64,
       "real_cdi": 9.325,
-      "ibov_dd": -12.470499403494461,
+      "ibov_dd": -12.49980116482179,
       "fund_dd": -10.70058677901895,
-      "breadth_pct": 43.47,
-      "mm200_pct": 31.169999999999998,
+      "breadth_pct": 43.669999999999995,
+      "mm200_pct": 32.47,
       "fg": 10.8,
-      "ibov": 173883.48,
+      "ibov": 173825.27,
       "regime": "bear",
       "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
@@ -224,13 +224,13 @@
       "ey": 3.0684258975145746,
       "dy": 1.03,
       "real_us": 2.32,
-      "sp_dd": -1.05,
+      "sp_dd": -1.0,
       "fg": 42,
       "fed": 3.63,
       "us_cpi": 4.25,
       "infl_exp": 2.23,
       "carry": 10.620000000000001,
-      "sp_cur": 7530.07,
+      "sp_cur": 7533.77,
       "sp_ath": 7609.78
     }
   },
