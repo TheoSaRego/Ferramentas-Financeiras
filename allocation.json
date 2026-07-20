@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-20T21:09:17.927753+00:00",
+  "generatedAt": "2026-07-20T22:48:39.520561+00:00",
   "asof": "2026-07-20",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -115,13 +115,13 @@
           {
             "key": "pe",
             "score": 0.5,
-            "read": "32.1x — extremo",
+            "read": "32.0x — extremo",
             "weight": 0.0889
           },
           {
             "key": "cape",
             "score": 0.5,
-            "read": "CAPE 42x — extremo (tipo 1999/2021)",
+            "read": "CAPE 41x — extremo (tipo 1999/2021)",
             "weight": 0.2444
           },
           {
@@ -219,9 +219,9 @@
       }
     },
     "us": {
-      "pe": 32.08,
-      "cape": 41.52,
-      "ey": 3.117206982543641,
+      "pe": 32.03,
+      "cape": 41.45,
+      "ey": 3.1220730565095223,
       "dy": 1.05,
       "real_us": 2.35,
       "sp_dd": -2.19,
