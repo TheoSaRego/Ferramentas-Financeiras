@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-17T22:30:58.868669+00:00",
-  "asof": "2026-07-17",
+  "generatedAt": "2026-07-20T15:37:01.224035+00:00",
+  "asof": "2026-07-20",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
   "brasil": 300000.0,
@@ -56,13 +56,13 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-12.6% — correção leve",
+            "read": "-12.5% — correção leve",
             "weight": 0.12
           },
           {
             "key": "fund_dd",
             "score": 4.5,
-            "read": "DD médio -11.1% — correção leve",
+            "read": "DD médio -11.2% — correção leve",
             "weight": 0.12
           }
         ]
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-2.0% — no topo/ATH",
+            "read": "-1.7% — no topo/ATH",
             "weight": 0.2
           }
         ]
@@ -149,7 +149,7 @@
           {
             "key": "fg",
             "score": 7,
-            "read": "37/100 — medo moderado",
+            "read": "39/100 — medo moderado",
             "weight": 0.1556
           }
         ]
@@ -204,18 +204,18 @@
       "selic": 14.25,
       "ipca": 4.64,
       "real_cdi": 9.325,
-      "ibov_dd": -12.55577200904071,
-      "fund_dd": -11.063290170114126,
-      "breadth_pct": 39.989999999999995,
+      "ibov_dd": -12.489788932682966,
+      "fund_dd": -11.155685290648515,
+      "breadth_pct": 40.5,
       "mm200_pct": 28.57,
       "fg": 10.8,
-      "ibov": 173714.08,
+      "ibov": 173845.16,
       "regime": "bear",
       "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
-        "organon": -15.583872362486384,
-        "artica": -6.542707977741868
+        "organon": -15.21416669400092,
+        "artica": -7.097203887296111
       }
     },
     "us": {
@@ -224,13 +224,13 @@
       "ey": 3.117206982543641,
       "dy": 1.05,
       "real_us": 2.31,
-      "sp_dd": -2.0,
-      "fg": 37,
+      "sp_dd": -1.66,
+      "fg": 39,
       "fed": 3.63,
       "us_cpi": 4.25,
       "infl_exp": 2.24,
       "carry": 10.620000000000001,
-      "sp_cur": 7457.69,
+      "sp_cur": 7483.75,
       "sp_ath": 7609.78
     }
   },
