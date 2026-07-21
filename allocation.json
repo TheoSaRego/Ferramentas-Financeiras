@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-07-20T22:48:39.520561+00:00",
-  "asof": "2026-07-20",
+  "generatedAt": "2026-07-21T15:31:22.750056+00:00",
+  "asof": "2026-07-21",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
   "brasil": 300000.0,
@@ -56,13 +56,13 @@
           {
             "key": "ibov_dd",
             "score": 4.5,
-            "read": "-12.7% — correção leve",
+            "read": "-13.2% — correção leve",
             "weight": 0.12
           },
           {
             "key": "fund_dd",
             "score": 4.5,
-            "read": "DD médio -11.2% — correção leve",
+            "read": "DD médio -11.5% — correção leve",
             "weight": 0.12
           }
         ]
@@ -73,7 +73,7 @@
           {
             "key": "breadth",
             "score": 6,
-            "read": "41% composto — abaixo do meio",
+            "read": "36% composto — abaixo do meio",
             "weight": 0.1
           },
           {
@@ -98,7 +98,7 @@
     }
   },
   "sp_signal": {
-    "score": 2.22,
+    "score": 2.48,
     "conf": "ALTA",
     "label": "HOLD",
     "cor": "#b4322a",
@@ -108,14 +108,14 @@
         "items": [
           {
             "key": "erp",
-            "score": 3,
-            "read": "ERP real +0.8pp — cara vs juros",
+            "score": 4.5,
+            "read": "ERP real +1.1pp — abaixo da média (richish)",
             "weight": 0.2444
           },
           {
             "key": "pe",
-            "score": 0.5,
-            "read": "32.0x — extremo",
+            "score": 1,
+            "read": "28.6x — muito caro",
             "weight": 0.0889
           },
           {
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-2.2% — no topo/ATH",
+            "read": "-1.4% — no topo/ATH",
             "weight": 0.2
           }
         ]
@@ -148,8 +148,8 @@
         "items": [
           {
             "key": "fg",
-            "score": 7,
-            "read": "38/100 — medo moderado",
+            "score": 6,
+            "read": "41/100 — leve medo",
             "weight": 0.1556
           }
         ]
@@ -157,22 +157,22 @@
     }
   },
   "decision": {
-    "tranche": 4500.0,
-    "piso": 0.09770555555555552,
+    "tranche": 5700.0,
+    "piso": 0.09433518518518515,
     "cashpct": 0.2,
-    "gap": 0.1022944444444445,
-    "want": 46000.0,
-    "aloc_brasil": 4500.0,
+    "gap": 0.10566481481481486,
+    "want": 47500.0,
+    "aloc_brasil": 5700.0,
     "aloc_sp": 0.0,
     "rodadas": 1,
     "base": 0.06814999999999996,
     "res_brasil": 0.0,
-    "res_sp": 0.029555555555555554,
-    "tgt_brasil": 0.6767208333333334,
-    "tgt_sp": 0.22557361111111116,
+    "res_sp": 0.026185185185185186,
+    "tgt_brasil": 0.6792486111111111,
+    "tgt_sp": 0.22641620370370372,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
-    "desc": "caixa-alvo 10% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
+    "desc": "caixa-alvo 9% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
   },
   "inputs": {
     "br_src": {
@@ -204,33 +204,33 @@
       "selic": 14.25,
       "ipca": 4.64,
       "real_cdi": 9.325,
-      "ibov_dd": -12.728300538113436,
-      "fund_dd": -11.155685290648515,
-      "breadth_pct": 40.760000000000005,
-      "mm200_pct": 28.57,
+      "ibov_dd": -13.21752065117262,
+      "fund_dd": -11.541171055105831,
+      "breadth_pct": 35.510000000000005,
+      "mm200_pct": 28.95,
       "fg": 10.8,
-      "ibov": 173371.34,
+      "ibov": 172399.47,
       "regime": "bear",
       "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
       "fund_dd_detail": {
-        "organon": -15.21416669400092,
-        "artica": -7.097203887296111
+        "organon": -15.748185992924357,
+        "artica": -7.334156117287305
       }
     },
     "us": {
-      "pe": 32.03,
-      "cape": 41.45,
-      "ey": 3.1220730565095223,
-      "dy": 1.05,
+      "pe": 28.64,
+      "cape": 40.64,
+      "ey": 3.4916201117318435,
+      "dy": 1.08,
       "real_us": 2.35,
-      "sp_dd": -2.19,
-      "fg": 38,
+      "sp_dd": -1.38,
+      "fg": 41,
       "fed": 3.63,
-      "us_cpi": 4.25,
+      "us_cpi": 3.53,
       "infl_exp": 2.25,
       "carry": 10.620000000000001,
-      "sp_cur": 7443.28,
+      "sp_cur": 7504.64,
       "sp_ath": 7609.78
     }
   },
