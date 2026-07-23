@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T17:10:09.405315+00:00",
+  "generatedAt": "2026-07-23T18:42:39.798178+00:00",
   "asof": "2026-07-23",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -98,7 +98,7 @@
     }
   },
   "sp_signal": {
-    "score": 2.48,
+    "score": 2.63,
     "conf": "ALTA",
     "label": "HOLD",
     "cor": "#b4322a",
@@ -138,7 +138,7 @@
           {
             "key": "sp_dd",
             "score": 1,
-            "read": "-2.6% — no topo/ATH",
+            "read": "-2.9% — no topo/ATH",
             "weight": 0.2
           }
         ]
@@ -148,8 +148,8 @@
         "items": [
           {
             "key": "fg",
-            "score": 6,
-            "read": "40/100 — leve medo",
+            "score": 7,
+            "read": "39/100 — medo moderado",
             "weight": 0.1556
           }
         ]
@@ -157,19 +157,19 @@
     }
   },
   "decision": {
-    "tranche": 5700.0,
-    "piso": 0.09433518518518515,
+    "tranche": 6300.0,
+    "piso": 0.0923907407407407,
     "cashpct": 0.2,
-    "gap": 0.10566481481481486,
-    "want": 47500.0,
-    "aloc_brasil": 5700.0,
+    "gap": 0.10760925925925931,
+    "want": 48400.0,
+    "aloc_brasil": 6300.0,
     "aloc_sp": 0.0,
     "rodadas": 1,
     "base": 0.06814999999999996,
     "res_brasil": 0.0,
-    "res_sp": 0.026185185185185186,
-    "tgt_brasil": 0.6792486111111111,
-    "tgt_sp": 0.22641620370370372,
+    "res_sp": 0.024240740740740743,
+    "tgt_brasil": 0.6807069444444445,
+    "tgt_sp": 0.22690231481481482,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
     "desc": "caixa-alvo 9% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
@@ -204,12 +204,12 @@
       "selic": 14.25,
       "ipca": 4.64,
       "real_cdi": 9.325,
-      "ibov_dd": -11.14958949344851,
+      "ibov_dd": -11.125678934042094,
       "fund_dd": -10.83460154223248,
-      "breadth_pct": 42.52,
+      "breadth_pct": 42.77,
       "mm200_pct": 32.47,
       "fg": 10.8,
-      "ibov": 176507.56,
+      "ibov": 176555.06,
       "regime": "bear",
       "pl_src": "manual (override)",
       "fund_dd_src": "planilha",
@@ -224,13 +224,13 @@
       "ey": 3.4662045060658575,
       "dy": 1.07,
       "real_us": 2.39,
-      "sp_dd": -2.63,
-      "fg": 40,
+      "sp_dd": -2.88,
+      "fg": 39,
       "fed": 3.63,
       "us_cpi": 3.53,
       "infl_exp": 2.28,
       "carry": 10.620000000000001,
-      "sp_cur": 7409.79,
+      "sp_cur": 7390.77,
       "sp_ath": 7609.78
     }
   },
