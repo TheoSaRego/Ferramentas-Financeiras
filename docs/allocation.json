@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T22:47:11.218678+00:00",
+  "generatedAt": "2026-07-24T02:02:36.146137+00:00",
   "asof": "2026-07-23",
   "carteira_total": 450000.0,
   "caixa": 90000.0,
@@ -15,7 +15,7 @@
     "alvo_sp": 0.25
   },
   "brasil_signal": {
-    "score": 5.86,
+    "score": 5.92,
     "conf": "ALTA",
     "label": "NEUTRO",
     "cor": "#b07d0a",
@@ -26,19 +26,19 @@
         "items": [
           {
             "key": "erp",
-            "score": 5.5,
+            "score": 5.982707,
             "read": "ERP real -0.4pp — juro real levem. superior",
             "weight": 0.22
           },
           {
             "key": "pl",
-            "score": 6,
+            "score": 6.233333,
             "read": "11.2x — levem. barato",
             "weight": 0.14
           },
           {
             "key": "dy",
-            "score": 5,
+            "score": 5.106667,
             "read": "4.8% — razoável",
             "weight": 0.1
           },
@@ -55,13 +55,13 @@
         "items": [
           {
             "key": "ibov_dd",
-            "score": 4.5,
+            "score": 3.680276,
             "read": "-11.0% — correção leve",
             "weight": 0.12
           },
           {
             "key": "fund_dd",
-            "score": 4.5,
+            "score": 4.56692,
             "read": "DD médio -10.8% — correção leve",
             "weight": 0.12
           }
@@ -72,13 +72,13 @@
         "items": [
           {
             "key": "breadth",
-            "score": 6,
+            "score": 5.877333,
             "read": "43% composto — abaixo do meio",
             "weight": 0.1
           },
           {
             "key": "mm200",
-            "score": 7,
+            "score": 6.164,
             "read": "34% > MM200 — fraqueza técnica",
             "weight": 0.04
           }
@@ -89,7 +89,7 @@
         "items": [
           {
             "key": "fg",
-            "score": 9,
+            "score": 9.42,
             "read": "11/100 — medo muito alto",
             "weight": 0.1
           }
@@ -98,7 +98,7 @@
     }
   },
   "sp_signal": {
-    "score": 2.48,
+    "score": 2.5,
     "conf": "ALTA",
     "label": "HOLD",
     "cor": "#b4322a",
@@ -108,13 +108,13 @@
         "items": [
           {
             "key": "erp",
-            "score": 4.5,
+            "score": 3.925717,
             "read": "ERP real +1.1pp — abaixo da média (richish)",
             "weight": 0.2444
           },
           {
             "key": "pe",
-            "score": 1,
+            "score": 1.431429,
             "read": "28.5x — muito caro",
             "weight": 0.0889
           },
@@ -137,7 +137,7 @@
         "items": [
           {
             "key": "sp_dd",
-            "score": 1,
+            "score": 1.24375,
             "read": "-2.6% — no topo/ATH",
             "weight": 0.2
           }
@@ -148,7 +148,7 @@
         "items": [
           {
             "key": "fg",
-            "score": 6,
+            "score": 6.5,
             "read": "40/100 — leve medo",
             "weight": 0.1556
           }
@@ -157,19 +157,19 @@
     }
   },
   "decision": {
-    "tranche": 5700.0,
-    "piso": 0.09433518518518515,
+    "tranche": 6200.0,
+    "piso": 0.09272592592592592,
     "cashpct": 0.2,
-    "gap": 0.10566481481481486,
-    "want": 47500.0,
-    "aloc_brasil": 5700.0,
+    "gap": 0.10727407407407409,
+    "want": 48300.0,
+    "aloc_brasil": 6200.0,
     "aloc_sp": 0.0,
     "rodadas": 1,
-    "base": 0.06814999999999996,
+    "base": 0.0668,
     "res_brasil": 0.0,
-    "res_sp": 0.026185185185185186,
-    "tgt_brasil": 0.6792486111111111,
-    "tgt_sp": 0.22641620370370372,
+    "res_sp": 0.025925925925925925,
+    "tgt_brasil": 0.6804555555555556,
+    "tgt_sp": 0.22681851851851853,
     "cur_brasil": 0.6666666666666666,
     "cur_sp": 0.13333333333333333,
     "desc": "caixa-alvo 9% · deploy roteado p/ o mercado barato e abaixo do alvo (mercado caro é vetado mesmo se sub-alocado)"
