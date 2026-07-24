@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-23T22:44:48.885453+00:00",
+  "generatedAt": "2026-07-24T02:35:16.174796+00:00",
   "anchorDate": "2026-07-21",
   "ibov": {
     "cagr12": 29.209421565020797,
@@ -42,7 +42,7 @@
   "ntnb": {
     "ntnb_rate_long": 7.8242,
     "ntnb_rate_mid": 8.3838,
-    "ntnb_fetched_at": "2026-07-23T22:36:08.296673+00:00",
+    "ntnb_fetched_at": "2026-07-24T02:24:57.993717+00:00",
     "ntnb_titles": [
       {
         "nome": "NTN-B",
@@ -358,7 +358,7 @@
     "16.876.874/0001-47": 0.3833,
     "52.239.457/0001-57": 0.8527,
     "51.253.495/0001-00": 1.1369,
-    "52.969.671/0001-69": 0.6318,
+    "52.969.671/0001-69": 0.6485,
     "07.013.315/0001-12": 0.2576,
     "14.812.722/0001-55": -0.9188,
     "48.997.077/0001-04": 3.2375,
@@ -1887,7 +1887,7 @@
       "delayDays": 0,
       "maxQuota": 1.396811,
       "maxQuotaDate": "2026-07-21",
-      "inceptionDate": "2023-11-30",
+      "inceptionDate": "2023-12-01",
       "anchorDate": "2026-07-21",
       "anchor12m": "2025-07-21",
       "anchor36m": "2023-07-21",
@@ -1895,11 +1895,11 @@
       "cagr12": 12.335947210566944,
       "cagr36": null,
       "cagr60": null,
-      "cagrInception": 13.498784071729663,
-      "ibovCagrInception": 12.3944,
-      "cdiCagrInception": 12.8939,
-      "alphaVsCdi": 0.6049,
-      "alphaVsIbov": 1.1044,
+      "cagrInception": 13.515430864966005,
+      "ibovCagrInception": 12.1506,
+      "cdiCagrInception": 12.8886,
+      "alphaVsCdi": 0.6268,
+      "alphaVsIbov": 1.3648,
       "error": false,
       "alphas": {
         "ibov": {
